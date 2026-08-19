@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ela Kumuk</title>
+<meta name="description" content="Business analytics and AI systems. Signal pipelines, causal inference, and AI products — plus charcoal drawings.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.vercel.app/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ela Kumuk">
+<meta property="og:description" content="I draw in charcoal and I build systems that decide when a model has earned your trust.">
+<meta property="og:url" content="https://elakumuk.vercel.app/">
+<meta property="og:image" content="https://elakumuk.vercel.app/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ela Kumuk">
+<meta name="twitter:description" content="I draw in charcoal and I build systems that decide when a model has earned your trust.">
+<meta name="twitter:image" content="https://elakumuk.vercel.app/assets/og.png">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&family=Karla:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="shell">
+  <aside class="rail">
+    <div>
+      <div class="rail__name">Ela<br>Kumuk</div>
+      <div class="rail__role">Business&nbsp;Analytics<br>AI&nbsp;Systems</div>
+    </div>
+    <div class="switch" role="tablist" aria-label="Sections of this site">
+      <button role="tab" id="tab-work" aria-selected="true" aria-controls="view-work">Work</button>
+      <button role="tab" id="tab-art" aria-selected="false" aria-controls="view-art">Personal</button>
+    </div>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="#story">The short version</a>
+      <a href="#work">Selected work</a>
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="rail__foot">
+      <a href="mailto:elakumuk@brandeis.edu">elakumuk@brandeis.edu</a>
+      <a href="https://www.linkedin.com/in/elakumuk" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/elakumuk" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </aside>
+
+  <main class="main">
+  <div class="view" id="view-work" role="tabpanel" aria-labelledby="tab-work">
+
+    <header class="hero">
+      <canvas id="smudge" aria-hidden="true"></canvas>
+      <h1 class="fade">Ela<br><em>Kumuk</em></h1>
+      <p class="hero__thesis fade">
+        I draw in charcoal and I build systems that decide when a model has earned your
+        trust. Both come down to one question: <em>how much do you believe the pattern in
+        front of you?</em>
+      </p>
+      <div class="status fade">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Open to full-time analytics &amp; AI roles from January 2027 · Boston / New York</span>
+      </div>
+      <p class="hint fade" id="hint">Move your cursor — the charcoal moves with it</p>
+    </header>
+
+    <!-- ═══════════ STORY ═══════════ -->
+    <section class="section rv" id="story">
+      <div class="section__head"><h2>The short version</h2><span class="line"></span></div>
+      <div class="story">
+        <p>I founded a perfume label in Istanbul at eighteen and ran it for three years —
+          the sourcing, the packaging, the pricing, and every customer conversation. It
+          taught me early that a business is just a long series of decisions you have to be
+          able to defend.</p>
+        <p>At Brandeis I studied business and psychology, took a studio art minor because I
+          could not <em>not</em> draw, and I finish a master's in business analytics this
+          December. People read that as three unrelated things. It is one thing.</p>
+        <p>Charcoal is unforgiving. You commit a mark, you cannot fully undo it, and the
+          work is finished the moment controlling it further would ruin it. That is also the
+          central problem in modelling. Everything below asks the question a drawing asks —
+          a meta-labeling layer deciding when a signal is worth trading, a guardrail
+          deciding when an agent's action is safe to run, a crash dataset where the obvious
+          answer is the wrong one.</p>
+        <p class="story__close">I am not looking for a job where the answer is already
+          known. I am good at the part where it isn't.</p>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="section__head">
+        <h2>Selected work</h2><span class="line"></span>
+        <span class="eyebrow">Three run live in this page</span>
+      </div>
+
+      <div class="filters" role="group" aria-label="Highlight work relevant to a role">
+        <span class="lbl">What are you hiring for?</span>
+        <button data-f="all" aria-pressed="true">Everything</button>
+        <button data-f="analytics" aria-pressed="false">Business analytics</button>
+        <button data-f="consulting" aria-pressed="false">Consulting &amp; strategy</button>
+        <button data-f="ds" aria-pressed="false">Data science / ML</button>
+        <button data-f="ai" aria-pressed="false">AI &amp; product</button>
+      </div>
+
+      <div class="act">
+        <div class="act__head"><span class="act__num">I</span>
+          <h3 class="act__title">When can you trust a signal?</h3></div>
+        <p class="act__lead">Every model produces an answer. The harder question is whether this particular answer has earned the right to be acted on.</p>
+        <article class="item rv" data-tracks="ds consulting">
+        <div class="item__meta">
+          <span class="item__org">State Street<br>Investment Management</span>
+          <span class="item__when">May – Aug 2026</span>
+        </div>
+        <div class="item__body">
+          <h3 class="item__title">AI-augmented multi-asset meta-labeling</h3>
+          <p class="item__role">Graduate Field Project · Brandeis × State Street, Boston</p>
+          <p class="item__desc">
+            A research pipeline that sits on top of a multi-asset signal book and decides which
+            signals to act on. A primary layer produces directional views; a meta-labeling layer
+            learns when that primary view is trustworthy, so the strategy sizes down instead of
+            trading everything it sees.
+          </p>
+          <p class="item__desc">
+            My work covered the attribution design — index-level rather than ETF-level returns,
+            technical signals consolidated into one sleeve, transaction costs applied in two
+            layers, and benchmark-relative active weights — plus walk-forward validation across
+            folds, so nothing is read off a single lucky sample.
+          </p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">Pipeline architecture</span></div>
+            <div class="fig__body">
+              <div class="diagram" id="diagram"></div>
+            </div>
+            <figcaption class="fig__cap">
+              Structure only. Signal definitions, weights, and performance results remain
+              confidential to the sponsor.
+            </figcaption>
+          </figure>
+
+          <p class="brought">Running my own P&amp;L for three years taught me to distrust a backtest that has never paid a transaction cost. That is why the cost model here has two layers.</p>
+              <div class="chips">
+            <span class="chip">Python</span><span class="chip">Meta-labeling</span>
+            <span class="chip">Walk-forward CV</span><span class="chip">Factor attribution</span>
+            <span class="chip">LLM signal extraction</span>
+          </div>
+        </div>
+      </article>
+      <article class="item rv" data-tracks="ds analytics consulting">
+        <div class="item__meta">
+          <span class="item__org">Brandeis<br>Marketing Analytics</span>
+          <span class="item__when">Spring 2026</span>
+        </div>
+        <div class="item__body">
+          <h3 class="item__title">Can an LLM be your marketing analyst?</h3>
+          <p class="item__role">Causal inference versus language-model reasoning on the same A/B test</p>
+          <p class="item__desc">
+            I gave a language model the same marketing campaign data I analysed properly, and
+            checked whether it could tell correlation from causation. The dataset: 5,000 users,
+            ten campaigns, a binary ad-exposure treatment, pre-treatment covariates and
+            conversion outcomes.
+          </p>
+          <p class="item__desc">
+            The naive treatment-minus-control difference is a 5.53 point lift and it is highly
+            significant. It is also entirely selection bias: users who saw more impressions were
+            already the more engaged users. Control for the covariates and the effect goes to
+            zero. Propensity score matching does not rescue it either &mdash; the two groups
+            separate almost perfectly on propensity, so there is no overlap to match on. That
+            failure is itself a result: not every method works on every dataset.
+          </p>
+          <p class="item__desc">
+            Given the same summary statistics, the model cited unconfoundedness, SUTVA and the
+            need for regression controls &mdash; and then accepted the 5.53 figure anyway. It
+            knew every concept and could not execute one of them. Its confidence also moved with
+            the framing of the question, which is the part that should worry anyone putting a
+            model in an analyst&rsquo;s chair.
+          </p>
+          <p class="brought">
+            The most dangerous way to use one of these models is to ask it to confirm something
+            you already believe. Given a leading prompt it pushed back &mdash; and then engaged
+            with the biased framing anyway.
+          </p>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">Same data, three methods, three different answers</span>
+            </div>
+            <div class="fig__body">
+              <div class="chartwrap" id="coefwrap">
+                <svg id="coef" viewBox="0 0 720 210" role="img"
+                     aria-label="Estimated effect of the ad campaign on conversion under three methods. The naive difference gives plus 5.53 percentage points. OLS with controls gives approximately zero. Propensity score matching gives plus 13.10 points but is unreliable because the groups do not overlap."></svg>
+              </div>
+              <p class="didnote">Estimated effect on conversion, in percentage points. The
+                propensity-score estimate is drawn hollow because the overlap assumption fails
+                &mdash; it is shown to be discounted, not believed.</p>
+            </div>
+            <figcaption class="fig__cap">
+              A reader who stops at the first method walks away with a campaign that works. The
+              honest answer is that this campaign did nothing measurable.
+            </figcaption>
+          </figure>
+
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">OLS</span>
+            <span class="chip">Propensity score matching</span>
+            <span class="chip">Causal inference</span><span class="chip">LLM evaluation</span>
+          </div>
+        </div>
+      </article>
+      </div>
+      <div class="act">
+        <div class="act__head"><span class="act__num">II</span>
+          <h3 class="act__title">When is the obvious answer wrong?</h3></div>
+        <p class="act__lead">The first number a dataset hands you is usually the one that hides the finding. These are the projects where the headline and the truth pointed in different directions.</p>
+        <article class="item rv" data-tracks="analytics consulting ds">
+        <div class="item__meta">
+          <span class="item__org">Brandeis BUS240F<br>with Xinger Wang</span>
+          <span class="item__when">Spring 2026</span>
+        </div>
+        <div class="item__body">
+          <h3 class="item__title">The aggregate said nothing. The sub-categories did not.</h3>
+          <p class="item__role">Difference-in-differences on Boston&ndash;Cambridge foot traffic &middot; Python, Tableau</p>
+          <p class="item__desc">
+            A natural experiment around the September 2025 H-1B proclamation, using Advan
+            point-of-interest visit data for Boston and Cambridge in January 2025 and January
+            2026. I built the pipeline: 65,360 POI-month rows, filtered to 37,524 after dropping
+            counts below the privacy-reliability threshold, then grouped by postal code into
+            tech, university and control areas, with a mix comparison to check the control group
+            was actually comparable.
+          </p>
+          <p class="item__desc">
+            At the aggregate level there is nothing to report &mdash; the difference-in-differences
+            contrasts are small and point in inconsistent directions. Disaggregated, a pattern
+            appears in exactly the places where daily life happens, and it appears on the largest
+            samples in the dataset.
+          </p>
+          <p class="brought">
+            I built the pipeline and the grouping rules. The finding only appeared after I
+            stopped trusting the average &mdash; and it survives because it sits on the biggest
+            samples, not the biggest percentages.
+          </p>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">What the aggregate says</span>
+            </div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">+2.06<i>%</i></span><span class="l">Tech areas</span></div>
+                <div class="did"><span class="n">&minus;1.10<i>%</i></span><span class="l">University areas</span></div>
+                <div class="did"><span class="n">&minus;0.24<i>%</i></span><span class="l">Control areas</span></div>
+                <div class="did em"><span class="n">+2.3<i>pp</i></span><span class="l">DiD, tech vs control</span></div>
+                <div class="did em"><span class="n">&minus;0.86<i>pp</i></span><span class="l">DiD, university vs control</span></div>
+              </div>
+              <p class="didnote">Change in average visits per point of interest, January 2025 to
+                January 2026. Read alone, this is a null result.</p>
+            </div>
+          </figure>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">What the sub-categories say</span>
+              <div class="seg" role="group" aria-label="Chart display">
+                <button id="s-tbl" aria-pressed="false">Table</button>
+              </div>
+            </div>
+            <div class="fig__body">
+              <div class="chartwrap" id="scatterwrap">
+                <svg id="scatter" viewBox="0 0 720 360" role="img"
+                     aria-label="Scatter plot. Each point is a business sub-category, positioned by its percentage change in visits and by how many locations are in the sample. The largest samples showing declines are coffee shops and full-service restaurants in university areas."></svg>
+                <div class="tip" id="tip2" role="status" aria-live="polite"></div>
+              </div>
+              <div class="legend" id="legend2"></div>
+              <div id="stablewrap" hidden></div>
+            </div>
+            <figcaption class="fig__cap">
+              134 sub-categories with at least 30 locations. Vertical axis is sample size on a log
+              scale, so the points you should believe sit near the top. Source: Advan POI data;
+              analysis by Ela Kumuk and Xinger Wang.
+            </figcaption>
+          </figure>
+
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">pandas</span>
+            <span class="chip">Difference-in-differences</span><span class="chip">Tableau</span>
+            <span class="chip">Causal inference</span>
+          </div>
+        </div>
+      </article>
+      <article class="item rv" data-tracks="analytics consulting">
+        <div class="item__meta">
+          <span class="item__org">Brandeis MSBA<br>Team project</span>
+          <span class="item__when">Spring 2026</span>
+        </div>
+        <div class="item__body">
+          <h3 class="item__title">Who actually gets hurt on Massachusetts roads</h3>
+          <p class="item__role">Crash analysis dashboard · Python, Streamlit, SQLite, MassDOT IMPACT API</p>
+          <p class="item__desc">
+            A dashboard over the state's open crash record system — 661,000 records across
+            2021–2025, pulled live from MassDOT's ArcGIS feature services, normalised into
+            SQLite, and filtered by date, road user, hour and street. Built on an MVC split so
+            the data layer, the filters and the views stay independently testable.
+          </p>
+          <p class="item__desc">
+            The finding that reframed the project: raw crash counts say the problem is motor
+            vehicles, because that is where the volume is. Severity rates say something else
+            entirely. I also assembled a small panel of municipal traffic-board approvals —
+            stop signs, stop-ahead treatments, reflective striping — with their approval dates,
+            so specific intersections can be studied before and after an intervention.
+          </p>
+
+          <div class="tiles" id="tiles">
+            <div class="tile"><span class="n" data-count="11.1" data-suffix="×" data-dp="1">0×</span>
+              <span class="l">A pedestrian crash is this many times more likely to be killed-or-serious than a motor-vehicle crash</span></div>
+            <div class="tile"><span class="n" data-count="47.6" data-suffix="%" data-dp="0" data-sign="1">0%</span>
+              <span class="l">Change in bicycle crash volume, 2021 → 2025</span></div>
+            <div class="tile"><span class="n" data-count="-27.6" data-suffix="%" data-dp="0" data-sign="1">0%</span>
+              <span class="l">Change in the share of bicycle crashes that are killed-or-serious</span></div>
+            <div class="tile"><span class="n" data-count="661375" data-dp="0">0</span>
+              <span class="l">Crash records aggregated for this chart</span></div>
+          </div>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">Massachusetts crashes by road user</span>
+              <div class="seg" role="group" aria-label="Chart measure">
+                <button id="m-rate" aria-pressed="true">KSI share</button>
+                <button id="m-idx" aria-pressed="false">Volume, 2021=100</button>
+              </div>
+              <div class="seg" role="group" aria-label="Chart display">
+                <button id="m-tbl" aria-pressed="false">Table</button>
+              </div>
+            </div>
+            <div class="fig__body">
+              <div class="chartwrap" id="chartwrap">
+                <svg id="chart" viewBox="0 0 720 300" role="img"
+                     aria-label="Line chart of Massachusetts crash outcomes by road user, 2021 to 2025"></svg>
+                <div class="tip" id="tip" role="status" aria-live="polite"></div>
+              </div>
+              <div class="legend" id="legend"></div>
+              <div id="tablewrap" hidden></div>
+            </div>
+            <figcaption class="fig__cap">
+              KSI = killed or suspected serious injury, classified with the same rule the project
+              uses. Source: MassDOT IMPACT open crash data, feature services 2021–2025, queried
+              August 2026. Recent years are provisional and revised as records close.
+            </figcaption>
+          </figure>
+
+          <p class="brought">I studied psychology before I studied analytics. How people misread a base rate is not a footnote to me — it is the thing I was trained on.</p>
+              <div class="chips">
+            <span class="chip">Python</span><span class="chip">Streamlit</span>
+            <span class="chip">SQLite</span><span class="chip">ArcGIS REST</span>
+            <span class="chip">MVC</span><span class="chip">pytest</span>
+          </div>
+        </div>
+      </article>
+      <article class="item rv" data-tracks="analytics consulting">
+        <div class="item__meta">
+          <span class="item__org">Personal project</span>
+          <span class="item__when">Spring 2026</span>
+        </div>
+        <div class="item__body">
+          <h3 class="item__title">What late delivery really costs</h3>
+          <p class="item__role">RFM segmentation on the Olist Brazilian e-commerce dataset</p>
+          <p class="item__desc">
+            An RFM segmentation over 100,000+ marketplace transactions, splitting the base into
+            high-value, dormant and churn-risk cohorts. The delivery analysis was the finding that
+            mattered: orders arriving late score 2.57 out of 5 against 4.29 for on-time orders — a
+            logistics problem showing up as a retention problem.
+          </p>
+          <p class="brought">I shipped a defective batch of perfume once. I learned that a logistics failure arrives disguised as a loyalty failure, and I learned it from customers, not from a table.</p>
+              <div class="chips">
+            <span class="chip">SQL</span><span class="chip">pandas</span>
+            <span class="chip">RFM</span><span class="chip">Cohort analysis</span>
+          </div>
+        </div>
+      </article>
+      <div class="mini rv" data-tracks="ds analytics">
+        <div class="item__meta"><span class="item__org">Personal project</span>
+          <span class="item__when">2026</span></div>
+        <div>
+          <h4>Telco churn &mdash; where the accuracy number lies</h4>
+          <p>Logistic regression, random forest and XGBoost on 7,000 subscriber records. The headline trap: 80% accuracy sounds strong until you notice the churn rate is 26.5%, so predicting &ldquo;nobody leaves&rdquo; already scores 73.5%. The model is only worth having if recall on the churn class beats that, which is why the evaluation runs on precision, recall and AUC.</p>
+          <div class="chips"><span class="chip">scikit-learn</span><span class="chip">XGBoost</span><span class="chip">Imbalanced classes</span><span class="chip">ROC / AUC</span></div>
+        </div>
+      </div>
+      </div>
+      <div class="act">
+        <div class="act__head"><span class="act__num">III</span>
+          <h3 class="act__title">When do you stop the machine?</h3></div>
+        <p class="act__lead">Automation is easy. Knowing which action should never run, and being able to show why afterwards, is the part that is actually hard.</p>
+        <article class="item rv" data-tracks="ai ds">
+        <div class="item__meta">
+          <span class="item__org">Ovrule</span>
+          <span class="item__when">Apr 2026 – present</span>
+        </div>
+        <div class="item__body">
+          <h3 class="item__title">Ovrule — decision receipts for AI agents</h3>
+          <p class="item__role">Creator &amp; sole developer · Next.js, Supabase, LLM classifier, npm SDK</p>
+          <p class="item__desc">
+            Every other guardrail reads what an agent <em>says</em>. Ovrule reads what the action
+            <em>does</em> — who authorised it, whether it can be undone, how much breaks if it is
+            wrong. A refused action never runs, and every verdict leaves a signed receipt written
+            in a sentence a compliance team can actually read.
+          </p>
+          <p class="item__desc">
+            Built end to end: schema, classifier, evaluation set, API, interface, and an npm SDK
+            that wraps an existing tool call in two lines. Selected for Demo Day at Ship Season S26.
+          </p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">Product demo · 58 seconds, silent, captioned</span></div>
+            <div class="fig__body">
+              <video class="demo-vid" controls muted playsinline preload="metadata"
+                     aria-label="Ovrule product demo: a safe command is allowed, a destructive one is blocked by six rules, producing a signed receipt">
+                <source src="assets/ovrule-demo.mp4" type="video/mp4">
+                Your browser cannot play this video.
+              </video>
+            </div>
+            <figcaption class="fig__cap">
+              A safe command passes. <code>DROP TABLE users</code> on production is refused, with a
+              plain-English reason and a signed receipt ID.
+            </figcaption>
+          </figure>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">The shape of the check — runs in this page</span>
+            </div>
+            <div class="fig__body">
+              <div class="demo">
+                <div>
+                  <label class="eyebrow" for="scenario">Proposed agent action</label>
+                  <textarea id="scenario" spellcheck="false">An AI coding agent wants to run DROP TABLE users on the production database.</textarea>
+                  <div class="presets" id="presets"></div>
+                  <button class="run" id="runbtn">Run guard()</button>
+                  <pre class="code" style="margin-top:1rem"><span class="c">// the same call, in your own agent</span>
+<span class="k">import</span> { guard } <span class="k">from</span> <span class="s">"ovrule-lab"</span>;
+
+<span class="k">const</span> r = <span class="k">await</span> guard({ scenario });
+<span class="k">if</span> (!r.allowed) <span class="k">throw new</span> Error(r.reason);</pre>
+                </div>
+                <div class="receipt">
+                  <div class="verdict idle" id="verdict">
+                    <span class="badge" id="vbadge">IDLE</span>
+                    <span id="vtext">Run the guard to produce a receipt</span>
+                  </div>
+                  <ul class="rules" id="rules"></ul>
+                  <div class="reason" id="reason">Six rules read the action independently. A single failure refuses it.</div>
+                  <div class="rcpt"><span id="rid">receipt —</span><span id="rlat">—</span></div>
+                </div>
+              </div>
+            </div>
+            <figcaption class="fig__cap">
+              An illustration of the <code>guard()</code> flow, evaluated locally in your browser
+              so it works offline. The categories shown are generic examples of what an action-level
+              check reads — they are not the product's rule set. The live product runs Ovrule's own
+              classifier against its six rules in parallel, returning a verdict in 8–9 seconds.
+            </figcaption>
+          </figure>
+
+          <p class="brought">For three years every decision in my company was mine to defend. I know exactly what it costs when nobody can answer “who approved this?”</p>
+              <div class="chips">
+            <span class="chip">Next.js</span><span class="chip">Supabase</span>
+            <span class="chip">TypeScript</span><span class="chip">LLM classifier</span>
+            <span class="chip">Evals</span><span class="chip">npm SDK</span>
+          </div>
+          <div class="links">
+            <a class="link" href="https://decision-receipt-lab.vercel.app" target="_blank" rel="noopener">Live product</a>
+            <a class="link" href="https://www.npmjs.com/package/ovrule-lab" target="_blank" rel="noopener">ovrule-lab on npm</a>
+          </div>
+        </div>
+      </article>
+      <div class="mini rv" data-tracks="ai">
+        <div class="item__meta"><span class="item__org">Personal project</span>
+          <span class="item__when">2026</span></div>
+        <div>
+          <h4>JobHunter &mdash; an agent that runs my search</h4>
+          <p>A Python CLI in three parts: a contact CRM tracking every cold outreach and follow-up, a portfolio pipeline, and a watcher that scans for new-grad postings on a schedule and pushes matches to Telegram. Built because a spreadsheet stops working around the fiftieth company.</p>
+          <div class="chips"><span class="chip">Python</span><span class="chip">SQLite</span><span class="chip">Scheduled jobs</span><span class="chip">Telegram API</span></div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="section rv" id="experience">
+      <div class="section__head"><h2>Experience</h2><span class="line"></span></div>
+      <div class="entry">
+        <div class="item__meta"><span class="item__when">2025</span><span class="item__when">Cheyenne, WY</span></div>
+        <div><h3>MissFlora USA</h3><p class="sub">Business Analyst Intern</p>
+          <p>SKU-level performance analysis in Python to find the growth segments worth shelf
+             space, market-share and pricing queries in SQL supporting US retail channel
+             expansion, and an automated supply-chain report that replaced a manual weekly pull.</p></div>
+      </div>
+      <div class="entry">
+        <div class="item__meta"><span class="item__when">2021 – 2024</span><span class="item__when">Istanbul, TR</span></div>
+        <div><h3>Kumukh Parfums</h3><p class="sub">Founder</p>
+          <p>Started a niche perfume label and ran all of it: two fragrance lines developed with a
+             perfumer, sourcing and packaging, premium pricing, and the customer relationships. A
+             defective batch became a gifting campaign to past customers — the cheapest
+             word-of-mouth channel I have ever had.</p></div>
+      </div>
+      <div class="entry">
+        <div class="item__meta"><span class="item__when">2020</span><span class="item__when">Istanbul, TR</span></div>
+        <div><h3>Ford Motors</h3><p class="sub">R&amp;D Intern</p>
+          <p>Mapped R&amp;D workflows in Excel and Python to find the stages where manual handoffs
+             cost the most time, and flagged the ones worth automating.</p></div>
+      </div>
+    </section>
+
+    <section class="section rv" id="education">
+      <div class="section__head"><h2>Education</h2><span class="line"></span></div>
+      <div class="entry">
+        <div class="item__meta"><span class="item__when">2026</span></div>
+        <div><h3>M.S. Business Analytics — Brandeis International Business School</h3>
+          <p class="sub">STEM-designated · GPA 3.56 · Jan – Dec 2026</p>
+          <p>Machine learning, econometrics with R, Python for business analytics, marketing
+             analytics, information visualization.</p></div>
+      </div>
+      <div class="entry">
+        <div class="item__meta"><span class="item__when">2022 – 2025</span></div>
+        <div><h3>B.A. Business and Psychology — Brandeis University</h3>
+          <p class="sub">Minor in Studio Art</p>
+          <p>Statistics, research methods and lab, competitive strategy, data analytics. The
+             studio art minor is the other half of this site.</p></div>
+      </div>
+    </section>
+
+    <section class="section rv" id="toolkit">
+      <div class="section__head"><h2>Toolkit</h2><span class="line"></span></div>
+      <div class="kit">
+        <div><h3>Languages</h3><p>Python · SQL · R · SAS · STATA</p></div>
+        <div><h3>Modeling</h3><p>scikit-learn · LightGBM · XGBoost · CatBoost · SHAP · AutoGluon · FLAML</p></div>
+        <div><h3>AI systems</h3><p>LLM APIs · RAG · ChromaDB · evals · agent guardrails</p></div>
+        <div><h3>Analysis &amp; build</h3><p>Tableau · Power BI · Bloomberg · advanced Excel · Git · Next.js · Supabase</p></div>
+        <div><h3>Languages spoken</h3><p>Turkish (native) · English (fluent) · French (beginner)</p></div>
+      </div>
+    </section>
+
+    <section class="section rv" id="contact">
+      <div class="section__head"><h2>Get in touch</h2><span class="line"></span></div>
+      <div class="contact">
+        <div class="contact__block"><span class="eyebrow">Email</span>
+          <a href="mailto:elakumuk@brandeis.edu">elakumuk@brandeis.edu</a></div>
+        <div class="contact__block"><span class="eyebrow">LinkedIn</span>
+          <a href="https://www.linkedin.com/in/elakumuk" target="_blank" rel="noopener">in/elakumuk</a></div>
+        <div class="contact__block"><span class="eyebrow">GitHub</span>
+          <a href="https://github.com/elakumuk" target="_blank" rel="noopener">github.com/elakumuk</a></div>
+        <div class="contact__block"><span class="eyebrow">Résumé</span><span>Available on request</span></div>
+        <div class="contact__block"><span class="eyebrow">Based in</span><span>Waltham, MA</span></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══════════════════════ DRAWINGS ═══════════════════════ -->
+  <div class="view" id="view-art" role="tabpanel" aria-labelledby="tab-art" hidden>
+    <header class="art-hero">
+        <h1>The rest of it</h1>
+        <p class="deck">Charcoal, ballet, and the things that are not on a r&eacute;sum&eacute;</p>
+      </header>
+
+      <section class="section">
+        <div class="section__head"><h2>Teaching</h2><span class="line"></span>
+          <span class="eyebrow">2021 &ndash; 2022 &middot; Turkey</span></div>
+        <div class="statement">
+          <p>I am a certified ballet instructor. For two years I taught ballet to children in
+             Turkey who had no prior access to the arts &mdash; kids who had never been inside a
+             studio and had no reason to think one was for them.</p>
+          <p>I keep it on this page rather than under work experience because it does not belong
+             to my career. But it is the thing that taught me how to explain something difficult
+             to somebody who has no vocabulary for it yet, and how to keep a room of people
+             engaged when I am the one standing at the front. I use both constantly.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head"><h2>Between Memory and Invention</h2><span class="line"></span>
+          <span class="eyebrow">Six charcoal drawings &middot; 2025</span></div>
+        <div class="statement">
+          <p>I made this series in March 2025 during my third year at Brandeis University in
+             Waltham, Massachusetts. Living through a New England winter, far from the landscapes I
+             grew up with, I found memories of the Aegean and Mediterranean returning through the
+             act of drawing.</p>
+          <p>I began without predetermined compositions, at times working on three drawings
+             simultaneously and allowing them to develop alongside one another. I had long been
+             drawn to perfection and planning; here, I wanted to release that impulse. Charcoal
+             became central to that process. I worked it directly with my hands, diffusing,
+             disturbing and erasing it, then returned with charcoal pencils to create sharper
+             marks. Its ability to move between atmosphere and precision allowed both control and
+             surrender.</p>
+          <p>Although I approached the works as abstraction, forms emerged as I worked: oceanic
+             rhythms, vegetation, landscapes, and fragments of places and memories. Having spent
+             much of my childhood around the Aegean Sea, its patterns remain part of my visual
+             memory. In Massachusetts, those impressions surfaced indirectly rather than as literal
+             depictions.</p>
+          <p>The drawings move between recognition and dissolution. A mark can suggest a landscape
+             or remembered place and then return to abstraction. The resulting works exist somewhere
+             between memory and invention, between what is remembered and what is being made in the
+             present.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head"><h2>Plates</h2><span class="line"></span>
+          <span class="eyebrow">Charcoal and charcoal pencil on paper</span></div>
+        <div class="plates" id="plates"></div>
+      </section>
+
+      <section class="section">
+        <div class="section__head"><h2>Also</h2><span class="line"></span></div>
+        <div class="kit">
+          <div><h3>Languages</h3><p>Turkish (native) &middot; English (fluent) &middot; French (beginner)</p></div>
+          <div><h3>Dance</h3><p>Certified ballet instructor &middot; taught 2021&ndash;2022</p></div>
+          <div><h3>Studio</h3><p>Studio Art minor, Brandeis &middot; charcoal and charcoal pencil</p></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>

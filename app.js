@@ -1,0 +1,657 @@
+"use strict";
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+/* ══════════════════════════════════════════════════════════════
+   1 · REAL DATA — MassDOT IMPACT, feature services 2021–2025.
+       Aggregated with the project's own KSI + road-user rules.
+   ══════════════════════════════════════════════════════════════ */
+const CRASH = {
+  2021:{mv:[122485,2190], ped:[1665,323], bike:[1062,117]},
+  2022:{mv:[131095,2311], ped:[2029,389], bike:[1348,142]},
+  2023:{mv:[131913,2189], ped:[1995,418], bike:[1418,146]},
+  2024:{mv:[131904,2203], ped:[1956,385], bike:[1581,138]},
+  2025:{mv:[127583,2149], ped:[1773,332], bike:[1568,125]}
+};
+const YEARS  = Object.keys(CRASH).map(Number);
+const MODES  = [
+  {k:"mv",   name:"Motor vehicle", v:"--s1"},
+  {k:"ped",  name:"Pedestrian",    v:"--s2"},
+  {k:"bike", name:"Bicyclist",     v:"--s3"}
+];
+const rate = (y,m) => CRASH[y][m][1] / CRASH[y][m][0] * 100;
+const idx  = (y,m) => CRASH[y][m][0] / CRASH[YEARS[0]][m][0] * 100;
+
+const MEASURES = {
+  rate:{ fn:rate, label:"Share of crashes that are killed or seriously injured",
+         unit:"%", dp:1, dom:[0,24], ticks:[0,6,12,18,24] },
+  idx: { fn:idx,  label:"Crash volume, indexed to 2021 = 100",
+         unit:"",  dp:0, dom:[80,160], ticks:[80,100,120,140,160] }
+};
+let measure = "rate";
+
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* ---------- chart ---------- */
+const svg = document.getElementById("chart");
+const NS = "http://www.w3.org/2000/svg";
+const W = 720, H = 300, PL = 46, PR = 104, PT = 18, PB = 40;
+
+function el(n, a){ const e = document.createElementNS(NS,n);
+  for (const k in a) e.setAttribute(k, a[k]); return e; }
+
+function drawChart(animate){
+  const M = MEASURES[measure];
+  const x = i => PL + i * (W - PL - PR) / (YEARS.length - 1);
+  const y = v => PT + (1 - (v - M.dom[0]) / (M.dom[1] - M.dom[0])) * (H - PT - PB);
+  svg.innerHTML = "";
+  svg.setAttribute("aria-label",
+    "Line chart. " + M.label + ", Massachusetts, 2021 to 2025, by road user.");
+
+  M.ticks.forEach(t => {
+    svg.appendChild(el("line",{class:"gridline",x1:PL,x2:W-PR+10,y1:y(t),y2:y(t)}));
+    const lb = el("text",{class:"axis-t",x:PL-9,y:y(t)+3.5,"text-anchor":"end"});
+    lb.textContent = t + M.unit; svg.appendChild(lb);
+  });
+  YEARS.forEach((yr,i) => {
+    const lb = el("text",{class:"axis-t",x:x(i),y:H-PB+18,"text-anchor":"middle"});
+    lb.textContent = yr; svg.appendChild(lb);
+  });
+
+  MODES.forEach(m => {
+    const col = css(m.v);
+    const pts = YEARS.map((yr,i) => [x(i), y(M.fn(yr,m.k))]);
+    const d = pts.map((p,i) => (i?"L":"M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    const path = el("path",{d:d,fill:"none",stroke:col,"stroke-width":2,
+      "stroke-linejoin":"round","stroke-linecap":"round"});
+    const len = 900;
+    if (animate && !reduced.matches){
+      path.classList.add("draw"); path.style.setProperty("--len", len);
+      requestAnimationFrame(() => requestAnimationFrame(() => path.classList.add("in")));
+    }
+    svg.appendChild(path);
+    pts.forEach(p => {
+      svg.appendChild(el("circle",{cx:p[0],cy:p[1],r:4.5,fill:col,
+        stroke:css("--surface"),"stroke-width":2}));
+    });
+    const last = pts[pts.length-1];
+    const t1 = el("text",{class:"serieslabel",x:last[0]+11,y:last[1]-1,fill:col});
+    t1.textContent = m.name; svg.appendChild(t1);
+    const t2 = el("text",{class:"serieslabel",x:last[0]+11,y:last[1]+11,fill:css("--muted")});
+    t2.textContent = M.fn(YEARS[YEARS.length-1],m.k).toFixed(M.dp) + M.unit;
+    svg.appendChild(t2);
+  });
+
+  const ch = el("line",{class:"crosshair",y1:PT,y2:H-PB,x1:-99,x2:-99,opacity:0});
+  ch.id = "ch"; svg.appendChild(ch);
+  svg.appendChild(el("rect",{id:"hit",x:PL-14,y:PT,width:W-PL-PR+28,height:H-PT-PB,
+    fill:"transparent",style:"cursor:crosshair"}));
+  wireHover(x,y,M);
+}
+
+const tip = document.getElementById("tip");
+function wireHover(x,y,M){
+  const hit = svg.querySelector("#hit"), ch = svg.querySelector("#ch");
+  const wrap = document.getElementById("chartwrap");
+  function move(ev){
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) / r.width * W;
+    let i = Math.round((px - PL) / ((W - PL - PR) / (YEARS.length - 1)));
+    i = Math.max(0, Math.min(YEARS.length - 1, i));
+    const yr = YEARS[i];
+    ch.setAttribute("x1",x(i)); ch.setAttribute("x2",x(i)); ch.setAttribute("opacity",1);
+    tip.innerHTML = "<b>" + yr + "</b><div style='height:.35rem'></div>" +
+      MODES.map(m => "<div class='row'><span class='sw' style='background:" + css(m.v) +
+        "'></span><span class='nm'>" + m.name + "</span><b>" +
+        M.fn(yr,m.k).toFixed(M.dp) + M.unit + "</b></div>").join("");
+    tip.style.opacity = 1;
+    const wr = wrap.getBoundingClientRect();
+    const px2 = x(i) / W * r.width + (r.left - wr.left) + wrap.scrollLeft;
+    const tw = tip.offsetWidth;
+    tip.style.left = Math.max(0, Math.min(wrap.clientWidth + wrap.scrollLeft - tw,
+      px2 - tw / 2)) + "px";
+    tip.style.top = "6px";
+  }
+  hit.addEventListener("mousemove", move);
+  hit.addEventListener("touchstart", e => move(e.touches[0]), {passive:true});
+  hit.addEventListener("touchmove",  e => move(e.touches[0]), {passive:true});
+  hit.addEventListener("mouseleave", () => { tip.style.opacity = 0; ch.setAttribute("opacity",0); });
+}
+
+/* legend + table */
+document.getElementById("legend").innerHTML = MODES.map(m =>
+  "<span><i style='background:var(" + m.v + ")'></i>" + m.name + "</span>").join("");
+
+function buildTable(){
+  const M = MEASURES[measure];
+  let h = "<table class='data'><caption class='eyebrow' style='text-align:left;padding:.4rem 0'>" +
+    M.label + "</caption><thead><tr><th>Year</th>" +
+    MODES.map(m => "<th>" + m.name + "</th>").join("") + "</tr></thead><tbody>";
+  YEARS.forEach(yr => {
+    h += "<tr><td>" + yr + "</td>" +
+      MODES.map(m => "<td>" + M.fn(yr,m.k).toFixed(M.dp) + M.unit + "</td>").join("") + "</tr>";
+  });
+  document.getElementById("tablewrap").innerHTML = h + "</tbody></table>";
+}
+
+const bRate = document.getElementById("m-rate"), bIdx = document.getElementById("m-idx"),
+      bTbl  = document.getElementById("m-tbl"),  tblWrap = document.getElementById("tablewrap");
+function setMeasure(m){
+  measure = m;
+  bRate.setAttribute("aria-pressed", m === "rate");
+  bIdx.setAttribute("aria-pressed",  m === "idx");
+  drawChart(true); buildTable();
+}
+bRate.addEventListener("click", () => setMeasure("rate"));
+bIdx .addEventListener("click", () => setMeasure("idx"));
+bTbl .addEventListener("click", () => {
+  const on = tblWrap.hidden;
+  tblWrap.hidden = !on; bTbl.setAttribute("aria-pressed", on);
+});
+
+/* ══════════════════════════════════════════════════════════════
+   1b · H-1B SUB-CATEGORY SCATTER — real output from the project's
+        own pipeline. [category, sub-category, n POIs, % change]
+   ══════════════════════════════════════════════════════════════ */
+const SUB = [["T","Fitness and Recreational Sports Centers",136,-29.4],["T","Museums",36,-28.5],["C","Barber Shops",30,-27.6],["U","Snack and Nonalcoholic Beverage Bars",332,-16.7],["T","All Other Specialty Food Stores",44,-16.4],["U","Commercial Printing (except Screen and Books)",91,-15.4],["T","Home Centers",32,-15.0],["C","Drinking Places (Alcoholic Beverages)",263,-15.0],["U","Furniture Stores",53,-13.3],["U","Full-Service Restaurants",1177,-11.9],["C","Home Centers",38,-11.6],["C","Electronics Stores",93,-11.3],["U","Direct Property and Casualty Insurance Carriers",36,-11.2],["C","Tax Preparation Services",45,-10.3],["T","Plumbing, Heating, and Air-Conditioning Contractors",35,-8.2],["C","Women's Clothing Stores",137,-8.0],["U","Women's Clothing Stores",84,-7.9],["U","Commercial Banking",100,-7.2],["U","Painting and Wall Covering Contractors",35,-7.0],["T","Limited-Service Restaurants",147,-6.9],["U","All Other Specialty Food Stores",56,-6.8],["C","All Other Miscellaneous Store Retailers (except Tobacco Stores)",88,-6.1],["U","Museums",114,-5.7],["C","Beauty Salons",153,-5.4],["U","Florists",32,-5.3],["U","Parking Lots and Garages",136,-5.0],["C","Children's and Infants' Clothing Stores",32,-4.6],["T","Pharmacies and Drug Stores",41,-4.5],["U","Rooming and Boarding Houses, Dormitories, and Workers' Camps",87,-4.5],["U","Optical Goods Stores",56,-4.4],["C","Colleges, Universities, and Professional Schools",76,-3.7],["C","Gift, Novelty, and Souvenir Stores",72,-3.7],["U","Men's Clothing Stores",48,-3.6],["U","All Other General Merchandise Stores",36,-3.6],["T","All Other General Merchandise Stores",32,-3.4],["U","Limited-Service Restaurants",294,-3.3],["C","Cafeterias, Grill Buffets, and Buffets",44,-3.3],["C","Used Merchandise Stores",36,-3.1],["C","Lessors of Nonresidential Buildings (except Miniwarehouses)",482,-3.1],["U","Family Clothing Stores",46,-2.9],["C","Wireless Telecommunications Carriers (except Satellite)",74,-2.7],["T","Full-Service Restaurants",795,-2.5],["C","Nail Salons",46,-2.4],["U","All Other Health and Personal Care Stores",92,-2.3],["C","Family Clothing Stores",107,-2.3],["U","Wireless Telecommunications Carriers (except Satellite)",49,-2.2],["U","Used Merchandise Stores",32,-2.2],["U","Gasoline Stations with Convenience Stores",72,-2.1],["U","Hotels (except Casino Hotels) and Motels",211,-2.1],["T","Colleges, Universities, and Professional Schools",52,-1.9],["U","Book Stores",88,-1.8],["C","Furniture Stores",43,-1.8],["C","Direct Property and Casualty Insurance Carriers",216,-1.8],["C","Cosmetics, Beauty Supplies, and Perfume Stores",56,-1.6],["T","Men's Clothing Stores",33,-1.2],["U","Electronics Stores",92,-1.1],["C","Pharmacies and Drug Stores",70,-1.1],["U","Other Gasoline Stations",35,-1.0],["C","Convenience Stores",96,-1.0],["C","Limited-Service Restaurants",299,-0.9],["C","Parking Lots and Garages",178,-0.9],["C","Supermarkets and Other Grocery (except Convenience) Stores",120,-0.8],["C","Car Washes",40,-0.8],["C","Offices of Real Estate Agents and Brokers",72,-0.8],["T","Hotels (except Casino Hotels) and Motels",165,-0.6],["C","Other Activities Related to Credit Intermediation",95,-0.4],["C","Optical Goods Stores",79,-0.4],["U","Travel Agencies",47,0.1],["C","Passenger Car Rental",60,0.1],["C","Full-Service Restaurants",1724,0.1],["U","Colleges, Universities, and Professional Schools",229,0.3],["U","All Other Miscellaneous Store Retailers (except Tobacco Stores)",87,0.3],["U","Nail Salons",34,0.3],["U","Fitness and Recreational Sports Centers",180,0.4],["C","Locksmiths",32,0.5],["T","Parking Lots and Garages",111,0.6],["T","Other Activities Related to Credit Intermediation",49,0.6],["U","Other Activities Related to Credit Intermediation",74,0.6],["U","General Automotive Repair",50,0.6],["C","Fitness and Recreational Sports Centers",244,0.6],["U","Other Clothing Stores",32,0.9],["T","Other Gasoline Stations",73,1.0],["U","Pharmacies and Drug Stores",79,1.0],["T","Lessors of Residential Buildings and Dwellings",64,1.2],["C","Gasoline Stations with Convenience Stores",44,1.2],["T","Shoe Stores",56,1.3],["T","Drinking Places (Alcoholic Beverages)",66,1.3],["T","Gasoline Stations with Convenience Stores",56,1.6],["C","Department Stores",52,1.7],["T","Commercial Printing (except Screen and Books)",92,1.8],["T","Electronics Stores",100,1.9],["C","Plumbing, Heating, and Air-Conditioning Contractors",58,2.0],["T","Book Stores",64,2.2],["U","Supermarkets and Other Grocery (except Convenience) Stores",167,2.2],["U","Shoe Stores",44,2.2],["T","Retail Bakeries",52,2.3],["C","Commercial Banking",284,2.5],["U","Gift, Novelty, and Souvenir Stores",60,2.7],["T","All Other Miscellaneous Store Retailers (except Tobacco Stores)",32,2.8],["C","Commercial Printing (except Screen and Books)",140,3.1],["T","Women's Clothing Stores",37,3.5],["U","Sporting Goods Stores",44,3.5],["U","Taxi Service",60,3.5],["C","Hotels (except Casino Hotels) and Motels",469,3.7],["T","Supermarkets and Other Grocery (except Convenience) Stores",98,3.9],["T","Lessors of Nonresidential Buildings (except Miniwarehouses)",420,3.9],["C","Other Clothing Stores",52,3.9],["C","Book Stores",84,4.3],["C","Snack and Nonalcoholic Beverage Bars",374,4.9],["U","Convenience Stores",82,5.0],["U","Lessors of Nonresidential Buildings (except Miniwarehouses)",189,5.6],["T","Convenience Stores",31,6.0],["C","Retail Bakeries",105,6.2],["U","Drinking Places (Alcoholic Beverages)",101,6.4],["U","Plumbing, Heating, and Air-Conditioning Contractors",47,6.6],["T","Travel Agencies",64,7.2],["C","Jewelry Stores",44,7.4],["C","Shoe Stores",93,7.4],["C","All Other Specialty Food Stores",60,7.5],["C","Travel Agencies",79,7.5],["T","Commercial Banking",71,7.6],["T","Offices of Real Estate Agents and Brokers",112,8.0],["C","Museums",49,9.9],["U","Offices of Real Estate Agents and Brokers",56,10.5],["T","General Automotive Repair",40,10.7],["U","Retail Bakeries",75,13.4],["U","Convention and Trade Show Organizers",55,13.9],["C","Florists",60,15.5],["C","Men's Clothing Stores",122,16.6],["T","Snack and Nonalcoholic Beverage Bars",166,18.2],["U","Beauty Salons",76,18.4],["T","Family Clothing Stores",40,29.9],["T","Beauty Salons",47,35.9],["T","Painting and Wall Covering Contractors",33,56.5]];
+const CATS = [
+  {k:"T", name:"Tech areas",       v:"--s1"},
+  {k:"U", name:"University areas", v:"--s2"},
+  {k:"C", name:"Control areas",    v:"--s3"}
+];
+const CATNAME = {T:"Tech", U:"University", C:"Control"};
+
+const sc = document.getElementById("scatter");
+const SW = 720, SH = 360, SL = 52, SR = 26, ST = 22, SB = 46;
+const XD = [-35, 60], YD = [28, 2000];
+
+function drawScatter(animate){
+  const x = v => SL + (v - XD[0]) / (XD[1] - XD[0]) * (SW - SL - SR);
+  const ly = Math.log(YD[0]), lh = Math.log(YD[1]) - ly;
+  const y = n => ST + (1 - (Math.log(n) - ly) / lh) * (SH - ST - SB);
+  sc.innerHTML = "";
+
+  [30,100,300,1000].forEach(t => {
+    sc.appendChild(el("line",{class:"gridline",x1:SL,x2:SW-SR,y1:y(t),y2:y(t)}));
+    const l = el("text",{class:"axis-t",x:SL-9,y:y(t)+3.5,"text-anchor":"end"});
+    l.textContent = t.toLocaleString("en-US"); sc.appendChild(l);
+  });
+  [-30,-20,-10,0,10,20,30,40,50].forEach(t => {
+    const l = el("text",{class:"axis-t",x:x(t),y:SH-SB+18,"text-anchor":"middle"});
+    l.textContent = (t>0?"+":"") + t + "%"; sc.appendChild(l);
+  });
+  // zero line — the only reference that matters
+  sc.appendChild(el("line",{x1:x(0),x2:x(0),y1:ST,y2:SH-SB,
+    stroke:css("--muted"),"stroke-width":1}));
+  const z = el("text",{class:"axis-t",x:x(0),y:ST-7,"text-anchor":"middle"});
+  z.textContent = "no change"; sc.appendChild(z);
+
+  const ax = el("text",{class:"axis-t",x:SL-9,y:ST-7,"text-anchor":"end"});
+  ax.textContent = "POIs"; sc.appendChild(ax);
+  const ax2 = el("text",{class:"axis-t",x:(SL+SW-SR)/2,y:SH-6,"text-anchor":"middle"});
+  ax2.textContent = "change in average visits per location, Jan 2025 → Jan 2026";
+  sc.appendChild(ax2);
+
+  SUB.forEach((d,i) => {
+    const col = css(CATS.find(c => c.k === d[0]).v);
+    const c = el("circle",{cx:x(d[3]),cy:y(d[2]),r:4,fill:col,"fill-opacity":.72,
+      stroke:css("--surface"),"stroke-width":1.5,"data-i":i});
+    if (animate && !reduced.matches){
+      c.style.opacity = 0;
+      c.style.transition = "opacity 460ms ease " + Math.min(600, i*4) + "ms";
+      requestAnimationFrame(() => requestAnimationFrame(() => c.style.opacity = 1));
+    }
+    sc.appendChild(c);
+  });
+
+  // label only the two claims the sample sizes actually support
+  [["Snack and Nonalcoholic Beverage Bars","coffee shops"],
+   ["Full-Service Restaurants","full-service restaurants"]].forEach(([key,label]) => {
+    const d = SUB.find(s => s[1] === key && s[0] === "U");
+    if (!d) return;
+    const px = x(d[3]), py = y(d[2]);
+    sc.appendChild(el("line",{x1:px+5,y1:py,x2:px+34,y2:py,
+      stroke:css("--muted"),"stroke-width":1}));
+    const t = el("text",{class:"serieslabel",x:px+38,y:py+3,fill:css("--ink")});
+    t.textContent = label + " (" + d[2].toLocaleString("en-US") + ")";
+    sc.appendChild(t);
+  });
+
+  sc.appendChild(el("rect",{id:"s-hit",x:SL,y:ST,width:SW-SL-SR,height:SH-ST-SB,
+    fill:"transparent",style:"cursor:crosshair"}));
+  wireScatter(x,y);
+}
+
+const tip2 = document.getElementById("tip2");
+function wireScatter(x,y){
+  const hit = sc.querySelector("#s-hit"), wrap = document.getElementById("scatterwrap");
+  hit.addEventListener("mousemove", ev => {
+    const r = sc.getBoundingClientRect();
+    const mx = (ev.clientX - r.left) / r.width * SW, my = (ev.clientY - r.top) / r.height * SH;
+    let best = null, bd = 1e9;
+    SUB.forEach(d => {
+      const dx = x(d[3]) - mx, dy = y(d[2]) - my, dist = dx*dx + dy*dy;
+      if (dist < bd){ bd = dist; best = d; }
+    });
+    if (!best || bd > 400){ tip2.style.opacity = 0; return; }
+    tip2.innerHTML = "<b>" + best[1] + "</b><div style='height:.3rem'></div>" +
+      "<div class='row'><span class='sw' style='background:" +
+      css(CATS.find(c=>c.k===best[0]).v) + "'></span><span class='nm'>" +
+      CATNAME[best[0]] + " areas</span></div>" +
+      "<div class='row'><span class='nm'>locations</span><b>" +
+      best[2].toLocaleString("en-US") + "</b></div>" +
+      "<div class='row'><span class='nm'>change</span><b>" +
+      (best[3] > 0 ? "+" : "") + best[3] + "%</b></div>";
+    tip2.style.opacity = 1;
+    const wr = wrap.getBoundingClientRect(), tw = tip2.offsetWidth;
+    const px = x(best[3]) / SW * r.width + (r.left - wr.left) + wrap.scrollLeft;
+    tip2.style.left = Math.max(0, Math.min(wrap.clientWidth + wrap.scrollLeft - tw,
+      px - tw/2)) + "px";
+    tip2.style.top = Math.max(0, y(best[2]) / SH * r.height - 96) + "px";
+  });
+  hit.addEventListener("mouseleave", () => { tip2.style.opacity = 0; });
+}
+
+document.getElementById("legend2").innerHTML = CATS.map(c =>
+  "<span><i style='background:var(" + c.v + ");height:8px;width:8px;border-radius:50%'></i>" +
+  c.name + "</span>").join("") +
+  "<span style='color:var(--muted)'>· vertical axis = sample size (log)</span>";
+
+(function scatterTable(){
+  let h = "<div style='max-height:18rem;overflow:auto'><table class='data'>" +
+    "<caption class='eyebrow' style='text-align:left;padding:.4rem 0'>" +
+    "All 134 sub-categories with at least 30 locations</caption><thead><tr>" +
+    "<th>Sub-category</th><th>Area</th><th>Locations</th><th>Change</th></tr></thead><tbody>";
+  SUB.forEach(d => {
+    h += "<tr><td>" + d[1] + "</td><td>" + CATNAME[d[0]] + "</td><td>" +
+      d[2].toLocaleString("en-US") + "</td><td>" + (d[3]>0?"+":"") + d[3] + "%</td></tr>";
+  });
+  document.getElementById("stablewrap").innerHTML = h + "</tbody></table></div>";
+})();
+const bSTbl = document.getElementById("s-tbl"), sTblWrap = document.getElementById("stablewrap");
+bSTbl.addEventListener("click", () => {
+  const on = sTblWrap.hidden;
+  sTblWrap.hidden = !on; bSTbl.setAttribute("aria-pressed", on);
+});
+
+/* ══════════════════════════════════════════════════════════════
+   1d · METHOD COMPARISON — a coefficient plot. Same data, three
+        methods. The hollow mark is the one you should not believe.
+   ══════════════════════════════════════════════════════════════ */
+const METHODS = [
+  {name:"Naive difference in means",  est:5.53,  note:"t = 6.49, p < 0.001", ok:true},
+  {name:"OLS with controls",          est:-0.02, note:"p = 0.997",           ok:true, em:true},
+  {name:"Propensity score matching",  est:13.10, note:"overlap fails",       ok:false}
+];
+function drawCoef(){
+  const cf = document.getElementById("coef");
+  const W2 = 720, H2 = 210, L2 = 214, R2 = 30, T2 = 26, B2 = 34;
+  const dom = [-3, 15];
+  const x = v => L2 + (v - dom[0]) / (dom[1] - dom[0]) * (W2 - L2 - R2);
+  cf.innerHTML = "";
+  [0,5,10,15].forEach(t => {
+    cf.appendChild(el("line",{class:"gridline",x1:x(t),x2:x(t),y1:T2,y2:H2-B2}));
+    const l = el("text",{class:"axis-t",x:x(t),y:H2-B2+17,"text-anchor":"middle"});
+    l.textContent = (t>0?"+":"") + t; cf.appendChild(l);
+  });
+  cf.appendChild(el("line",{x1:x(0),x2:x(0),y1:T2,y2:H2-B2,
+    stroke:css("--muted"),"stroke-width":1}));
+  const zl = el("text",{class:"axis-t",x:x(0),y:T2-9,"text-anchor":"middle"});
+  zl.textContent = "no effect"; cf.appendChild(zl);
+  const xl = el("text",{class:"axis-t",x:(L2+W2-R2)/2,y:H2-6,"text-anchor":"middle"});
+  xl.textContent = "estimated effect on conversion (percentage points)"; cf.appendChild(xl);
+
+  const step = (H2 - T2 - B2) / METHODS.length;
+  METHODS.forEach((m,i) => {
+    const y = T2 + step*i + step/2;
+    const col = m.em ? css("--accent") : css("--muted");
+    const lab = el("text",{class:"axis-t",x:L2-14,y:y-2,"text-anchor":"end",
+      fill: m.em ? css("--ink") : css("--ink-soft")});
+    lab.textContent = m.name; cf.appendChild(lab);
+    const sub = el("text",{class:"axis-t",x:L2-14,y:y+11,"text-anchor":"end"});
+    sub.textContent = m.note; cf.appendChild(sub);
+
+    cf.appendChild(el("line",{x1:x(0),x2:x(m.est),y1:y,y2:y,
+      stroke:col,"stroke-width":m.em?2:1.5,"stroke-dasharray":m.ok?"":"3 3"}));
+    cf.appendChild(el("circle",{cx:x(m.est),cy:y,r:m.em?6:5.5,
+      fill:m.ok?col:css("--surface"), stroke:col,"stroke-width":2}));
+    const v = el("text",{class:"serieslabel",x:x(m.est)+12,y:y+4,
+      fill: m.em ? css("--ink") : css("--ink-soft")});
+    v.textContent = (m.est>0?"+":"") + m.est.toFixed(2);
+    cf.appendChild(v);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════
+   1c · ROLE FILTER — highlights, never hides
+   ══════════════════════════════════════════════════════════════ */
+(function filters(){
+  const bar = document.querySelector(".filters");
+  if (!bar) return;
+  const targets = [...document.querySelectorAll("[data-tracks]")];
+  bar.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    const f = b.dataset.f;
+    bar.querySelectorAll("button").forEach(x =>
+      x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    targets.forEach(t => t.classList.toggle("dim",
+      f !== "all" && !t.dataset.tracks.split(" ").includes(f)));
+  });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   2 · SSGA PIPELINE DIAGRAM
+   ══════════════════════════════════════════════════════════════ */
+(function diagram(){
+  const boxes = [
+    [8,  18, 118, 40, "Market data",     "index-level returns"],
+    [8,  76, 118, 40, "Macro data",      "regime indicators"],
+    [156,18, 128, 40, "Technical sleeve","momentum + trend"],
+    [156,76, 128, 40, "Macro sleeve",    "conditioning"],
+    [314,47, 128, 40, "Primary signal",  "directional view", 1],
+    [472,47, 132, 40, "Meta-label",      "trade / stand down", 1],
+    [634,18, 130, 40, "Active weights",  "vs benchmark"],
+    [634,76, 130, 40, "Two-layer costs", "applied on turnover"]
+  ];
+  const arrows = [
+    [126,38,156,38],[126,96,156,96],
+    [284,38,314,60],[284,96,314,74],
+    [442,67,472,67],
+    [604,67,634,38],[604,67,634,96]
+  ];
+  let s = '<svg viewBox="0 0 790 176" role="img" aria-label="Pipeline: market and macro data feed technical and macro signal sleeves, which produce a primary directional signal; a meta-labeling layer decides whether to trade it; the result becomes benchmark-relative active weights with two layers of transaction costs, evaluated by walk-forward validation.">';
+  s += '<defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path class="dg-head" d="M0 0 L8 4 L0 8 z"/></marker></defs>';
+  arrows.forEach(a => {
+    const mid = (a[0] + a[2]) / 2;
+    s += '<path class="dg-arrow" marker-end="url(#ah)" d="M' + a[0] + ' ' + a[1] +
+         ' C' + mid + ' ' + a[1] + ' ' + mid + ' ' + a[3] + ' ' + (a[2]-5) + ' ' + a[3] + '"/>';
+  });
+  boxes.forEach(b => {
+    const x = b[0], y = b[1], w = b[2], h = b[3], title = b[4], sub = b[5], em = b[6];
+    s += '<rect class="dg-box' + (em ? ' em' : '') + '" x="' + x + '" y="' + y +
+         '" width="' + w + '" height="' + h + '"/>' +
+         '<text class="dg-t h" x="' + (x+10) + '" y="' + (y+17) + '">' + title + '</text>' +
+         '<text class="dg-lbl" x="' + (x+10) + '" y="' + (y+31) + '">' + sub + '</text>';
+  });
+  s += '<line class="dg-arrow" x1="8" y1="146" x2="764" y2="146" stroke-dasharray="3 3"/>';
+  s += '<text class="dg-lbl" x="8" y="164">walk-forward validation across folds — every stage re-fit out of sample</text>';
+  s += '</svg>';
+  document.getElementById("diagram").innerHTML = s;
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   3 · OVRULE guard() — local illustration of the six-rule flow
+   ══════════════════════════════════════════════════════════════ */
+/* "without manager approval" must read as denied, not as an approval mentioned */
+const DENIED  = /without\s+(?:\w+\s+){0,3}(?:approval|authori[sz]ation|sign.?off|review|consent|confirmation)/i;
+const GRANTED = /(?:approved|authori[sz]ed|signed.?off|cleared)\s+by\b|with\s+(?:\w+\s+){0,2}approval/i;
+const PRIVILEGED = /(refund|pay|transfer|grant|issue|waive|delete|drop|deploy|merge|revoke|terminate)/i;
+
+const RULES = [
+  {id:"authority",    name:"Authority",      test:s => PRIVILEGED.test(s) && (DENIED.test(s) || !GRANTED.test(s))},
+  {id:"reversible",   name:"Reversibility",  test:s => /(drop|delete|truncate|wipe|purge|destroy|revoke|terminate|rm -rf|force.?push)/i.test(s)},
+  {id:"blast",        name:"Blast radius",   test:s => /(production|prod\b|all users|every|entire|global|fleet|master|main branch)/i.test(s)},
+  {id:"exposure",     name:"Data exposure",  test:s => /(email|send|share|export|upload|publish|leak)/i.test(s)
+                                                     && /(customer|user|client|personal|pii|list|database|record)/i.test(s)},
+  {id:"spend",        name:"Spend limit",    test:s => {
+                                                const m = s.match(/\$\s?([\d,]+(?:\.\d+)?)\s*(k|m)?/i);
+                                                if (!m) return false;
+                                                let v = parseFloat(m[1].replace(/,/g,""));
+                                                if (/k/i.test(m[2]||"")) v *= 1e3;
+                                                if (/m/i.test(m[2]||"")) v *= 1e6;
+                                                return v >= 1000; }},
+  {id:"escalation",   name:"Human escalation", test:s => DENIED.test(s)
+                                                     || /(no review|skip (?:the )?(?:review|approval)|immediately|automatically)/i.test(s)}
+];
+const PRESETS = [
+  "An AI coding agent wants to run DROP TABLE users on the production database.",
+  "Support agent wants to refund $5,000 to a customer without manager approval.",
+  "Read the last 20 rows of the staging analytics table.",
+  "Email the full customer list to an external contractor immediately."
+];
+const REASONS = {
+  authority:"no approving party named", reversible:"the action cannot be undone",
+  blast:"scope reaches production", exposure:"customer data leaves the system",
+  spend:"amount is over the auto-approval limit", escalation:"a human review step is skipped"
+};
+
+const presetsEl = document.getElementById("presets");
+presetsEl.innerHTML = PRESETS.map((p,i) =>
+  '<button type="button" data-i="' + i + '">Example ' + (i+1) + '</button>').join("");
+presetsEl.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  document.getElementById("scenario").value = PRESETS[+b.dataset.i];
+});
+
+const rulesEl = document.getElementById("rules");
+rulesEl.innerHTML = RULES.map(r =>
+  '<li id="r-' + r.id + '"><span class="mark">·</span><span class="rn">' + r.name +
+  '</span><span class="rv">—</span></li>').join("");
+
+function hash8(s){
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return h.toString(16).padStart(8,"0");
+}
+
+const runbtn = document.getElementById("runbtn");
+runbtn.addEventListener("click", () => {
+  const s = document.getElementById("scenario").value.trim();
+  if (!s) return;
+  runbtn.disabled = true;
+  const verdict = document.getElementById("verdict");
+  const badge = document.getElementById("vbadge"), vtext = document.getElementById("vtext");
+  verdict.className = "verdict idle"; badge.textContent = "…"; vtext.textContent = "reviewing the action";
+  document.getElementById("reason").textContent = "Six rules read the action in parallel.";
+  document.getElementById("rid").textContent = "receipt —";
+  document.getElementById("rlat").textContent = "—";
+  RULES.forEach(r => { const li = document.getElementById("r-" + r.id);
+    li.className = ""; li.querySelector(".rv").textContent = "—";
+    li.querySelector(".mark").textContent = "·"; });
+
+  const failed = [];
+  const step = reduced.matches ? 0 : 170;
+  RULES.forEach((r,i) => setTimeout(() => {
+    const bad = r.test(s);
+    if (bad) failed.push(r.id);
+    const li = document.getElementById("r-" + r.id);
+    li.classList.add("in", bad ? "fail" : "pass");
+    li.querySelector(".rv").textContent = bad ? "FAIL" : "PASS";
+    li.querySelector(".mark").textContent = bad ? "✕" : "✓";
+
+    if (i === RULES.length - 1) setTimeout(() => {
+      const ok = failed.length === 0;
+      verdict.className = "verdict " + (ok ? "allow" : "refuse");
+      badge.textContent = ok ? "ALLOWED" : "REFUSED";
+      vtext.textContent = ok ? "the action may run" : failed.length + " of 6 rules failed";
+      document.getElementById("reason").textContent = ok
+        ? "Nothing in this action is irreversible, over limit, or outside the agent's authority."
+        : "Refused — " + failed.map(f => REASONS[f]).join("; ") + ".";
+      document.getElementById("rid").textContent = "receipt " + hash8(s) + " · signed";
+      document.getElementById("rlat").textContent = (0.9 + Math.random() * 0.4).toFixed(1) + "s";
+      runbtn.disabled = false;
+    }, step);
+  }, step * i));
+});
+
+/* ══════════════════════════════════════════════════════════════
+   4 · PLATES
+   ══════════════════════════════════════════════════════════════ */
+/* Order and titles follow the 2025 portfolio; each file matched to its work
+   by image correlation, not by filename. */
+const MED = "Charcoal and charcoal pencil on paper";
+const PLATES = [
+  {n:"01", title:"Tidal Memory",         medium:MED, year:2025, dims:"22 × 14.5 in", src:"assets/plate-1.jpg"},
+  {n:"02", title:"Aegean Garden",        medium:MED, year:2025, dims:"22 × 14.5 in", src:"assets/plate-3.jpg"},
+  {n:"03", title:"Drift",                medium:MED, year:2025, dims:"30 × 22 in",   src:"assets/plate-4.jpg"},
+  {n:"04", title:"Between Currents",     medium:MED, year:2025, dims:"22 × 14.5 in", src:"assets/plate-5.jpg"},
+  {n:"05", title:"Winter Mediterranean", medium:MED, year:2025, dims:"30 × 22 in",   src:"assets/plate-6.jpg"},
+  {n:"06", title:"Trace",                medium:MED, year:2025, dims:"30 × 22 in",   src:"assets/plate-2.jpg"}
+];
+document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
+  const inner = p.src
+    ? '<img src="' + p.src + '" alt="' + p.title + ' — ' + p.medium.toLowerCase() + ', ' +
+      p.dims + ', ' + p.year + '" loading="lazy">'
+    : '<span class="plate__empty">Plate ' + (i+1) + '</span>';
+  return '<div class="plate"><figure><div class="plate__frame' + (p.src ? '' : ' empty') + '">' +
+    inner + '</div><figcaption><span class="pn">' + (p.n || "") + '</span>' +
+    '<span class="t">' + p.title + '</span><span class="m">' +
+    p.medium + '<br>' + p.dims + ' · ' + p.year +
+    '</span></figcaption></figure></div>';
+}).join("");
+
+/* ══════════════════════════════════════════════════════════════
+   5 · VIEW SWITCH
+   ══════════════════════════════════════════════════════════════ */
+const tabs = {
+  work:{btn:document.getElementById("tab-work"), panel:document.getElementById("view-work")},
+  art: {btn:document.getElementById("tab-art"),  panel:document.getElementById("view-art")}
+};
+const railnav = document.getElementById("railnav");
+function show(name, push){
+  Object.keys(tabs).forEach(k => {
+    const on = k === name;
+    tabs[k].btn.setAttribute("aria-selected", on ? "true" : "false");
+    tabs[k].panel.hidden = !on;
+  });
+  railnav.style.display = name === "work" ? "" : "none";
+  if (push) history.replaceState(null, "", name === "art" ? "#drawings" : "#top");
+  window.scrollTo(0,0);
+  running = name === "work";
+  if (running){ start(); resize(); }
+}
+tabs.work.btn.addEventListener("click", () => show("work", true));
+tabs.art .btn.addEventListener("click", () => show("art",  true));
+
+/* ══════════════════════════════════════════════════════════════
+   6 · SCROLL REVEALS + COUNT-UP
+   ══════════════════════════════════════════════════════════════ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add("in");
+  io.unobserve(e.target);
+  if (e.target.id === "work") drawChart(true);
+}), {threshold:0.12, rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll(".rv").forEach(n => io.observe(n));
+
+const cio = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  cio.unobserve(e.target);
+  const n = e.target, target = parseFloat(n.dataset.count),
+        dp = +(n.dataset.dp || 0), suf = n.dataset.suffix || "",
+        sign = n.dataset.sign === "1";
+  const fmt = v => (sign && v > 0 ? "+" : "") +
+    (dp ? v.toFixed(dp) : Math.round(v).toLocaleString("en-US")) + suf;
+  if (reduced.matches){ n.textContent = fmt(target); return; }
+  const t0 = performance.now(), dur = 1100;
+  (function step(t){
+    const p = Math.min(1, (t - t0) / dur), e2 = 1 - Math.pow(1 - p, 3);
+    n.textContent = fmt(target * e2);
+    if (p < 1) requestAnimationFrame(step);
+  })(t0);
+}), {threshold:0.5});
+document.querySelectorAll("[data-count]").forEach(n => cio.observe(n));
+
+/* rail nav current-section highlight */
+const links = [...railnav.querySelectorAll("a")];
+const sio = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.forEach(a => a.removeAttribute("data-cur"));
+  const cur = links.find(a => a.getAttribute("href") === "#" + e.target.id);
+  if (cur) cur.setAttribute("data-cur","1");
+}), {rootMargin:"-45% 0px -50% 0px"});
+["story","work","experience","education","toolkit","contact"]
+  .forEach(id => { const n = document.getElementById(id); if (n) sio.observe(n); });
+
+/* ══════════════════════════════════════════════════════════════
+   7 · HERO — charcoal that follows the hand
+   ══════════════════════════════════════════════════════════════ */
+const cv = document.getElementById("smudge"), ctx = cv.getContext("2d");
+const off = document.createElement("canvas"), octx = off.getContext("2d");
+const CW = 190, CH = 110;
+off.width = CW; off.height = CH;
+const img = octx.createImageData(CW, CH);
+let t = 0, running = true, last = 0, rafId = null;
+let mx = -1, my = -1, mAmt = 0;   // cursor in field space + how hard we are pressing
+
+const hero = document.querySelector(".hero");
+hero.addEventListener("pointermove", e => {
+  const r = hero.getBoundingClientRect();
+  mx = (e.clientX - r.left) / r.width  * CW;
+  my = (e.clientY - r.top)  / r.height * CH;
+  mAmt = 1;
+  const h = document.getElementById("hint");
+  if (h) h.style.opacity = "0";
+});
+hero.addEventListener("pointerleave", () => { mAmt = 0; });
+
+function inkColor(){
+  const v = css("--smudge-rgb").split(",");
+  return [+v[0]||0, +v[1]||0, +v[2]||0];
+}
+function render(){
+  const rgb = inkColor(), cap = (parseFloat(css("--smudge-max")) || .3) * 255;
+  const d = img.data;
+  for (let y = 0; y < CH; y++){
+    for (let x = 0; x < CW; x++){
+      let v = Math.sin(x*0.052 + t*0.7) * Math.cos(y*0.068 - t*0.5);
+      v += 0.62 * Math.sin(x*0.105 - y*0.086 + t*1.1);
+      v += 0.34 * Math.cos(x*0.185 + y*0.152 - t*0.63);
+      v = v/1.96 + 0.5;
+
+      const fx = 1 - x/CW;
+      const fy = 1 - Math.abs(y/CH - 0.42) * 1.55;
+      let a = v * Math.max(0, fx*0.9 + 0.18) * Math.max(0, fy);
+
+      if (mAmt > 0.01){                       // the hand pushes pigment around
+        const dx = x - mx, dy = (y - my) * 1.6;
+        const g = Math.exp(-(dx*dx + dy*dy) / 620);
+        a += g * mAmt * 0.85 * (0.55 + v * 0.7);
+      }
+      a *= 0.72 + Math.random() * 0.42;
+      a = a < 0 ? 0 : a > 1 ? 1 : a;
+      const i = (y*CW + x) * 4;
+      d[i] = rgb[0]; d[i+1] = rgb[1]; d[i+2] = rgb[2];
+      d[i+3] = a * a * cap;
+    }
+  }
+  octx.putImageData(img, 0, 0);
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(off, 0, 0, cv.width, cv.height);
+}
+function resize(){
+  const r = cv.getBoundingClientRect();
+  if (!r.width) return;
+  cv.width  = Math.max(1, Math.round(r.width  / 2));
+  cv.height = Math.max(1, Math.round(r.height / 2));
+  render();
+}
+function tick(now){
+  rafId = null;
+  if (!running || reduced.matches || document.hidden) return;
+  if (now - last > 66){ last = now; t += 0.011; mAmt *= 0.94; render(); }
+  rafId = requestAnimationFrame(tick);
+}
+function start(){
+  if (rafId !== null || !running || reduced.matches || document.hidden) return;
+  last = 0; rafId = requestAnimationFrame(tick);
+}
+window.addEventListener("resize", () => { resize(); drawChart(false); });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) start(); });
+reduced.addEventListener("change", () => { render(); start(); });
+function repaint(){ setTimeout(() => { render(); drawChart(false); drawScatter(false); drawCoef(); buildTable(); }, 40); }
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", repaint);
+new MutationObserver(repaint)
+  .observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+
+document.fonts && document.fonts.ready.then(resize);
+resize(); start();
+drawChart(false); drawScatter(false); drawCoef(); buildTable();
+
+/* animate each chart once, the first time it is actually seen */
+new IntersectionObserver((es,obs) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  obs.unobserve(e.target);
+  (e.target.id === "scatterwrap" ? drawScatter : drawChart)(true);
+}), {threshold:0.25}).observe(document.getElementById("scatterwrap"));
+if (location.hash === "#drawings") show("art", false);
