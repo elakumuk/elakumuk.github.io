@@ -501,6 +501,79 @@ document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
 }).join("");
 
 /* ══════════════════════════════════════════════════════════════
+   4a · RESOLUTION — the same sheet of paper, read at two scales.
+        The detail crop is cut from the original photograph, so
+        close range stays sharp instead of turning to mush.
+   ══════════════════════════════════════════════════════════════ */
+(function resolution(){
+  const cv = document.getElementById("zoomcv");
+  if (!cv) return;
+  const cx = cv.getContext("2d");
+  const sl = document.getElementById("zoomsl"), cap = document.getElementById("zoomcap");
+  const RECT = {x:0.08, y:0.55, w:0.37995, h:0.38};   // detail's place on the full sheet
+
+  const full = new Image(), det = new Image();
+  let ready = 0, z = 1;
+  full.onload = det.onload = () => { if (++ready === 2){ if (size()) frame(); reveal(); } };
+  full.src = PLATES[0].src;      // Tidal Memory
+  det.src  = "assets/detail-1.jpg";
+
+  function size(){
+    const w = cv.parentElement.clientWidth - 2;
+    if (w <= 0) return false;
+    cv.width  = Math.max(1, Math.round(w * devicePixelRatio));
+    cv.height = Math.round(cv.width * full.height / full.width);
+    cv.style.height = Math.round(w * full.height / full.width) + "px";
+    return true;
+  }
+  function frame(){
+    const W = cv.width, H = cv.height;
+    const rx = 0 + (RECT.x - 0) * z, ry = 0 + (RECT.y - 0) * z;
+    const rw = 1 + (RECT.w - 1) * z, rh = 1 + (RECT.h - 1) * z;
+    cx.clearRect(0,0,W,H);
+    cx.imageSmoothingQuality = "high";
+    cx.drawImage(full, rx*full.width, ry*full.height, rw*full.width, rh*full.height, 0,0,W,H);
+    if (z > 0.45){
+      const a = Math.min(1, (z - 0.45) / 0.33);
+      cx.globalAlpha = a;
+      cx.drawImage(det, (RECT.x-rx)/rw*W, (RECT.y-ry)/rh*H, RECT.w/rw*W, RECT.h/rh*H);
+      cx.globalAlpha = 1;
+    }
+    const p = PLATES[0];
+    if (z > 0.72){ cap.className = "zoomcap"; cap.textContent = "Charcoal, up close. Nothing here is anything yet."; }
+    else if (z > 0.34){ cap.className = "zoomcap"; cap.textContent = "Something is starting to organise."; }
+    else { cap.className = "zoomcap resolved"; cap.textContent = p.title + ", " + p.year + " — " + p.dims; }
+  }
+  function set(v){ z = Math.max(0, Math.min(1, v)); sl.value = Math.round(z*1000); frame(); }
+
+  sl.addEventListener("input", () => { z = +sl.value/1000; frame(); });
+  // dragging across the drawing also works, because that is the obvious thing to try
+  let drag = false, sx = 0, sz = 0;
+  cv.addEventListener("pointerdown", e => { drag = true; sx = e.clientX; sz = z;
+    cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", e => { if (!drag) return;
+    set(sz - (e.clientX - sx) / cv.clientWidth * 1.4); });
+  cv.addEventListener("pointerup",   () => { drag = false; });
+  cv.addEventListener("pointercancel", () => { drag = false; });
+  window.addEventListener("resize", () => { if (ready === 2 && size()) frame(); });
+  window.addEventListener("viewchange", () => { if (ready === 2 && size()) frame(); });
+
+  function reveal(){
+    if (reduced.matches){ set(0.12); return; }
+    new IntersectionObserver((es,obs) => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      const t0 = performance.now(), dur = 2600;
+      (function step(now){
+        const p = Math.min(1, (now - t0) / dur);
+        set(1 - (1 - Math.pow(1 - p, 3)) * 0.88);
+        if (p < 1) requestAnimationFrame(step);
+      })(t0);
+    }), {threshold:0.4}).observe(cv);
+  }
+})();
+
+/* ══════════════════════════════════════════════════════════════
    4b · LIGHTBOX — the drawings at size, which is how drawings work
    ══════════════════════════════════════════════════════════════ */
 (function lightbox(){
@@ -585,6 +658,7 @@ function show(name, push){
   window.scrollTo(0,0);
   running = name === "work";
   if (running){ start(); resize(); }
+  window.dispatchEvent(new Event("viewchange"));
 }
 tabs.work.btn.addEventListener("click", () => show("work", true));
 tabs.art .btn.addEventListener("click", () => show("art",  true));

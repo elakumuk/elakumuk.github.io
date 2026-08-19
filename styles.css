@@ -342,6 +342,23 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   color:var(--ink) !important;border-left:2px solid var(--accent);
   padding-left:1.1rem;margin-top:.75rem}
 
+/* ════════════════════════════════════════════════════════════ ZOOM */
+.zoomfig{margin:0}
+.zoomwrap{border:1px solid var(--rule);background:var(--mat);
+  padding:clamp(.5rem,1.4vw,.9rem);overflow:hidden}
+#zoomcv{display:block;width:100%;height:auto;cursor:ew-resize}
+.zoomctl{display:flex;align-items:center;gap:.9rem;margin-top:.85rem}
+.zoomctl input[type="range"]{flex:1;appearance:none;height:1px;background:var(--rule);
+  outline-offset:8px}
+.zoomctl input[type="range"]::-webkit-slider-thumb{appearance:none;width:14px;height:14px;
+  border-radius:50%;background:var(--ink);border:2px solid var(--paper);cursor:grab}
+.zoomctl input[type="range"]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+  background:var(--ink);border:2px solid var(--paper);cursor:grab}
+.zoomcap{margin-top:.7rem;font-family:var(--f-mono);font-size:.75rem;color:var(--muted);
+  min-height:1.4em;transition:color 200ms}
+.zoomcap.resolved{color:var(--ink);font-family:var(--f-display);font-style:italic;
+  font-size:1rem}
+
 /* ════════════════════════════════════════════════════════════ LIGHTBOX */
 .plate__frame{cursor:zoom-in}
 .lb{position:fixed;inset:0;z-index:100;background:rgba(14,13,16,.94);
