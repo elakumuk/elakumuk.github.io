@@ -492,12 +492,79 @@ document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
     ? '<img src="' + p.src + '" alt="' + p.title + ' — ' + p.medium.toLowerCase() + ', ' +
       p.dims + ', ' + p.year + '" loading="lazy">'
     : '<span class="plate__empty">Plate ' + (i+1) + '</span>';
-  return '<div class="plate"><figure><div class="plate__frame' + (p.src ? '' : ' empty') + '">' +
-    inner + '</div><figcaption><span class="pn">' + (p.n || "") + '</span>' +
+  const open = p.src ? ' tabindex="0" role="button" aria-label="View ' + p.title + ' full size"' : '';
+  return '<div class="plate"><figure><div class="plate__frame' + (p.src ? '' : ' empty') + '"' +
+    open + '>' + inner + '</div><figcaption><span class="pn">' + (p.n || "") + '</span>' +
     '<span class="t">' + p.title + '</span><span class="m">' +
     p.medium + '<br>' + p.dims + ' · ' + p.year +
     '</span></figcaption></figure></div>';
 }).join("");
+
+/* ══════════════════════════════════════════════════════════════
+   4b · LIGHTBOX — the drawings at size, which is how drawings work
+   ══════════════════════════════════════════════════════════════ */
+(function lightbox(){
+  const lb = document.createElement("div");
+  lb.className = "lb";
+  lb.setAttribute("role", "dialog");
+  lb.setAttribute("aria-modal", "true");
+  lb.setAttribute("aria-label", "Drawing viewer");
+  lb.innerHTML =
+    '<span class="lb__n"></span>' +
+    '<button class="lb__x" aria-label="Close viewer">✕</button>' +
+    '<button class="lb__prev" aria-label="Previous drawing">←</button>' +
+    '<button class="lb__next" aria-label="Next drawing">→</button>' +
+    '<img alt=""><div class="lb__cap"></div>';
+  document.body.appendChild(lb);
+
+  const im = lb.querySelector("img"), cap = lb.querySelector(".lb__cap"),
+        num = lb.querySelector(".lb__n");
+  let cur = 0, opener = null;
+
+  function paint(){
+    const p = PLATES[cur];
+    im.src = p.src;
+    im.alt = p.title + " — " + p.medium.toLowerCase() + ", " + p.dims + ", " + p.year;
+    cap.innerHTML = '<span class="t">' + p.title + '</span><span class="m">' +
+      p.medium + " · " + p.dims + " · " + p.year + "</span>";
+    num.textContent = p.n + " / 06";
+  }
+  function open(i, from){
+    cur = i; opener = from || null; paint();
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+    lb.querySelector(".lb__x").focus();
+  }
+  function close(){
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+    if (opener) opener.focus();
+  }
+  const step = d => { cur = (cur + d + PLATES.length) % PLATES.length; paint(); };
+
+  document.getElementById("plates").addEventListener("click", e => {
+    const fr = e.target.closest(".plate__frame");
+    if (!fr || !fr.querySelector("img")) return;
+    open([...document.querySelectorAll("#plates .plate__frame")].indexOf(fr), fr);
+  });
+  document.getElementById("plates").addEventListener("keydown", e => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const fr = e.target.closest(".plate__frame"); if (!fr) return;
+    e.preventDefault();
+    open([...document.querySelectorAll("#plates .plate__frame")].indexOf(fr), fr);
+  });
+
+  lb.querySelector(".lb__x").addEventListener("click", close);
+  lb.querySelector(".lb__prev").addEventListener("click", e => { e.stopPropagation(); step(-1); });
+  lb.querySelector(".lb__next").addEventListener("click", e => { e.stopPropagation(); step(1); });
+  lb.addEventListener("click", e => { if (e.target === lb || e.target === im) close(); });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowLeft") step(-1);
+    else if (e.key === "ArrowRight") step(1);
+  });
+})();
 
 /* ══════════════════════════════════════════════════════════════
    5 · VIEW SWITCH
@@ -588,15 +655,53 @@ function inkColor(){
   const v = css("--smudge-rgb").split(",");
   return [+v[0]||0, +v[1]||0, +v[2]||0];
 }
+/* The field the cursor pushes around is sampled from an actual drawing —
+   "Drift", heavily downsampled, so only its broad tonal masses survive.
+   Falls back to procedural noise if the image cannot be read. */
+let FIELD = null;
+(function loadField(){
+  const im = new Image();
+  im.crossOrigin = "anonymous";
+  im.onload = function(){
+    const s = document.createElement("canvas");
+    s.width = CW; s.height = CH;
+    const sx = s.getContext("2d", {willReadFrequently:true});
+    sx.drawImage(im, 0, 0, CW, CH);
+    let px;
+    try { px = sx.getImageData(0, 0, CW, CH).data; } catch(e){ return; }
+    const f = new Float32Array(CW*CH);
+    let lo = 1, hi = 0;
+    for (let i = 0; i < CW*CH; i++){
+      // luminance, inverted: charcoal is dark on paper, we want pigment high
+      const l = (px[i*4]*0.299 + px[i*4+1]*0.587 + px[i*4+2]*0.114) / 255;
+      const v = 1 - l;
+      f[i] = v; if (v < lo) lo = v; if (v > hi) hi = v;
+    }
+    const span = Math.max(1e-3, hi - lo);
+    for (let i = 0; i < CW*CH; i++) f[i] = (f[i] - lo) / span;
+    FIELD = f;
+    render();
+  };
+  im.src = PLATES[2].src;   // "Drift"
+})();
+
 function render(){
   const rgb = inkColor(), cap = (parseFloat(css("--smudge-max")) || .3) * 255;
   const d = img.data;
+  const ox = Math.round(Math.sin(t*0.21) * 5), oy = Math.round(Math.cos(t*0.17) * 4);
   for (let y = 0; y < CH; y++){
     for (let x = 0; x < CW; x++){
-      let v = Math.sin(x*0.052 + t*0.7) * Math.cos(y*0.068 - t*0.5);
-      v += 0.62 * Math.sin(x*0.105 - y*0.086 + t*1.1);
-      v += 0.34 * Math.cos(x*0.185 + y*0.152 - t*0.63);
-      v = v/1.96 + 0.5;
+      let v;
+      if (FIELD){
+        const sxp = (x + ox + CW) % CW, syp = (y + oy + CH) % CH;
+        v = FIELD[syp*CW + sxp];
+        v = 0.18 + v * 0.92;                    // lift the paper so it never goes flat
+      } else {
+        v = Math.sin(x*0.052 + t*0.7) * Math.cos(y*0.068 - t*0.5);
+        v += 0.62 * Math.sin(x*0.105 - y*0.086 + t*1.1);
+        v += 0.34 * Math.cos(x*0.185 + y*0.152 - t*0.63);
+        v = v/1.96 + 0.5;
+      }
 
       const fx = 1 - x/CW;
       const fy = 1 - Math.abs(y/CH - 0.42) * 1.55;
