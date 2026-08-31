@@ -823,6 +823,10 @@ let FIELD = null;
 
 function render(){
   const rgb = inkColor(), cap = (parseFloat(css("--smudge-max")) || .3) * 255;
+  if (mAmt <= 0.01){                          // hero rests as clean paper
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    return;
+  }
   const d = img.data;
   const ox = Math.round(Math.sin(t*0.21) * 5), oy = Math.round(Math.cos(t*0.17) * 4);
   for (let y = 0; y < CH; y++){
@@ -839,14 +843,14 @@ function render(){
         v = v/1.96 + 0.5;
       }
 
-      const fx = 1 - x/CW;
-      const fy = 1 - Math.abs(y/CH - 0.42) * 1.55;
-      let a = v * Math.max(0, fx*0.9 + 0.18) * Math.max(0, fy);
-
-      if (mAmt > 0.01){                       // the hand pushes pigment around
+      /* No resting wash. Scaled seven times up, the sampled drawing loses the grain
+         and the edges that made it charcoal and leaves a grey cloud behind the
+         wordmark. The field now only textures what the cursor draws. */
+      let a = 0;
+      if (mAmt > 0.01){
         const dx = x - mx, dy = (y - my) * 1.6;
-        const g = Math.exp(-(dx*dx + dy*dy) / 220);
-        a += g * mAmt * 0.55 * (0.55 + v * 0.7);
+        const g = Math.exp(-(dx*dx + dy*dy) / 240);
+        a = g * mAmt * 0.9 * (0.45 + v * 0.95);
       }
       a *= 0.72 + Math.random() * 0.42;
       a = a < 0 ? 0 : a > 1 ? 1 : a;
