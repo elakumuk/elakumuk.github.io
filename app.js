@@ -328,14 +328,49 @@ function drawCoef(){
   const bar = document.querySelector(".filters");
   if (!bar) return;
   const targets = [...document.querySelectorAll("[data-tracks]")];
+  const acts    = [...document.querySelectorAll(".act")];
+
+  /* Collapse a card out of the layout: fix its height, then run it to zero.
+     Height is the one property that cannot be done on the compositor, but
+     this only fires on a click, never on scroll. */
+  function show(el, on){
+    clearTimeout(el._ft);
+    if (reduced.matches){
+      el.hidden = !on;
+      el.style.height = el.style.opacity = "";
+      el.classList.toggle("out", !on);
+      return;
+    }
+    const from = el.hidden ? 0 : el.offsetHeight;
+    if (on) el.hidden = false;
+    const to = on ? el.scrollHeight : 0;
+    if (from === to && !on){ el.hidden = true; return; }
+    el.style.height = from + "px";
+    el.classList.toggle("out", !on);
+    el.getBoundingClientRect();                 // commit the start height
+    el.style.height = to + "px";
+    el._ft = setTimeout(() => {
+      el.style.height = "";                     // release to auto
+      if (!on) el.hidden = true;
+    }, 380);
+  }
+
   bar.addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
     const f = b.dataset.f;
     if (!f) return;                    // the expand-all control also lives in this bar
     bar.querySelectorAll("button[data-f]").forEach(x =>
       x.setAttribute("aria-pressed", x === b ? "true" : "false"));
-    targets.forEach(t => t.classList.toggle("dim",
-      f !== "all" && !t.dataset.tracks.split(" ").includes(f)));
+
+    targets.forEach(t =>
+      show(t, f === "all" || t.dataset.tracks.split(" ").includes(f)));
+
+    /* an act whose every card just left should not keep its heading */
+    acts.forEach(a => {
+      const live = [...a.querySelectorAll("[data-tracks]")]
+        .some(t => f === "all" || t.dataset.tracks.split(" ").includes(f));
+      a.classList.toggle("act--empty", !live);
+    });
   });
 })();
 

@@ -201,8 +201,16 @@ a{color:inherit}
 .act__title{font-family:var(--f-display);font-size:clamp(1.25rem,2.2vw,1.625rem);line-height:1.2}
 .act__lead{font-size:.9375rem;color:var(--muted);max-width:62ch;margin:.6rem 0 .35rem}
 
-.item,.mini{transition:opacity 300ms ease,filter 300ms ease}
-.dim{opacity:.26;filter:saturate(.2)}
+/* filtered-out cards leave the layout. .item/.mini already carry an opacity
+   transition; the height is driven inline from JS because only the browser
+   knows what "auto" measures to. overflow:hidden keeps content from spilling
+   while the box closes. */
+.item,.mini{overflow:hidden;transition:opacity 280ms ease,transform 280ms ease,height 360ms cubic-bezier(.3,.7,.2,1)}
+.item.out,.mini.out{opacity:0;transform:scale(.99);border-top-color:transparent}
+/* display:grid on these outranks the UA [hidden] rule, so say it explicitly */
+.item[hidden],.mini[hidden]{display:none}
+.act--empty{display:none}
+@media(prefers-reduced-motion:reduce){.item,.mini{transition:none}}
 
 .mini{display:grid;grid-template-columns:9.5rem minmax(0,1fr);gap:0 2.5rem;
   padding:1.35rem 0;border-top:1px solid var(--rule-soft)}
