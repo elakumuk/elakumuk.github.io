@@ -127,7 +127,7 @@ a{color:inherit}
    compositor. Browsers without animation-timeline simply never see it. */
 @supports (animation-timeline: view()){
   @media (prefers-reduced-motion: no-preference){
-    .section::before{
+    #view-work .section::before{
       content:"";position:absolute;inset:-2.5rem 0 auto 0;height:10rem;
       pointer-events:none;z-index:2;opacity:0;
       background-size:200px 200px;
@@ -143,9 +143,9 @@ a{color:inherit}
       animation-timeline:view();
       animation-range:entry 0% entry 55%;
     }
-    :root[data-theme="dark"] .section::before{mix-blend-mode:screen}
+    :root[data-theme="dark"] #view-work .section::before{mix-blend-mode:screen}
     @media (prefers-color-scheme: dark){
-      :root:not([data-theme="light"]) .section::before{mix-blend-mode:screen}
+      :root:not([data-theme="light"]) #view-work .section::before{mix-blend-mode:screen}
     }
     @keyframes wipe{
       from{opacity:.38;transform:translate3d(0,-1.1rem,0)}
