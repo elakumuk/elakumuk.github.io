@@ -433,6 +433,59 @@ function hash8(s){
   return h.toString(16).padStart(8,"0");
 }
 
+/* ── receipt typing ──────────────────────────────────────────────
+   setTimeout chaining, no rAF loop. 12ms/char was chosen against the
+   measured output: the receipt runs 125–158 characters, so this lands
+   between 1.5s and 1.9s — on top of the ~1.2s the rule sequence already
+   takes. Click the receipt to finish it instantly; reduced motion skips
+   it entirely.                                                        */
+const TYPE_MS = 12, TYPE_GAP = 120;
+const receiptEl = document.querySelector(".receipt");
+let activeTyper = null;
+
+function reserve(el, txt){
+  const prev = el.textContent;
+  el.style.minHeight = "";
+  el.textContent = txt;
+  el.style.minHeight = el.offsetHeight + "px";
+  el.textContent = prev;
+}
+
+function type(steps, done){
+  if (activeTyper) activeTyper.skip();
+  if (reduced.matches){
+    steps.forEach(([el, txt]) => { el.textContent = txt; });
+    done && done();
+    return;
+  }
+  let si = 0, ci = 0, timer = null, live = true;
+  function finish(){
+    if (!live) return;
+    live = false;
+    clearTimeout(timer);
+    steps.forEach(([el, txt]) => { el.textContent = txt; el.classList.remove("caret"); });
+    receiptEl.classList.remove("typing");
+    activeTyper = null;
+    done && done();
+  }
+  function tick(){
+    if (!live) return;
+    const [el, txt] = steps[si];
+    el.classList.add("caret");
+    el.textContent = txt.slice(0, ++ci);
+    if (ci < txt.length){ timer = setTimeout(tick, TYPE_MS); return; }
+    el.classList.remove("caret");
+    si++; ci = 0;
+    timer = setTimeout(si < steps.length ? tick : finish, TYPE_GAP);
+  }
+  steps.forEach(([el]) => { el.textContent = ""; });
+  receiptEl.classList.add("typing");
+  activeTyper = {skip: finish};
+  timer = setTimeout(tick, TYPE_MS);
+}
+
+receiptEl.addEventListener("click", () => { if (activeTyper) activeTyper.skip(); });
+
 const runbtn = document.getElementById("runbtn");
 runbtn.addEventListener("click", () => {
   const s = document.getElementById("scenario").value.trim();
@@ -460,15 +513,24 @@ runbtn.addEventListener("click", () => {
 
     if (i === RULES.length - 1) setTimeout(() => {
       const ok = failed.length === 0;
-      verdict.className = "verdict " + (ok ? "allow" : "refuse");
-      badge.textContent = ok ? "ALLOWED" : "REFUSED";
-      vtext.textContent = ok ? "the action may run" : failed.length + " of 6 rules failed";
-      document.getElementById("reason").textContent = ok
+      const reasonEl = document.getElementById("reason"),
+            ridEl    = document.getElementById("rid");
+      const txtV = ok ? "the action may run" : failed.length + " of 6 rules failed";
+      const txtR = ok
         ? "Nothing in this action is irreversible, over limit, or outside the agent's authority."
         : "Refused — " + failed.map(f => REASONS[f]).join("; ") + ".";
-      document.getElementById("rid").textContent = "receipt " + hash8(s) + " · signed";
+      const txtI = "receipt " + hash8(s) + " · signed";
+
+      // the badge is a state chip, not prose — it lands whole, with its colour
+      verdict.className = "verdict " + (ok ? "allow" : "refuse");
+      badge.textContent = ok ? "ALLOWED" : "REFUSED";
       document.getElementById("rlat").textContent = (0.9 + Math.random() * 0.4).toFixed(1) + "s";
-      runbtn.disabled = false;
+
+      // reserve the final height before a single character is written, so nothing
+      // below the demo moves while the text grows
+      reserve(reasonEl, txtR);
+
+      type([[vtext, txtV], [reasonEl, txtR], [ridEl, txtI]], () => { runbtn.disabled = false; });
     }, step);
   }, step * i));
 });

@@ -292,6 +292,14 @@ table.data th{color:var(--muted);font-weight:500}
 .rules li .mark{width:1rem;text-align:center}
 .reason{padding:.7rem .85rem;border-top:1px solid var(--rule);font-size:.8125rem;
   color:var(--ink-soft);line-height:1.55}
+/* receipt typing: a caret while a line is being written, and the whole block
+   is a click target to finish it early */
+.receipt.typing{cursor:pointer}
+.caret::after{content:"▏";margin-left:1px;color:var(--accent);
+  animation:caretblink 1s steps(1,end) infinite}
+@keyframes caretblink{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.caret::after{content:none}}
+
 .rcpt{padding:.55rem .85rem;border-top:1px solid var(--rule);font-family:var(--f-mono);
   font-size:.6875rem;color:var(--muted);display:flex;justify-content:space-between;gap:.5rem}
 pre.code{margin:0;overflow-x:auto;background:var(--paper);border:1px solid var(--rule);
