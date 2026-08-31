@@ -325,6 +325,14 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .entry .sub{font-size:.8125rem;font-style:italic;color:var(--muted);margin-bottom:.5rem}
 .entry p{font-size:.9375rem;color:var(--ink-soft);max-width:var(--measure)}
 
+.creds{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule)}
+.creds li{background:var(--surface);padding:.9rem 1.1rem}
+.creds__n{display:block;font-size:.9375rem;color:var(--ink);line-height:1.4}
+.creds__m{display:block;margin-top:.3rem;font-family:var(--f-mono);font-size:.6875rem;
+  color:var(--muted);letter-spacing:.02em}
+
 .kit{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;
   background:var(--rule);border:1px solid var(--rule)}
 .kit>div{background:var(--surface);padding:1.25rem 1.35rem}

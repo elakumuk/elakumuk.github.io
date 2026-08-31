@@ -764,7 +764,7 @@ const sio = new IntersectionObserver(es => es.forEach(e => {
 
 window.addEventListener("resize", moveDot);
 window.addEventListener("viewchange", () => setTimeout(moveDot, 0));
-["story","work","experience","education","toolkit","contact"]
+["story","work","experience","education","credentials","toolkit","contact"]
   .forEach(id => { const n = document.getElementById(id); if (n) sio.observe(n); });
 
 /* ══════════════════════════════════════════════════════════════
