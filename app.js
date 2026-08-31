@@ -1034,3 +1034,32 @@ if (location.hash === "#drawings") show("art", false);
     load();
   }), {rootMargin:"200px"}).observe(wrap);
 })();
+
+/* ── paper parallax ──────────────────────────────────────────────
+   The grain drifts a few pixels against the cursor, which is what keeps
+   the digital sections feeling like the same sheet as the drawings. Only
+   a custom property changes; the overlay is moved with transform, so
+   nothing repaints. rAF is used here as a throttle, not a loop — it is
+   scheduled only when a new pointer position has arrived.              */
+(function paperParallax(){
+  if (reduced.matches) return;
+  const root = document.documentElement;
+  let px = 0, py = 0, queued = false;
+  function apply(){
+    queued = false;
+    root.style.setProperty("--gx", px.toFixed(1) + "px");
+    root.style.setProperty("--gy", py.toFixed(1) + "px");
+  }
+  window.addEventListener("pointermove", e => {
+    if (e.pointerType !== "mouse") return;
+    px = (e.clientX / innerWidth  - 0.5) * -10;   // ±5px, below conscious notice
+    py = (e.clientY / innerHeight - 0.5) * -10;
+    if (!queued){ queued = true; requestAnimationFrame(apply); }
+  }, {passive:true});
+  reduced.addEventListener("change", () => {
+    if (reduced.matches){
+      root.style.setProperty("--gx", "0px");
+      root.style.setProperty("--gy", "0px");
+    }
+  });
+})();

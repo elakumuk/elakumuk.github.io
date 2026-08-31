@@ -47,8 +47,12 @@
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
   font-size:1rem;line-height:1.62;-webkit-font-smoothing:antialiased}
 /* paper tooth over the whole page — the site is a sheet, not a screen */
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;
+body::after{content:"";position:fixed;inset:-40px;pointer-events:none;z-index:90;
   opacity:.42;mix-blend-mode:overlay;
+  /* oversized by 40px so the parallax shift never exposes an edge; only
+     transform moves, so the grain never repaints */
+  transform:translate3d(var(--gx,0px),var(--gy,0px),0);
+  will-change:transform;
   background-image:url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
 <filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/>\
