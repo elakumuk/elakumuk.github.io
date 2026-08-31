@@ -359,7 +359,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .art-hero .deck{margin-top:1.4rem;font-family:var(--f-mono);font-size:.8125rem;color:var(--muted)}
 .statement{max-width:var(--measure);display:flex;flex-direction:column;gap:1.1rem}
 .statement p{font-size:1rem;color:var(--ink-soft)}
-.statement p:first-child::first-letter{font-family:var(--f-display);font-size:3.1rem;
+.statement--lede p:first-child::first-letter{font-family:var(--f-display);font-size:3.1rem;
   line-height:.82;float:left;padding:.1em .14em 0 0;color:var(--ink)}
 .plates{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));
   gap:2.5rem 2rem;margin-top:1rem;align-items:start}
