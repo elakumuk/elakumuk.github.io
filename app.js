@@ -1154,3 +1154,141 @@ if (location.hash === "#drawings") show("art", false);
     all.textContent = opening ? "Collapse all" : "Expand all";
   });
 })();
+
+
+/* ══════════════════════════════════════════════════════════════
+   10 · BACKGROUND TABS — Experience / Education / Toolkit share
+        one panel. The three <section> elements keep their ids and
+        stay in the DOM, so #experience, #education and #toolkit
+        still resolve; landing on one selects its tab.
+   ══════════════════════════════════════════════════════════════ */
+(function backgroundTabs(){
+  const ids = ["experience", "education", "toolkit"];
+  const secs = ids.map(id => document.getElementById(id));
+  if (secs.some(s => !s)) return;
+
+  const host = document.createElement("div");
+  host.className = "tabs";
+  secs[0].before(host);
+
+  const list = document.createElement("div");
+  list.className = "tabs__list";
+  list.setAttribute("role", "tablist");
+  list.setAttribute("aria-label", "Background");
+  host.appendChild(list);
+
+  const stage = document.createElement("div");
+  stage.className = "tabs__stage";
+  host.appendChild(stage);
+
+  const btns = secs.map((sec, i) => {
+    const label = sec.querySelector(".section__head h2").textContent.trim();
+    sec.querySelector(".section__head").remove();     // the tab is the heading now
+    sec.classList.add("tabs__panel");
+    sec.setAttribute("role", "tabpanel");
+    sec.setAttribute("aria-labelledby", "tab-" + ids[i]);
+    stage.appendChild(sec);
+
+    const b = document.createElement("button");
+    b.type = "button";
+    b.id = "tab-" + ids[i];
+    b.className = "tabs__btn";
+    b.setAttribute("role", "tab");
+    b.setAttribute("aria-controls", ids[i]);
+    b.textContent = label;
+    list.appendChild(b);
+    return b;
+  });
+
+  let cur = -1;
+  function select(i, focus){
+    if (i === cur) return;
+    const from = cur > -1 ? stage.offsetHeight : null;
+    secs.forEach((s, n) => {
+      const on = n === i;
+      s.classList.toggle("on", on);
+      s.setAttribute("aria-hidden", on ? "false" : "true");
+      btns[n].setAttribute("aria-selected", on ? "true" : "false");
+      btns[n].tabIndex = on ? 0 : -1;
+    });
+    cur = i;
+    if (focus) btns[i].focus();
+
+    /* height: measure, then animate from the old to the new and release */
+    if (from === null || reduced.matches) return;
+    const to = stage.scrollHeight;
+    if (from === to) return;
+    stage.style.height = from + "px";
+    stage.getBoundingClientRect();                    // force the start value
+    stage.style.transition = "height 340ms cubic-bezier(.3,.7,.2,1)";
+    stage.style.height = to + "px";
+    const done = e => {
+      if (e.propertyName !== "height") return;
+      stage.style.transition = stage.style.height = "";
+      stage.removeEventListener("transitionend", done);
+    };
+    stage.addEventListener("transitionend", done);
+  }
+
+  list.addEventListener("click", e => {
+    const b = e.target.closest(".tabs__btn");
+    if (b) select(btns.indexOf(b), false);
+  });
+  list.addEventListener("keydown", e => {
+    const d = {ArrowRight:1, ArrowLeft:-1, Home:"first", End:"last"}[e.key];
+    if (d === undefined) return;
+    e.preventDefault();
+    select(d === "first" ? 0 : d === "last" ? btns.length - 1
+         : (cur + d + btns.length) % btns.length, true);
+  });
+
+  /* deep links: #education must still land on Education */
+  function fromHash(){
+    const i = ids.indexOf(location.hash.slice(1));
+    if (i > -1){ select(i, false); host.scrollIntoView({behavior:"smooth", block:"start"}); }
+  }
+  window.addEventListener("hashchange", fromHash);
+  document.querySelectorAll('.railnav a[href^="#"]').forEach(a => {
+    const i = ids.indexOf(a.getAttribute("href").slice(1));
+    if (i > -1) a.addEventListener("click", () => select(i, false));
+  });
+
+  select(Math.max(0, ids.indexOf(location.hash.slice(1))), false);
+})();
+
+
+/* ── plates carousel arrows ──────────────────────────────────────
+   The gallery itself is pure CSS scroll-snap; this only adds the
+   two buttons, because a mouse has no swipe.                      */
+(function plateNav(){
+  const strip = document.getElementById("plates");
+  if (!strip) return;
+  const head = strip.closest("section").querySelector(".section__head");
+  if (!head) return;
+
+  const nav = document.createElement("div");
+  nav.className = "platenav";
+  nav.innerHTML = '<button type="button" data-d="-1" aria-label="Previous drawings">←</button>' +
+                  '<button type="button" data-d="1" aria-label="Next drawings">→</button>';
+  head.appendChild(nav);
+
+  const [prev, next] = nav.querySelectorAll("button");
+  const step = () => {
+    const p = strip.querySelector(".plate");
+    return p ? p.getBoundingClientRect().width + 32 : strip.clientWidth * 0.8;
+  };
+  nav.addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (b) strip.scrollBy({left: step() * +b.dataset.d,
+                           behavior: reduced.matches ? "auto" : "smooth"});
+  });
+
+  function ends(){
+    prev.disabled = strip.scrollLeft < 4;
+    next.disabled = strip.scrollLeft > strip.scrollWidth - strip.clientWidth - 4;
+  }
+  strip.addEventListener("scroll", ends, {passive:true});
+  window.addEventListener("resize", ends);
+  window.addEventListener("viewchange", () => setTimeout(ends, 0));
+  ends();
+})();
