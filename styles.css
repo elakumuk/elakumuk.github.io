@@ -416,3 +416,12 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   .rv{opacity:1;transform:none}
   .draw{stroke-dashoffset:0}
 }
+
+/* ════════════════════════════════════════════════════════════ CRASH MAP */
+.mapwrap{position:relative;background:var(--paper);border:1px solid var(--rule-soft);
+  overflow:hidden}
+#crashmap{display:block;width:100%;height:auto}
+.maphint{position:absolute;inset:0;display:grid;place-items:center;margin:0;
+  font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.08em;color:var(--muted);
+  transition:opacity 400ms}
+.maphint.gone{opacity:0;pointer-events:none}

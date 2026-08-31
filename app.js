@@ -834,3 +834,123 @@ new IntersectionObserver((es,obs) => es.forEach(e => {
   (e.target.id === "scatterwrap" ? drawScatter : drawChart)(true);
 }), {threshold:0.25}).observe(document.getElementById("scatterwrap"));
 if (location.hash === "#drawings") show("art", false);
+
+
+/* ══════════════════════════════════════════════════════════════
+   8 · CRASH MAP — no basemap. The state is drawn out of the
+       crashes themselves. Payload is fetched only when seen.
+   ══════════════════════════════════════════════════════════════ */
+(function crashmap(){
+  const cv = document.getElementById("crashmap");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  const hint = document.getElementById("maphint");
+  const wrap = document.getElementById("mapwrap");
+  let D = null;                              // {bbox, n, xy:Uint16Array, cls:Uint8Array}
+  const show = {0:true, 1:true, 2:true};     // mv / ped / bike
+  let ksiOnly = false;
+
+  const COL = [null, "--s2", "--s3"];        // ped, bike take the categorical hues
+  const AR  = () => {                        // correct for longitude compression at 42°N
+    const [lo0, la0, lo1, la1] = D.bbox;
+    return ((lo1 - lo0) * Math.cos((la0 + la1) / 2 * Math.PI / 180)) / (la1 - la0);
+  };
+
+  function size(){
+    const w = wrap.clientWidth;
+    if (!w || !D) return false;
+    cv.width  = Math.round(w * Math.min(2, devicePixelRatio));
+    cv.height = Math.round(cv.width / AR());
+    cv.style.height = Math.round(w / AR()) + "px";
+    return true;
+  }
+
+  function draw(){
+    if (!D) return;
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0, 0, W, H);
+    const ink = css("--smudge-rgb");
+    const cols = [null, css("--s2"), css("--s3")];
+
+    // motor vehicle first, faint — these are what draw the roads
+    if (show[0]){
+      ctx.fillStyle = "rgba(" + ink + ",0.30)";
+      for (let i = 0; i < D.n; i++){
+        const c = D.cls[i];
+        if ((c & 3) !== 0) continue;
+        if (ksiOnly && !(c & 4)) continue;
+        ctx.fillRect(D.xy[i*2] / 65535 * W, D.xy[i*2+1] / 65535 * H, 1, 1);
+      }
+    }
+    // vulnerable users on top, in colour, slightly larger so they survive the density
+    for (let m = 1; m <= 2; m++){
+      if (!show[m]) continue;
+      ctx.fillStyle = cols[m];
+      for (let i = 0; i < D.n; i++){
+        const c = D.cls[i];
+        if ((c & 3) !== m) continue;
+        if (ksiOnly && !(c & 4)) continue;
+        const x = D.xy[i*2] / 65535 * W, y = D.xy[i*2+1] / 65535 * H;
+        ctx.globalAlpha = (c & 4) ? 1 : 0.62;
+        ctx.fillRect(x, y, (c & 4) ? 2.5 : 1.6, (c & 4) ? 2.5 : 1.6);
+      }
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function b64(s){
+    const bin = atob(s), out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  let loading = false;
+  function load(){
+    if (D || loading) return;
+    loading = true;
+    fetch("assets/crashes-2025.json")
+      .then(r => r.json())
+      .then(j => {
+        const raw = b64(j.xy);
+        D = {bbox:j.bbox, n:j.n, xy:new Uint16Array(raw.buffer, raw.byteOffset, j.n*2),
+             cls:b64(j.cls)};
+        hint.classList.add("gone");
+        if (size()) draw();
+      })
+      .catch(() => { hint.textContent = "map data could not be loaded"; });
+  }
+
+  document.getElementById("maplegend").innerHTML =
+    "<span><i style='background:rgba(" + "128,128,136" + ",.6)'></i>Motor vehicle</span>" +
+    "<span><i style='background:var(--s2)'></i>Pedestrian</span>" +
+    "<span><i style='background:var(--s3)'></i>Bicyclist</span>" +
+    "<span style='color:var(--muted)'>· larger marks are killed or seriously injured</span>";
+
+  [["mp-mv",0],["mp-ped",1],["mp-bike",2]].forEach(([id,m]) => {
+    const b = document.getElementById(id);
+    b.addEventListener("click", () => {
+      show[m] = !show[m];
+      b.setAttribute("aria-pressed", show[m] ? "true" : "false");
+      draw();
+    });
+  });
+  const bk = document.getElementById("mp-ksi");
+  bk.addEventListener("click", () => {
+    ksiOnly = !ksiOnly;
+    bk.setAttribute("aria-pressed", ksiOnly ? "true" : "false");
+    draw();
+  });
+
+  window.addEventListener("resize", () => { if (D && size()) draw(); });
+  window.addEventListener("viewchange", () => { if (D && size()) draw(); });
+  new MutationObserver(() => setTimeout(draw, 40))
+    .observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+  window.matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => setTimeout(draw, 40));
+
+  new IntersectionObserver((es, obs) => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    obs.disconnect();
+    load();
+  }), {rootMargin:"200px"}).observe(wrap);
+})();

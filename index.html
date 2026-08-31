@@ -353,6 +353,35 @@
             </figcaption>
           </figure>
 
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">Massachusetts, drawn only from its crashes</span>
+              <div class="seg" role="group" aria-label="Road users shown">
+                <button id="mp-mv"   aria-pressed="true">Motor vehicle</button>
+                <button id="mp-ped"  aria-pressed="true">Pedestrian</button>
+                <button id="mp-bike" aria-pressed="true">Bicyclist</button>
+              </div>
+              <div class="seg" role="group" aria-label="Severity filter">
+                <button id="mp-ksi" aria-pressed="false">Killed or serious only</button>
+              </div>
+            </div>
+            <div class="fig__body">
+              <div class="mapwrap" id="mapwrap">
+                <canvas id="crashmap" role="img"
+                  aria-label="A map of Massachusetts formed entirely from the locations of 2025 crashes. No basemap is drawn — the road network appears out of the crash points themselves. Pedestrian and cyclist crashes concentrate in Boston, Cambridge, Worcester and Springfield."></canvas>
+                <p class="maphint" id="maphint">loading 41,308 crash locations…</p>
+              </div>
+              <div class="legend" id="maplegend"></div>
+            </div>
+            <figcaption class="fig__cap">
+              Every 2025 crash with usable coordinates, plotted with no basemap underneath: the
+              state and its road network are made only of the crashes themselves. All 3,308
+              pedestrian and cyclist crashes are shown; motor-vehicle crashes are a random sample
+              of 38,000 from 124,102, which keeps the file smaller than one photograph without
+              changing the shape.
+            </figcaption>
+          </figure>
+
           <p class="brought">I studied psychology before I studied analytics. How people misread a base rate is not a footnote to me — it is the thing I was trained on.</p>
               <div class="chips">
             <span class="chip">Python</span><span class="chip">Streamlit</span>
