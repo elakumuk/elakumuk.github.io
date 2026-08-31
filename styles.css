@@ -26,6 +26,9 @@
     --rule:#33323A; --rule-soft:#26262C;
     --accent:#94ADDC; --accent-dim:#6C82AC;
     --smudge-rgb:226,222,214; --smudge-max:0.20;
+    /* a mount, not a sheet: on a dark page six paper-white mats glare and the
+       drawings recede. The drawing's own paper carries the light instead. */
+    --mat:#24232B;
     --s1:#5D96DE; --s2:#D46A3E; --s3:#A87BE0;
     --ok:#63B37F; --bad:#E0745A;
     --grid:#2B2A32;
@@ -37,6 +40,7 @@
   --rule:#33323A; --rule-soft:#26262C;
   --accent:#94ADDC; --accent-dim:#6C82AC;
   --smudge-rgb:226,222,214; --smudge-max:0.20;
+  --mat:#24232B;
   --s1:#5D96DE; --s2:#D46A3E; --s3:#A87BE0;
   --ok:#63B37F; --bad:#E0745A;
   --grid:#2B2A32;
@@ -374,12 +378,17 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 /* A drawing keeps its own proportions and is never cropped. The mat stays
    paper-toned in both themes — a charcoal drawing's ground is paper, and
    flipping it to black in dark mode would swallow the darks. */
+/* The image is taken out of flow so it cannot stretch the box: a grid item sizes the
+   row to its own content and quietly overrides aspect-ratio, which is why the six
+   frames came out 254-273px tall instead of identical. */
 .plate__frame{position:relative;background:var(--mat);border:1px solid var(--rule);
-  padding:clamp(.55rem,2.2vw,1.05rem);display:grid;place-items:center;
-  aspect-ratio:4/3}
-.plate__frame img{max-width:100%;max-height:100%;width:auto;height:auto;
-  object-fit:contain;display:block;box-shadow:0 1px 4px rgba(20,18,24,.22)}
-.plate__frame.empty{aspect-ratio:4/5;background:var(--surface);padding:0}
+  aspect-ratio:4/3;overflow:hidden;--mount:clamp(.55rem,2.2vw,1.05rem)}
+.plate__frame img{position:absolute;inset:0;margin:auto;
+  max-width:calc(100% - 2 * var(--mount));max-height:calc(100% - 2 * var(--mount));
+  width:auto;height:auto;object-fit:contain;display:block;
+  box-shadow:0 1px 4px rgba(20,18,24,.22)}
+.plate__frame.empty{aspect-ratio:4/5;background:var(--surface);
+  display:grid;place-items:center}
 .plate__frame.empty::before,.plate__frame.empty::after{content:"";position:absolute;
   width:10px;height:10px;border:1px solid var(--rule)}
 .plate__frame.empty::before{top:8px;left:8px;border-right:0;border-bottom:0}
