@@ -70,6 +70,10 @@ a{color:inherit}
 .rail{position:fixed;inset:0 auto 0 0;width:var(--rail-w);
   padding:2.75rem 1.5rem 1.75rem var(--pad-x);border-right:1px solid var(--rule);
   background:var(--paper);display:flex;flex-direction:column;gap:2rem;z-index:30}
+/* square, not a circle — nothing else on this page is round — and edged with the
+   same hairline the plate frames use */
+.rail__face{display:block;width:4.75rem;height:4.75rem;object-fit:cover;
+  border:1px solid var(--rule);margin-bottom:1rem;background:var(--surface)}
 .rail__name{font-family:var(--f-display);font-size:1.5rem;line-height:1.1}
 .rail__role{margin-top:.5rem;font-family:var(--f-mono);font-size:.6875rem;
   letter-spacing:.08em;color:var(--muted);line-height:1.7}
@@ -450,6 +454,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
     flex-wrap:wrap;gap:.85rem 1.25rem;padding:.85rem var(--pad-x);border-right:0;
     border-bottom:1px solid var(--rule)}
   .rail__name{font-size:1.0625rem}
+  .rail__face{width:2.25rem;height:2.25rem;margin:0 .1rem 0 0;float:left}
   .rail__role,.railnav,.rail__foot{display:none}
   .switch{margin-left:auto}
   .main{margin-left:0}
