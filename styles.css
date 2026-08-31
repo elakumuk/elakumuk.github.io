@@ -365,16 +365,20 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .statement p{font-size:1rem;color:var(--ink-soft)}
 .statement--lede p:first-child::first-letter{font-family:var(--f-display);font-size:3.1rem;
   line-height:.82;float:left;padding:.1em .14em 0 0;color:var(--ink)}
-.plates{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));
+/* Six drawings, three across, two clean rows. Every frame is the same height so the
+   captions sit on one line instead of floating at six different baselines — the
+   drawings differ in proportion, the frames should not. */
+.plates{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));
   gap:2.5rem 2rem;margin-top:1rem;align-items:start}
 .plate figure{margin:0}
 /* A drawing keeps its own proportions and is never cropped. The mat stays
    paper-toned in both themes — a charcoal drawing's ground is paper, and
    flipping it to black in dark mode would swallow the darks. */
 .plate__frame{position:relative;background:var(--mat);border:1px solid var(--rule);
-  padding:clamp(.55rem,2.2vw,1.05rem);display:grid;place-items:center}
-.plate__frame img{max-width:100%;height:auto;display:block;
-  box-shadow:0 1px 4px rgba(20,18,24,.22)}
+  padding:clamp(.55rem,2.2vw,1.05rem);display:grid;place-items:center;
+  aspect-ratio:4/3}
+.plate__frame img{max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;display:block;box-shadow:0 1px 4px rgba(20,18,24,.22)}
 .plate__frame.empty{aspect-ratio:4/5;background:var(--surface);padding:0}
 .plate__frame.empty::before,.plate__frame.empty::after{content:"";position:absolute;
   width:10px;height:10px;border:1px solid var(--rule)}
