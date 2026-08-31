@@ -331,7 +331,8 @@ function drawCoef(){
   bar.addEventListener("click", e => {
     const b = e.target.closest("button"); if (!b) return;
     const f = b.dataset.f;
-    bar.querySelectorAll("button").forEach(x =>
+    if (!f) return;                    // the expand-all control also lives in this bar
+    bar.querySelectorAll("button[data-f]").forEach(x =>
       x.setAttribute("aria-pressed", x === b ? "true" : "false"));
     targets.forEach(t => t.classList.toggle("dim",
       f !== "all" && !t.dataset.tracks.split(" ").includes(f)));
@@ -1125,5 +1126,31 @@ if (location.hash === "#drawings") show("art", false);
       btn.setAttribute("aria-expanded", open ? "true" : "false");
       btn.firstChild.textContent = open ? "Collapse" : "Read the full case";
     });
+  });
+
+  /* one control for readers who would rather read than click six times.
+     The page already opens compact, so this only ever needs to add depth. */
+  const bar = document.querySelector(".filters");
+  const arts = [...document.querySelectorAll("article.item")];
+  if (!bar || !arts.length) return;
+
+  const all = document.createElement("button");
+  all.type = "button";
+  all.className = "expandall";
+  all.setAttribute("aria-pressed", "false");
+  all.textContent = "Expand all";
+  bar.appendChild(all);
+
+  all.addEventListener("click", () => {
+    const opening = !arts.every(a => a.classList.contains("open"));
+    arts.forEach(a => {
+      a.classList.toggle("open", opening);
+      const b = a.querySelector(".peek__btn");
+      if (!b) return;
+      b.setAttribute("aria-expanded", opening ? "true" : "false");
+      b.firstChild.textContent = opening ? "Collapse" : "Read the full case";
+    });
+    all.setAttribute("aria-pressed", opening ? "true" : "false");
+    all.textContent = opening ? "Collapse all" : "Expand all";
   });
 })();
