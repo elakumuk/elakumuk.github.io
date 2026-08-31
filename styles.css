@@ -75,13 +75,19 @@ a{color:inherit}
   color:var(--muted);padding:.5rem .25rem;transition:background 140ms,color 140ms}
 .switch button:hover{color:var(--ink)}
 .switch button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
-.railnav{display:flex;flex-direction:column;gap:.55rem}
+.railnav{display:flex;flex-direction:column;gap:.55rem;position:relative}
+/* one indicator that slides between links, instead of each link growing its own */
+.railnav__dot{position:absolute;left:0;top:0;width:.55rem;height:1px;
+  background:var(--accent);opacity:0;pointer-events:none;
+  transform:translateY(-99px);
+  transition:transform 340ms cubic-bezier(.3,.7,.2,1),opacity 220ms ease}
+.railnav__dot.on{opacity:1}
 .railnav a{text-decoration:none;font-size:.875rem;color:var(--muted);display:flex;
   align-items:baseline;gap:.6rem;transition:color 140ms}
 .railnav a::before{content:"";width:.9rem;height:1px;background:var(--rule);flex:none;
   transform:translateY(-.28em);transition:width 180ms,background 180ms}
 .railnav a:hover,.railnav a[data-cur="1"]{color:var(--ink)}
-.railnav a:hover::before,.railnav a[data-cur="1"]::before{width:1.6rem;background:var(--accent)}
+.railnav a:hover::before{width:1.6rem;background:var(--accent)}
 .rail__foot{margin-top:auto;display:flex;flex-direction:column;gap:.4rem;
   font-family:var(--f-mono);font-size:.75rem}
 .rail__foot a{color:var(--muted);text-decoration:none;transition:color 140ms}

@@ -756,12 +756,30 @@ document.querySelectorAll("[data-count]").forEach(n => cio.observe(n));
 
 /* rail nav current-section highlight */
 const links = [...railnav.querySelectorAll("a")];
+/* one indicator, slid into place — transform only, so it stays on the compositor */
+const navDot = document.createElement("span");
+navDot.className = "railnav__dot";
+navDot.setAttribute("aria-hidden", "true");
+railnav.appendChild(navDot);
+
+function moveDot(){
+  const cur = links.find(a => a.getAttribute("data-cur") === "1");
+  if (!cur || !cur.offsetHeight){ navDot.classList.remove("on"); return; }
+  navDot.style.transform =
+    "translateY(" + (cur.offsetTop + cur.offsetHeight / 2 - 0.5) + "px)";
+  navDot.classList.add("on");
+}
+
 const sio = new IntersectionObserver(es => es.forEach(e => {
   if (!e.isIntersecting) return;
   links.forEach(a => a.removeAttribute("data-cur"));
   const cur = links.find(a => a.getAttribute("href") === "#" + e.target.id);
   if (cur) cur.setAttribute("data-cur","1");
+  moveDot();
 }), {rootMargin:"-45% 0px -50% 0px"});
+
+window.addEventListener("resize", moveDot);
+window.addEventListener("viewchange", () => setTimeout(moveDot, 0));
 ["story","work","experience","education","toolkit","contact"]
   .forEach(id => { const n = document.getElementById(id); if (n) sio.observe(n); });
 
