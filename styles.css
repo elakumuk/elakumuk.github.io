@@ -114,8 +114,6 @@ a{color:inherit}
   border:1px solid var(--rule);background:var(--surface);padding:.5rem .9rem;
   font-family:var(--f-mono);font-size:.75rem;color:var(--ink-soft);max-width:100%}
 .status .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;flex:none}
-.hint{margin-top:1rem;font-family:var(--f-mono);font-size:.625rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);opacity:.75}
 
 /* ════════════════════════════════════════════════════════════ SECTIONS */
 .section{padding:clamp(3.25rem,8vh,5rem) 0 0;position:relative}
@@ -205,6 +203,24 @@ a{color:inherit}
   margin-bottom:.3rem}
 .mini p{font-size:.9375rem;color:var(--ink-soft);max-width:var(--measure)}
 .mini .chips{margin-top:.8rem}
+
+/* case-study prose folds; figures, tags and the "what I brought" line stay put.
+   grid-template-rows is the one height animation that needs no JS measurement.
+   Only one card animates at a time, so the layout cost is trivial. */
+.prose{display:grid;grid-template-rows:0fr;transition:grid-template-rows 420ms cubic-bezier(.3,.7,.2,1)}
+.item.open .prose{grid-template-rows:1fr}
+.prose__inner{overflow:hidden;min-height:0}
+.peek{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .7rem;margin:.2rem 0 .1rem}
+.peek b{font-weight:500;font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.02em;
+  color:var(--ink-soft);border:1px solid var(--rule);padding:.16rem .45rem}
+.peek span{color:var(--rule);font-size:.6875rem}
+.peek__btn{appearance:none;background:transparent;border:0;cursor:pointer;padding:.2rem 0;
+  font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.06em;color:var(--accent);
+  border-bottom:1px solid var(--accent-dim);transition:border-color 140ms}
+.peek__btn:hover{border-bottom-color:var(--accent)}
+.peek__btn::after{content:" +";font-size:.75rem}
+.item.open .peek__btn::after{content:" −"}
+@media(prefers-reduced-motion:reduce){.prose{transition:none}}
 
 .brought{margin-top:1.15rem;font-style:italic;font-size:.9375rem;color:var(--ink);
   border-left:2px solid var(--accent);padding-left:.95rem;max-width:58ch;line-height:1.6}
@@ -442,7 +458,6 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .hero h1.fade{animation-delay:0ms}
 .hero .hero__thesis.fade{animation-delay:110ms}
 .hero .status.fade{animation-delay:220ms}
-.hero .hint.fade{animation-delay:320ms}
 @keyframes settle{to{opacity:1;transform:none}}
 .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);
   transition:stroke-dashoffset 1100ms cubic-bezier(.3,.6,.2,1)}
