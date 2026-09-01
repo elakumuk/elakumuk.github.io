@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&family=Karla:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap">
-<link rel="stylesheet" href="styles.css?v=0ae5a55c">
+<link rel="stylesheet" href="styles.css?v=a301006e">
 </head>
 <body>
 
@@ -101,12 +101,25 @@
         <span class="eyebrow">Three run live in this page</span>
       </div>
 
+      <!-- Every piece already declares its tracks in data-tracks; this is the control
+           that reads them, plus an index, because the section is long enough that a
+           reader who lands on it cannot see what is in it without scrolling past
+           several thousand words. Both are progressive: without JS the section is
+           exactly what it was. -->
+      <div class="workbar" id="workbar" hidden>
+        <div class="workbar__row">
+          <div class="tracks" id="tracks" role="group" aria-label="Filter selected work by track"></div>
+          <p class="workbar__count" id="workcount" role="status" aria-live="polite"></p>
+        </div>
+        <ol class="workindex" id="workindex"></ol>
+      </div>
+
 
       <div class="act">
         <div class="act__head"><span class="act__num">I</span>
           <h3 class="act__title">When can you trust a signal?</h3></div>
         <p class="act__lead">Every model produces an answer. The harder question is whether this particular answer has earned the right to be acted on.</p>
-        <article class="item rv" data-tracks="ds consulting">
+        <article class="item rv" data-tracks="ds consulting" id="w-meta-labeling" data-short="Multi-asset meta-labeling">
         <div class="item__meta">
           <span class="item__org">State Street<br>Investment Management</span>
           <span class="item__when">May – Aug 2026</span>
@@ -146,7 +159,7 @@
           </div>
         </div>
       </article>
-      <article class="item rv" data-tracks="ds analytics consulting">
+      <article class="item rv" data-tracks="ds analytics consulting" id="w-llm-analyst" data-short="LLM versus causal inference">
         <div class="item__meta">
           <span class="item__org">Brandeis<br>Marketing Analytics</span>
           <span class="item__when">Spring 2026</span>
@@ -212,7 +225,7 @@
         <div class="act__head"><span class="act__num">II</span>
           <h3 class="act__title">When is the obvious answer wrong?</h3></div>
         <p class="act__lead">The first number a dataset hands you is usually the one that hides the finding. These are the projects where the headline and the truth pointed in different directions.</p>
-        <article class="item rv" data-tracks="analytics consulting ds">
+        <article class="item rv" data-tracks="analytics consulting ds" id="w-foot-traffic" data-short="Boston foot traffic, DiD">
         <div class="item__meta">
           <span class="item__org">Brandeis BUS240F<br>Group project</span>
           <span class="item__when">Spring 2026</span>
@@ -287,7 +300,7 @@
           </div>
         </div>
       </article>
-      <article class="item rv" data-tracks="analytics consulting">
+      <article class="item rv" data-tracks="analytics consulting" id="w-crash-dashboard" data-short="Massachusetts crash dashboard">
         <div class="item__meta">
           <span class="item__org">Brandeis MSBA<br>Team project</span>
           <span class="item__when">Spring 2026</span>
@@ -384,7 +397,7 @@
           </div>
         </div>
       </article>
-      <article class="item rv" data-tracks="analytics consulting">
+      <article class="item rv" data-tracks="analytics consulting" id="w-olist" data-short="What late delivery costs">
         <div class="item__meta">
           <span class="item__org">Personal project</span>
           <span class="item__when">Spring 2026</span>
@@ -405,7 +418,7 @@
           </div>
         </div>
       </article>
-      <div class="mini rv" data-tracks="ds analytics">
+      <div class="mini rv" data-tracks="ds analytics" id="w-telco-churn" data-short="Telco churn">
         <div class="item__meta"><span class="item__org">Personal project</span>
           <span class="item__when">2026</span></div>
         <div>
@@ -419,7 +432,7 @@
         <div class="act__head"><span class="act__num">III</span>
           <h3 class="act__title">When do you stop the machine?</h3></div>
         <p class="act__lead">Automation is easy. Knowing which action should never run, and being able to show why afterwards, is the part that is actually hard.</p>
-        <article class="item rv" data-tracks="ai ds">
+        <article class="item rv" data-tracks="ai ds" id="w-ovrule" data-short="Ovrule — decision receipts">
         <div class="item__meta">
           <span class="item__org">Ovrule</span>
           <span class="item__when">Apr 2026 – present</span>
@@ -501,7 +514,7 @@
           </div>
         </div>
       </article>
-      <div class="mini rv" data-tracks="ai">
+      <div class="mini rv" data-tracks="ai" id="w-jobhunter" data-short="JobHunter agent">
         <div class="item__meta"><span class="item__org">Personal project</span>
           <span class="item__when">2026</span></div>
         <div>
@@ -690,6 +703,6 @@
   </main>
 </div>
 
-<script src="app.js?v=352f22e0" defer></script>
+<script src="app.js?v=f161c4f8" defer></script>
 </body>
 </html>

@@ -769,118 +769,256 @@ window.addEventListener("viewchange", () => setTimeout(moveDot, 0));
 
 /* ══════════════════════════════════════════════════════════════
    7 · HERO — charcoal that follows the hand
+
+   Rebuilt. The old version walked a 190x110 pixel buffer in JS and scaled it
+   about seven times up, which is what destroyed the grain, and it lived inside
+   a canvas clipped to the text column, so the smudge was sliced off on a
+   straight vertical line beside the E of Ela and the K of Kumuk.
+
+   Now three surfaces are composited each frame:
+
+     mask  soft elliptical blobs along the recent path of the cursor, stretched
+           along the direction of travel so a sweep reads as one stroke instead
+           of a row of dots. Drawn as radial gradients — the GPU does this, no
+           per-pixel loop.
+     tex   the charcoal itself: ink-coloured tooth built once per resize at the
+           real pixel size of the canvas. Two frequencies — "Drift" downsampled
+           for the broad tonal masses, tileable value noise for the grain that
+           has to stay sharp. Only the low frequency is ever upscaled, which is
+           the whole fix.
+     edge  a falloff painted in so the smudge fades out before the edge of the
+           sheet rather than being cut by it.
+
+   The hero rests as clean paper: with nothing on the trail the canvas clears
+   and the loop stops.
    ══════════════════════════════════════════════════════════════ */
 const cv = document.getElementById("smudge"), ctx = cv.getContext("2d");
-const off = document.createElement("canvas"), octx = off.getContext("2d");
-const CW = 190, CH = 110;
-off.width = CW; off.height = CH;
-const img = octx.createImageData(CW, CH);
-let t = 0, running = true, last = 0, rafId = null;
-let mx = -1, my = -1, mAmt = 0;   // cursor in field space + how hard we are pressing
-
 const hero = document.querySelector(".hero");
-hero.addEventListener("pointermove", e => {
-  const r = hero.getBoundingClientRect();
-  mx = (e.clientX - r.left) / r.width  * CW;
-  my = (e.clientY - r.top)  / r.height * CH;
-  mAmt = 1;
-});
-hero.addEventListener("pointerleave", () => { mAmt = 0; });
+const off  = document.createElement("canvas"), octx = off.getContext("2d");
+const tex  = document.createElement("canvas"), tctx = tex.getContext("2d");
+const edge = document.createElement("canvas"), ectx = edge.getContext("2d");
+
+const TEXPAD = 30;          // slack so the tooth can drift without showing an edge
+const MAXPTS = 20;          // length of the trail
+let VW = 0, VH = 0, S = 1;  // canvas size in CSS px, and its backing-store scale
+let CAP = 0.3;              // --smudge-max: how black the charcoal is allowed to get
+let NOISE = null, LOW = null;
+let t = 0, running = true, last = 0, rafId = null;
 
 function inkColor(){
   const v = css("--smudge-rgb").split(",");
   return [+v[0]||0, +v[1]||0, +v[2]||0];
 }
-/* The field the cursor pushes around is sampled from an actual drawing —
-   "Drift", heavily downsampled, so only its broad tonal masses survive.
-   Falls back to procedural noise if the image cannot be read. */
-let FIELD = null;
-(function loadField(){
-  const im = new Image();
-  im.crossOrigin = "anonymous";
-  im.onload = function(){
-    const s = document.createElement("canvas");
-    s.width = CW; s.height = CH;
-    const sx = s.getContext("2d", {willReadFrequently:true});
-    sx.drawImage(im, 0, 0, CW, CH);
-    let px;
-    try { px = sx.getImageData(0, 0, CW, CH).data; } catch(e){ return; }
-    const f = new Float32Array(CW*CH);
-    let lo = 1, hi = 0;
-    for (let i = 0; i < CW*CH; i++){
-      // luminance, inverted: charcoal is dark on paper, we want pigment high
-      const l = (px[i*4]*0.299 + px[i*4+1]*0.587 + px[i*4+2]*0.114) / 255;
-      const v = 1 - l;
-      f[i] = v; if (v < lo) lo = v; if (v > hi) hi = v;
+
+/* ---------- the trail ---------- */
+let pts = [], hover = false, lastX = -1, lastY = -1;
+
+hero.addEventListener("pointermove", e => {
+  const r = hero.getBoundingClientRect();
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  const dx = lastX < 0 ? 0 : x - lastX, dy = lastY < 0 ? 0 : y - lastY;
+  lastX = x; lastY = y;
+  hover = e.pointerType === "mouse";
+  /* a pointermove can jump 200px. Fill the gap so a fast sweep leaves a
+     continuous stroke rather than a dotted line. */
+  const n = Math.max(1, Math.min(6, Math.round(Math.hypot(dx, dy) / 26)));
+  for (let i = 1; i <= n; i++)
+    pts.push({x: x - dx*(1 - i/n), y: y - dy*(1 - i/n), dx: dx/n, dy: dy/n, a: 1});
+  if (pts.length > MAXPTS) pts.splice(0, pts.length - MAXPTS);
+  start();
+}, {passive:true});
+
+const away = () => { hover = false; lastX = lastY = -1; };
+hero.addEventListener("pointerleave",  away);
+hero.addEventListener("pointercancel", away);
+hero.addEventListener("pointerup",     away);
+
+function decay(){
+  const head = pts.length - 1;
+  for (let i = head; i >= 0; i--){
+    const p = pts[i];
+    p.a *= 0.885;
+    /* a resting hand keeps a pool of charcoal under it; a moving one drags it */
+    if (i === head && hover) p.a = Math.max(p.a, 0.66);
+    if (p.a < 0.02) pts.splice(i, 1);
+  }
+}
+
+/* ---------- the two textures ---------- */
+
+/* Tileable value noise: every term is an integer multiple of a full turn in
+   both axes, so the 256px tile repeats without a seam. The sines give the
+   organic mid frequencies, a cheap integer hash gives the finest tooth. */
+function buildNoise(){
+  const N = 256, c = document.createElement("canvas");
+  c.width = c.height = N;
+  const x2 = c.getContext("2d"), id = x2.createImageData(N, N), d = id.data;
+  const rgb = inkColor(), TAU = Math.PI * 2;
+  for (let y = 0; y < N; y++){
+    for (let x = 0; x < N; x++){
+      const u = x / N * TAU, v = y / N * TAU;
+      let n = Math.sin(u*7  + Math.cos(v*5)) * 0.50
+            + Math.sin(v*11 - Math.cos(u*3)) * 0.30
+            + Math.sin(u*19 + v*23)          * 0.22
+            + Math.sin(u*37 - v*29)          * 0.14;
+      n = n / 1.16 * 0.5 + 0.5;
+      let r = (x * 374761393 + y * 668265263) >>> 0;
+      r = (r ^ (r >>> 13)) >>> 0;
+      const w = (r % 1024) / 1024;
+      n = n * 0.74 + w * 0.26;
+      const i = (y*N + x) * 4;
+      d[i] = rgb[0]; d[i+1] = rgb[1]; d[i+2] = rgb[2];
+      d[i+3] = (0.52 + n * 0.48) * 255;
     }
-    const span = Math.max(1e-3, hi - lo);
-    for (let i = 0; i < CW*CH; i++) f[i] = (f[i] - lo) / span;
-    FIELD = f;
-    render();
-  };
-  im.src = PLATES[2].src;   // "Drift"
-})();
+  }
+  x2.putImageData(id, 0, 0);
+  return c;
+}
+
+/* "Drift" reduced to alpha only — the broad masses of the drawing, nothing
+   else. This is the one surface that gets upscaled, and it is the one that
+   can afford to be: it carries no detail worth losing. */
+function buildLow(im){
+  const w = 190, h = 110, c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const x2 = c.getContext("2d", {willReadFrequently:true});
+  x2.drawImage(im, 0, 0, w, h);
+  let px; try { px = x2.getImageData(0, 0, w, h); } catch(e){ return null; }
+  const d = px.data, f = new Float32Array(w*h);
+  let lo = 1, hi = 0;
+  for (let i = 0; i < w*h; i++){
+    // luminance, inverted: charcoal is dark on paper, we want pigment high
+    const l = (d[i*4]*0.299 + d[i*4+1]*0.587 + d[i*4+2]*0.114) / 255;
+    const v = 1 - l;
+    f[i] = v; if (v < lo) lo = v; if (v > hi) hi = v;
+  }
+  const span = Math.max(1e-3, hi - lo);
+  for (let i = 0; i < w*h; i++){
+    const v = (f[i] - lo) / span;
+    d[i*4] = d[i*4+1] = d[i*4+2] = 0;
+    d[i*4+3] = (0.55 + v * 0.45) * 255;
+  }
+  x2.putImageData(px, 0, 0);
+  return c;
+}
+
+function buildTex(){
+  if (!VW || !VH) return;
+  if (!NOISE) NOISE = buildNoise();
+  const w = Math.ceil(VW) + TEXPAD*2, h = Math.ceil(VH) + TEXPAD*2;
+  tex.width = w; tex.height = h;
+  tctx.setTransform(1,0,0,1,0,0);
+  tctx.globalCompositeOperation = "source-over";
+  tctx.fillStyle = tctx.createPattern(NOISE, "repeat");
+  tctx.fillRect(0, 0, w, h);
+  if (LOW){
+    tctx.globalCompositeOperation = "destination-in";
+    tctx.drawImage(LOW, 0, 0, w, h);
+    tctx.globalCompositeOperation = "source-over";
+  }
+  CAP = parseFloat(css("--smudge-max")) || 0.3;
+}
+
+/* The sheet has edges. Fade into them instead of letting the clip cut. */
+function buildEdge(){
+  const w = Math.max(1, Math.ceil(VW)), h = Math.max(1, Math.ceil(VH));
+  edge.width = w; edge.height = h;
+  ectx.setTransform(1,0,0,1,0,0);
+  ectx.globalCompositeOperation = "source-over";
+  ectx.fillStyle = "#000";
+  ectx.fillRect(0, 0, w, h);
+  ectx.globalCompositeOperation = "destination-out";
+  const fx = Math.min(72, w * 0.09), fy = Math.min(64, h * 0.14);
+  [[0,0,fx,0], [w,0,w-fx,0], [0,0,0,fy], [0,h,0,h-fy]].forEach(([x0,y0,x1,y1]) => {
+    const g = ectx.createLinearGradient(x0, y0, x1, y1);
+    g.addColorStop(0, "rgba(0,0,0,1)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ectx.fillStyle = g;
+    ectx.fillRect(0, 0, w, h);
+  });
+  ectx.globalCompositeOperation = "source-over";
+}
+
+/* ---------- the frame ---------- */
+function blob(c, p, R){
+  const sp = Math.min(1, Math.hypot(p.dx, p.dy) / 26);   // how fast the hand moved
+  const a  = p.a * 0.9;
+  c.save();
+  c.translate(p.x, p.y);
+  if (sp > 0.02) c.rotate(Math.atan2(p.dy, p.dx));
+  c.scale(1 + sp * 0.8, 1 / (1 + sp * 0.28));            // a sweep smears
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, R);
+  g.addColorStop(0,    "rgba(0,0,0," + a.toFixed(3) + ")");
+  g.addColorStop(0.28, "rgba(0,0,0," + (a * 0.66).toFixed(3) + ")");
+  g.addColorStop(0.62, "rgba(0,0,0," + (a * 0.22).toFixed(3) + ")");
+  g.addColorStop(1,    "rgba(0,0,0,0)");
+  c.fillStyle = g;
+  c.beginPath(); c.arc(0, 0, R, 0, 6.283185); c.fill();
+  c.restore();
+}
 
 function render(){
-  const rgb = inkColor(), cap = (parseFloat(css("--smudge-max")) || .3) * 255;
-  if (mAmt <= 0.01){                          // hero rests as clean paper
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    return;
-  }
-  const d = img.data;
-  const ox = Math.round(Math.sin(t*0.21) * 5), oy = Math.round(Math.cos(t*0.17) * 4);
-  for (let y = 0; y < CH; y++){
-    for (let x = 0; x < CW; x++){
-      let v;
-      if (FIELD){
-        const sxp = (x + ox + CW) % CW, syp = (y + oy + CH) % CH;
-        v = FIELD[syp*CW + sxp];
-        v = 0.18 + v * 0.92;                    // lift the paper so it never goes flat
-      } else {
-        v = Math.sin(x*0.052 + t*0.7) * Math.cos(y*0.068 - t*0.5);
-        v += 0.62 * Math.sin(x*0.105 - y*0.086 + t*1.1);
-        v += 0.34 * Math.cos(x*0.185 + y*0.152 - t*0.63);
-        v = v/1.96 + 0.5;
-      }
+  if (!VW || !VH) return;
+  ctx.clearRect(0, 0, VW, VH);
+  if (!pts.length) return;                    // the hero rests as clean paper
 
-      /* No resting wash. Scaled seven times up, the sampled drawing loses the grain
-         and the edges that made it charcoal and leaves a grey cloud behind the
-         wordmark. The field now only textures what the cursor draws. */
-      let a = 0;
-      if (mAmt > 0.01){
-        const dx = x - mx, dy = (y - my) * 1.6;
-        const g = Math.exp(-(dx*dx + dy*dy) / 240);
-        a = g * mAmt * 0.9 * (0.45 + v * 0.95);
-      }
-      a *= 0.72 + Math.random() * 0.42;
-      a = a < 0 ? 0 : a > 1 ? 1 : a;
-      const i = (y*CW + x) * 4;
-      d[i] = rgb[0]; d[i+1] = rgb[1]; d[i+2] = rgb[2];
-      d[i+3] = a * a * cap;
-    }
-  }
-  octx.putImageData(img, 0, 0);
-  ctx.clearRect(0,0,cv.width,cv.height);
-  ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(off, 0, 0, cv.width, cv.height);
+  const R = Math.max(160, Math.min(380, VW * 0.21));
+  octx.clearRect(0, 0, VW, VH);
+  octx.globalCompositeOperation = "source-over";
+  for (let i = 0; i < pts.length; i++) blob(octx, pts[i], R);
+
+  octx.globalCompositeOperation = "source-in";     // keep the tooth, in the shape drawn
+  octx.drawImage(tex, -TEXPAD + Math.sin(t * 0.21) * 9,
+                      -TEXPAD + Math.cos(t * 0.17) * 7, tex.width, tex.height);
+  octx.globalCompositeOperation = "destination-in";  // and fade at the edges
+  octx.drawImage(edge, 0, 0, VW, VH);
+  octx.globalCompositeOperation = "source-over";
+
+  ctx.globalAlpha = CAP;
+  ctx.drawImage(off, 0, 0, VW, VH);
+  ctx.globalAlpha = 1;
 }
+
 function resize(){
   const r = cv.getBoundingClientRect();
-  if (!r.width) return;
-  cv.width  = Math.max(1, Math.round(r.width  / 2));
-  cv.height = Math.max(1, Math.round(r.height / 2));
-  render();
+  if (!r.width || !r.height) return;
+  VW = r.width; VH = r.height;
+  S = Math.min(1.5, window.devicePixelRatio || 1);
+  const w = Math.max(1, Math.round(VW * S)), h = Math.max(1, Math.round(VH * S));
+  cv.width = w;  cv.height = h;  ctx.setTransform(S, 0, 0, S, 0, 0);
+  off.width = w; off.height = h; octx.setTransform(S, 0, 0, S, 0, 0);
+  buildEdge(); buildTex(); render();
 }
+
 function tick(now){
   rafId = null;
   if (!running || reduced.matches || document.hidden) return;
-  if (now - last > 66){ last = now; t += 0.011; mAmt *= 0.94; render(); }
+  if (now - last >= 32){
+    last = now; t += 0.02;
+    decay(); render();
+    if (!pts.length) return;                  // nothing left to draw — stop the loop
+  }
   rafId = requestAnimationFrame(tick);
 }
 function start(){
   if (rafId !== null || !running || reduced.matches || document.hidden) return;
   last = 0; rafId = requestAnimationFrame(tick);
 }
+
+(function loadPlate(){
+  const im = new Image();
+  im.crossOrigin = "anonymous";
+  im.decoding = "async";
+  im.onload = () => { LOW = buildLow(im); buildTex(); render(); };
+  im.src = PLATES[2].src;   // "Drift"
+})();
+
+/* the ink colour flips with the theme, so the tooth has to be rebuilt */
+function retheme(){ NOISE = null; buildTex(); render(); }
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
+new MutationObserver(retheme)
+  .observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
+
 window.addEventListener("resize", () => { resize(); drawChart(false); });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) start(); });
 reduced.addEventListener("change", () => { render(); start(); });
@@ -1048,4 +1186,102 @@ if (location.hash === "#drawings") show("art", false);
       root.style.setProperty("--gy", "0px");
     }
   });
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   10 · SELECTED WORK — index and track filter
+
+   Every piece already declared its tracks in data-tracks and nothing read
+   them. This is the control that does, plus an index of the section: eight
+   pieces and several thousand words, with no way to see what is in it short
+   of scrolling all of it. Both are generated from the items themselves, so
+   neither can drift from the content, and both are additive — with JS off
+   the bar stays hidden and the section is exactly what it was.
+   ══════════════════════════════════════════════════════════════ */
+(function selectedWork(){
+  const bar = document.getElementById("workbar");
+  if (!bar) return;
+  const pieces = [...document.querySelectorAll("#work [data-tracks]")];
+  if (!pieces.length) return;
+
+  const TRACKS = [["all","All"], ["ai","AI systems"], ["ds","Data science"],
+                  ["analytics","Analytics"], ["consulting","Consulting"]];
+  const has = (n,t) => t === "all" ||
+    (" " + n.dataset.tracks + " ").indexOf(" " + t + " ") > -1;
+
+  const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  /* .item__org carries a <br>; take the text with the break as a space */
+  const txt = el => el ? el.innerHTML.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim() : "";
+
+  /* ---------- index ---------- */
+  const idx = document.getElementById("workindex");
+  idx.innerHTML = pieces.map((n,i) => {
+    const t    = esc(n.dataset.short || "") || txt(n.querySelector(".item__title, h4"));
+    const meta = [txt(n.querySelector(".item__org")), txt(n.querySelector(".item__when"))]
+                   .filter(Boolean).join(" · ");
+    return '<li data-for="' + n.id + '"><a href="#' + n.id + '">' +
+           '<span class="n">' + String(i+1).padStart(2,"0") + '</span>' +
+           '<span class="t">' + t + '</span>' +
+           '<span class="m">' + meta + '</span></a></li>';
+  }).join("");
+  const rows = [...idx.children];
+
+  /* ---------- filter ---------- */
+  const tracksEl = document.getElementById("tracks");
+  const count = document.getElementById("workcount");
+  const acts  = [...document.querySelectorAll("#work .act")];
+
+  tracksEl.innerHTML = TRACKS.map(([k,label],i) =>
+    '<button type="button" data-track="' + k + '" aria-pressed="' + (i === 0) + '">' +
+    label + "</button>").join("");
+
+  function apply(track){
+    let n = 0;
+    pieces.forEach(p => {
+      const on = has(p, track);
+      p.hidden = !on;
+      /* a piece revealed by the filter must not sit at opacity 0 waiting for a
+         scroll that already happened */
+      if (on){ n++; p.classList.add("in"); }
+    });
+    rows.forEach(li => { li.hidden = document.getElementById(li.dataset.for).hidden; });
+    acts.forEach(a => {
+      const kids = [...a.querySelectorAll("[data-tracks]")];
+      a.hidden = kids.every(k => k.hidden);
+      let first = true;
+      kids.forEach(k => {
+        k.classList.toggle("is-top", !k.hidden && first);
+        if (!k.hidden) first = false;
+      });
+    });
+    count.textContent = n + (n === 1 ? " piece" : " pieces");
+  }
+
+  tracksEl.addEventListener("click", e => {
+    const b = e.target.closest("button[data-track]");
+    if (!b) return;
+    [...tracksEl.children].forEach(x => x.setAttribute("aria-pressed", x === b));
+    apply(b.dataset.track);
+  });
+
+  apply("all");
+  bar.hidden = false;
+
+  /* a piece linked to directly — from the index, or from an application email */
+  const h = location.hash.slice(1);
+  if (h && pieces.some(p => p.id === h))
+    setTimeout(() => document.getElementById(h).scrollIntoView(), 0);
+
+  /* ---------- charts that scroll sideways get an edge, not a crop ---------- */
+  const wraps = [...document.querySelectorAll(".chartwrap")];
+  function overflow(){
+    wraps.forEach(w => {
+      if (w.scrollWidth > w.clientWidth + 4) w.dataset.of = "1";
+      else delete w.dataset.of;
+    });
+  }
+  overflow();
+  window.addEventListener("resize", overflow);
+  window.addEventListener("viewchange", () => setTimeout(overflow, 60));
+  document.fonts && document.fonts.ready.then(overflow);
 })();
