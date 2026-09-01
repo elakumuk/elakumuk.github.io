@@ -764,7 +764,7 @@ const sio = new IntersectionObserver(es => es.forEach(e => {
 
 window.addEventListener("resize", moveDot);
 window.addEventListener("viewchange", () => setTimeout(moveDot, 0));
-["story","work","experience","education","credentials","toolkit","contact"]
+["work","more","experience","about","education","toolkit","contact"]
   .forEach(id => { const n = document.getElementById(id); if (n) sio.observe(n); });
 
 /* ══════════════════════════════════════════════════════════════
@@ -1255,19 +1255,18 @@ if (location.hash === "#drawings") show("art", false);
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   10 · SELECTED WORK — index and track filter
+   10 · WORK — track filter
 
-   Every piece already declared its tracks in data-tracks and nothing read
-   them. This is the control that does, plus an index of the section: eight
-   pieces and several thousand words, with no way to see what is in it short
-   of scrolling all of it. Both are generated from the items themselves, so
-   neither can drift from the content, and both are additive — with JS off
-   the bar stays hidden and the section is exactly what it was.
+   She is aiming at six job titles and the work splits cleanly between them, so
+   the reader can cut the section down to the one they are hiring for. The
+   tracks were already declared on every piece in data-tracks; this is the
+   control that reads them. Additive: with JS off the bar stays hidden and both
+   sections are exactly what they were.
    ══════════════════════════════════════════════════════════════ */
-(function selectedWork(){
+(function workFilter(){
   const bar = document.getElementById("workbar");
   if (!bar) return;
-  const pieces = [...document.querySelectorAll("#work [data-tracks]")];
+  const pieces = [...document.querySelectorAll("[data-tracks]")];
   if (!pieces.length) return;
 
   const TRACKS = [["all","All"], ["ai","AI systems"], ["ds","Data science"],
@@ -1275,27 +1274,10 @@ if (location.hash === "#drawings") show("art", false);
   const has = (n,t) => t === "all" ||
     (" " + n.dataset.tracks + " ").indexOf(" " + t + " ") > -1;
 
-  const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  /* .item__org carries a <br>; take the text with the break as a space */
-  const txt = el => el ? el.innerHTML.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim() : "";
-
-  /* ---------- index ---------- */
-  const idx = document.getElementById("workindex");
-  idx.innerHTML = pieces.map((n,i) => {
-    const t    = esc(n.dataset.short || "") || txt(n.querySelector(".item__title, h4"));
-    const meta = [txt(n.querySelector(".item__org")), txt(n.querySelector(".item__when"))]
-                   .filter(Boolean).join(" · ");
-    return '<li data-for="' + n.id + '"><a href="#' + n.id + '">' +
-           '<span class="n">' + String(i+1).padStart(2,"0") + '</span>' +
-           '<span class="t">' + t + '</span>' +
-           '<span class="m">' + meta + '</span></a></li>';
-  }).join("");
-  const rows = [...idx.children];
-
-  /* ---------- filter ---------- */
   const tracksEl = document.getElementById("tracks");
-  const count = document.getElementById("workcount");
-  const acts  = [...document.querySelectorAll("#work .act")];
+  const count    = document.getElementById("workcount");
+  const more     = document.getElementById("more");
+  const minis    = document.querySelector(".minis");
 
   tracksEl.innerHTML = TRACKS.map(([k,label],i) =>
     '<button type="button" data-track="' + k + '" aria-pressed="' + (i === 0) + '">' +
@@ -1303,22 +1285,25 @@ if (location.hash === "#drawings") show("art", false);
 
   function apply(track){
     let n = 0;
-    pieces.forEach(p => {
-      const on = has(p, track);
-      p.hidden = !on;
-      /* a piece revealed by the filter must not sit at opacity 0 waiting for a
+    pieces.forEach(el => {
+      const on = has(el, track);
+      el.hidden = !on;
+      /* a piece the filter brings back must not sit at opacity 0 waiting for a
          scroll that already happened */
-      if (on){ n++; p.classList.add("in"); }
+      if (on){ n++; el.classList.add("in"); }
     });
-    rows.forEach(li => { li.hidden = document.getElementById(li.dataset.for).hidden; });
-    acts.forEach(a => {
-      const kids = [...a.querySelectorAll("[data-tracks]")];
-      a.hidden = kids.every(k => k.hidden);
-      let first = true;
-      kids.forEach(k => {
-        k.classList.toggle("is-top", !k.hidden && first);
-        if (!k.hidden) first = false;
-      });
+    /* an empty container is worse than no container: drop the wrapper, and the
+       whole More work section, when the filter leaves them with nothing */
+    const liveMinis = minis && [...minis.children].some(c => !c.hidden);
+    if (minis) minis.hidden = !liveMinis;
+    if (more)  more.hidden  = !(liveMinis || [...more.querySelectorAll(".cs")].some(c => !c.hidden));
+    /* the first surviving case study should not carry a rule above it */
+    document.querySelectorAll("#work .cs, #more .cs").forEach(c => c.classList.remove("is-top"));
+    ["work","more"].forEach(id => {
+      const sec = document.getElementById(id);
+      if (!sec) return;
+      const first = [...sec.querySelectorAll(".cs")].find(c => !c.hidden);
+      if (first) first.classList.add("is-top");
     });
     count.textContent = n + (n === 1 ? " piece" : " pieces");
   }
@@ -1333,9 +1318,9 @@ if (location.hash === "#drawings") show("art", false);
   apply("all");
   bar.hidden = false;
 
-  /* a piece linked to directly — from the index, or from an application email */
+  /* a piece linked to directly — from an application email, or a DM */
   const h = location.hash.slice(1);
-  if (h && pieces.some(p => p.id === h))
+  if (h && pieces.some(el => el.id === h))
     setTimeout(() => document.getElementById(h).scrollIntoView(), 0);
 
   /* ---------- charts that scroll sideways get an edge, not a crop ---------- */
