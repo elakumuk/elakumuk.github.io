@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&family=Karla:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap">
-<link rel="stylesheet" href="styles.css?v=e73a04a9">
+<link rel="stylesheet" href="styles.css?v=75c645a5">
 </head>
 <body>
 
@@ -108,6 +108,9 @@
         <h2>Selected work</h2><span class="line"></span>
         <span class="eyebrow">Four case studies &middot; three run live in this page</span>
       </div>
+      <p class="section__deck">The first number a dataset hands you is usually the one that
+        hides the finding. Each of these is a different version of the same job: working out
+        whether the apparent answer has earned the right to be acted on.</p>
 
       <!-- Every piece declares its tracks in data-tracks; this control reads them, so a
            reader can cut the section down to the kind of role they are hiring for.
@@ -124,6 +127,7 @@
                data-short="Multi-asset meta-labeling">
         <div class="cs__rail">
           <p class="cs__num" aria-hidden="true">01</p>
+          <p class="cs__tag">When to act</p>
           <p class="cs__org">State Street<br>Investment Management</p>
           <p class="cs__when">May &ndash; Aug 2026</p>
           <p class="cs__kind">Graduate Field Project<br>Brandeis &times; State Street, Boston</p>
@@ -149,7 +153,8 @@
 
           <dl class="facts">
             <div><dt>My role</dt>
-              <dd>Attribution design &middot; walk-forward validation &middot; two-layer cost model</dd></div>
+              <dd>Attribution design &middot; walk-forward validation &middot; transaction-cost modelling
+                  &middot; benchmark-relative weighting</dd></div>
             <div><dt>Method</dt>
               <dd>Index-level returns rather than ETF &middot; technical signals consolidated into
                   one sleeve &middot; benchmark-relative active weights &middot; every stage re-fit
@@ -186,6 +191,7 @@
                data-short="LLM versus causal inference">
         <div class="cs__rail">
           <p class="cs__num" aria-hidden="true">02</p>
+          <p class="cs__tag">When to believe</p>
           <p class="cs__org">Brandeis<br>Marketing Analytics</p>
           <p class="cs__when">Spring 2026</p>
           <p class="cs__kind">Coursework study<br>5,000 users &middot; 10 campaigns</p>
@@ -201,6 +207,7 @@
               <span class="vn__n">+5.53<i>pp</i></span>
               <span class="vn__l">Apparent campaign lift<br><em>naive treatment minus control, highly significant</em></span>
             </div>
+            <span class="vnums__a" aria-hidden="true"></span>
             <div class="vn vn--eq">
               <span class="vn__n">&asymp;&thinsp;0<i>pp</i></span>
               <span class="vn__l">Once you control for who was already engaged<br><em>the whole effect was selection bias</em></span>
@@ -261,6 +268,7 @@
                data-short="Massachusetts crash intelligence">
         <div class="cs__rail">
           <p class="cs__num" aria-hidden="true">03</p>
+          <p class="cs__tag">What to count</p>
           <p class="cs__org">Brandeis MSBA<br>Team project</p>
           <p class="cs__when">Spring 2026</p>
           <p class="cs__kind">MassDOT IMPACT open data<br>ArcGIS feature services</p>
@@ -272,13 +280,15 @@
             the volume is. Severity rates say something else entirely.</p>
 
           <div class="tiles" id="tiles">
-            <div class="tile"><span class="n" data-count="661375" data-dp="0">0</span>
+            <!-- These are the values. Nothing animates them and nothing replaces them,
+                 so the page cannot publish a number that is not the result. -->
+            <div class="tile"><span class="n">661,375</span>
               <span class="l">Crash records pulled live from MassDOT and normalised</span></div>
             <div class="tile"><span class="n">2021&ndash;25</span>
               <span class="l">Years of coverage, revised as records close</span></div>
-            <div class="tile"><span class="n" data-count="11.1" data-suffix="&times;" data-dp="1">0&times;</span>
+            <div class="tile"><span class="n">11.1&times;</span>
               <span class="l">A pedestrian crash is this many times more likely to be killed-or-serious than a motor-vehicle crash</span></div>
-            <div class="tile"><span class="n" data-count="-27.6" data-suffix="%" data-dp="0" data-sign="1">0%</span>
+            <div class="tile"><span class="n">&minus;27.6%</span>
               <span class="l">Change in the share of bicycle crashes that are killed-or-serious, even as volume rose 47.6%</span></div>
           </div>
 
@@ -369,6 +379,7 @@
                data-short="Ovrule — decision receipts">
         <div class="cs__rail">
           <p class="cs__num" aria-hidden="true">04</p>
+          <p class="cs__tag">When to stop</p>
           <p class="cs__org">Ovrule</p>
           <p class="cs__when">Apr 2026 &ndash; present</p>
           <p class="cs__kind">Creator &amp; sole developer<br>Shipped product &middot; npm SDK</p>
@@ -395,10 +406,10 @@
 
           <dl class="facts">
             <div><dt>My role</dt>
-              <dd>Schema &middot; classifier &middot; evaluation set &middot; API &middot; interface &middot; npm SDK</dd></div>
+              <dd><b>Creator &amp; sole developer.</b> Schema &middot; classifier &middot; evaluation set
+                  &middot; API &middot; interface &middot; npm SDK &mdash; every layer</dd></div>
             <div><dt>Shipped</dt>
-              <dd>Live product &middot; published npm package &middot; two lines to wrap an existing
-                  tool call &middot; verdict in 8&ndash;9 seconds</dd></div>
+              <dd>Live product &middot; published npm package &middot; two lines to wrap an existing tool call</dd></div>
           </dl>
 
           <div class="links links--cta">
@@ -481,6 +492,7 @@
                data-short="Boston foot traffic, DiD">
         <div class="cs__rail">
           <p class="cs__num" aria-hidden="true">05</p>
+          <p class="cs__tag">Where to look</p>
           <p class="cs__org">Brandeis BUS240F<br>Group project</p>
           <p class="cs__when">Spring 2026</p>
           <p class="cs__kind">Advan POI visit data<br>Boston &amp; Cambridge</p>
@@ -679,12 +691,18 @@
     <section class="section rv" id="toolkit">
       <div class="section__head"><h2>Toolkit</h2><span class="line"></span></div>
       <div class="kit">
-        <div><h3>Languages</h3><p>Python &middot; SQL &middot; R &middot; SAS &middot; STATA</p></div>
-        <div><h3>Modeling</h3><p>scikit-learn &middot; LightGBM &middot; XGBoost &middot; CatBoost &middot; SHAP &middot; AutoGluon &middot; FLAML</p></div>
-        <div><h3>AI systems</h3><p>LLM APIs &middot; RAG &middot; ChromaDB &middot; evals &middot; agent guardrails</p></div>
-        <div><h3>Analysis &amp; build</h3><p>Tableau &middot; Power BI &middot; Bloomberg &middot; advanced Excel &middot; Git &middot; Next.js &middot; Supabase</p></div>
-        <div><h3>Languages spoken</h3><p>Turkish (native) &middot; English (fluent) &middot; French (beginner)</p></div>
+        <div><h3>Core</h3><p>Python &middot; SQL &middot; R &middot; advanced Excel</p></div>
+        <div><h3>Analytical methods</h3><p>Causal inference &middot; experimentation &middot; machine learning &middot; information visualization</p></div>
+        <div><h3>AI systems</h3><p>LLM APIs &middot; evals &middot; RAG &middot; agent guardrails</p></div>
+        <div><h3>Build &amp; BI</h3><p>Tableau &middot; Power BI &middot; Bloomberg &middot; Next.js &middot; Supabase &middot; Git</p></div>
       </div>
+      <dl class="kit-also">
+        <div><dt>Also used</dt>
+          <dd>scikit-learn &middot; LightGBM &middot; XGBoost &middot; CatBoost &middot; SHAP &middot; AutoGluon
+            &middot; FLAML &middot; ChromaDB &middot; SAS &middot; STATA</dd></div>
+        <div><dt>Languages spoken</dt>
+          <dd>Turkish (native) &middot; English (fluent) &middot; French (beginner)</dd></div>
+      </dl>
     </section>
 
     <!-- ═══════════ CLOSING ═══════════ -->
@@ -805,6 +823,6 @@
   </main>
 </div>
 
-<script src="app.js?v=3ed7e5d6" defer></script>
+<script src="app.js?v=11ef1f3d" defer></script>
 </body>
 </html>

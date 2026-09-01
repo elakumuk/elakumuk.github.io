@@ -720,23 +720,16 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), {threshold:0.12, rootMargin:"0px 0px -8% 0px"});
 document.querySelectorAll(".rv").forEach(n => io.observe(n));
 
-const cio = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  cio.unobserve(e.target);
-  const n = e.target, target = parseFloat(n.dataset.count),
-        dp = +(n.dataset.dp || 0), suf = n.dataset.suffix || "",
-        sign = n.dataset.sign === "1";
-  const fmt = v => (sign && v > 0 ? "+" : "") +
-    (dp ? v.toFixed(dp) : Math.round(v).toLocaleString("en-US")) + suf;
-  if (reduced.matches){ n.textContent = fmt(target); return; }
-  const t0 = performance.now(), dur = 1100;
-  (function step(t){
-    const p = Math.min(1, (t - t0) / dur), e2 = 1 - Math.pow(1 - p, 3);
-    n.textContent = fmt(target * e2);
-    if (p < 1) requestAnimationFrame(step);
-  })(t0);
-}), {threshold:0.5});
-document.querySelectorAll("[data-count]").forEach(n => cio.observe(n));
+/* The stat tiles used to count up from zero. Two problems, and the second is the
+   one that matters: a counter starting at zero publishes "0 records" and "0x" as
+   if they were the finding, and on the way up it publishes every wrong number in
+   between — a screenshot taken mid-animation showed 533,543 crash records and a
+   9.0x severity ratio, both plausible, both false. On a site whose argument is
+   that a number has to earn belief before you act on it, an animation that
+   invents numbers for a second is not a flourish worth having. The tiles now
+   carry their true value in the markup and never change: correct with no JS,
+   correct to a crawler, correct in a screenshot. The section still arrives with
+   the .rv reveal, which is motion enough.                                      */
 
 /* rail nav current-section highlight */
 const links = [...railnav.querySelectorAll("a")];

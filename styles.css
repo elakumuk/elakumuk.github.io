@@ -231,6 +231,10 @@ a{color:inherit}
 }
 .section__head{display:flex;align-items:baseline;gap:1rem;margin-bottom:2.25rem;flex-wrap:wrap}
 .section__head .line{flex:1 1 2rem}
+/* names the thread through the section once, so the case-study questions can
+   carry it from there without any of them having to restate it */
+.section__deck{margin:-1.5rem 0 2.4rem;font-size:1rem;line-height:1.6;
+  color:var(--muted);max-width:62ch}
 .section__head h2{font-family:var(--f-display);font-size:clamp(1.5rem,2.6vw,2rem);
   letter-spacing:-.01em}
 .section__head .line{flex:1;height:1px;background:var(--rule)}
@@ -249,6 +253,11 @@ a{color:inherit}
   color:var(--accent);margin-bottom:.95rem}
 /* the client name is the first credential a recruiter looks for — set it as a
    masthead, not as metadata */
+/* one word for the judgment each piece turned on. Five different phrasings down
+   the page read as a pattern; five copies of one sentence read as a tic. */
+.cs__tag{margin:-.6rem 0 .95rem;font-family:var(--f-mono);font-size:.625rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);
+  padding-bottom:.55rem;border-bottom:1px solid var(--rule-soft)}
 .cs__org{font-family:var(--f-display);font-size:1.0625rem;color:var(--ink);
   line-height:1.2;letter-spacing:-.005em}
 .cs__when{margin-top:.4rem;font-family:var(--f-mono);font-size:.6875rem;color:var(--muted);
@@ -305,6 +314,12 @@ a{color:inherit}
 .vnums{margin:1.7rem 0 0;display:flex;flex-wrap:wrap;gap:1px}
 .vn{flex:1 1 15rem;min-width:0;background:var(--paper);padding:1.15rem 1.2rem;
   box-shadow:0 0 0 1px var(--rule)}
+/* the point is the move from one to the other, not the two on their own */
+.vnums__a{flex:0 0 2.25rem;align-self:center;height:1px;background:var(--rule);
+  position:relative;margin:0 .35rem}
+.vnums__a::after{content:"";position:absolute;right:0;top:-4px;
+  border-left:6px solid var(--rule);
+  border-top:4px solid transparent;border-bottom:4px solid transparent}
 .vn__n{display:block;font-family:var(--f-display);font-size:clamp(2.25rem,4.6vw,3.25rem);
   line-height:1;font-variant-numeric:tabular-nums;color:var(--muted)}
 .vn__n i{font-style:normal;font-size:.34em;margin-left:.16em;letter-spacing:.02em}
@@ -439,8 +454,12 @@ table.data th:first-child,table.data td:first-child{text-align:left}
 table.data th{color:var(--muted);font-weight:500}
 
 /* ════════════════════════════════════════════════════════════ OVRULE DEMO */
-.demo{display:grid;grid-template-columns:1fr;gap:1rem}
-@media(min-width:56rem){.demo{grid-template-columns:1fr 1fr}}
+/* 1fr is minmax(auto,1fr): the receipt's mono rows set a min-content width that
+   1fr will not go below, so at 1024 it pushed 13px past the viewport. And the
+   breakpoint was reading the window when what matters is this column — two
+   panels only earn their split once the case-study column is genuinely wide. */
+.demo{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
+@media(min-width:72rem){.demo{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 .demo label{display:block;margin-bottom:.4rem}
 .demo textarea{width:100%;min-height:5.5rem;resize:vertical;background:var(--paper);
   color:var(--ink);border:1px solid var(--rule);padding:.6rem .7rem;
@@ -462,11 +481,11 @@ table.data th{color:var(--muted);font-weight:500}
 .verdict .badge{padding:.1rem .45rem;border:1px solid currentColor;font-size:.6875rem}
 .verdict.allow{color:var(--ok)} .verdict.refuse{color:var(--bad)} .verdict.idle{color:var(--muted)}
 .rules{list-style:none;margin:0;padding:.3rem 0}
-.rules li{display:flex;align-items:center;gap:.6rem;padding:.42rem .85rem;
+.rules li{display:flex;align-items:center;gap:.6rem;padding:.42rem .85rem;min-width:0;
   font-family:var(--f-mono);font-size:.75rem;opacity:0;transform:translateX(-4px);
   transition:opacity 260ms,transform 260ms}
 .rules li.in{opacity:1;transform:none}
-.rules li .rn{margin-right:auto;color:var(--ink-soft)}
+.rules li .rn{margin-right:auto;min-width:0;color:var(--ink-soft)}
 .rules li .rv{font-size:.6875rem;letter-spacing:.06em}
 .rules li.pass .rv{color:var(--ok)} .rules li.fail .rv{color:var(--bad)}
 .rules li .mark{width:1rem;text-align:center}
@@ -486,7 +505,9 @@ pre.code{margin:0;overflow-x:auto;background:var(--paper);border:1px solid var(-
   padding:.85rem;font-family:var(--f-mono);font-size:.75rem;line-height:1.7;color:var(--ink-soft)}
 pre.code .k{color:var(--accent)} pre.code .s{color:var(--s2)} pre.code .c{color:var(--muted)}
 
-video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--rule)}
+/* 1280x990, declared so the figure does not resize when metadata arrives */
+video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--rule);
+  aspect-ratio:128/99}
 
 /* ════════════════════════════════════════════════════════════ DIAGRAM */
 .diagram{overflow-x:auto}
@@ -530,6 +551,13 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .kit h3{font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.13em;
   text-transform:uppercase;color:var(--muted);margin-bottom:.6rem}
 .kit p{font-size:.875rem;color:var(--ink-soft);line-height:1.75}
+/* kept, but visibly a second tier — a flat list of every library reads as a dump
+   and buries the four things that are actually the toolkit */
+.kit-also{margin:1.5rem 0 0;display:grid;gap:.85rem}
+.kit-also>div{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:0 1.25rem}
+.kit-also dt{font-family:var(--f-mono);font-size:.625rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);padding-top:.15rem}
+.kit-also dd{margin:0;font-size:.8125rem;color:var(--muted);line-height:1.7}
 .contact{display:flex;flex-wrap:wrap;gap:2.5rem 4rem}
 .contact__block{min-width:12rem}
 .contact__block .eyebrow{display:block;margin-bottom:.5rem}
@@ -665,6 +693,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   .cs__rail{position:static;display:flex;flex-wrap:wrap;align-items:baseline;
     gap:.3rem .85rem;padding-bottom:.9rem;border-bottom:1px solid var(--rule-soft)}
   .cs__num{order:1;margin:0}
+  .cs__tag{order:1;margin:0;padding:0;border-bottom:0}
   .cs__when{order:2;margin:0}
   .cs__org{order:3;flex:1 1 100%;font-size:1rem;margin-top:.15rem}
   .cs__kind{order:4;flex:1 1 100%;margin:0;font-size:.6875rem}
@@ -673,6 +702,8 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   /* a long eyebrow was crushing the heading into two lines; give it its own */
   .section__head{gap:.35rem 1rem}
   .section__head .eyebrow{flex:1 1 100%}
+  .section__deck{margin:-1rem 0 1.9rem;font-size:.9375rem}
+  .kit-also>div{grid-template-columns:1fr;gap:.2rem}
   /* separators on a wrapped row leave orphan rules; stack instead */
   .hero__facts{flex-direction:column;row-gap:.3rem}
   .hero__facts li{padding-left:0;margin-left:0;border-left:0}
@@ -701,7 +732,10 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 /* ════════════════════════════════════════════════════════════ CRASH MAP */
 .mapwrap{position:relative;background:var(--paper);border:1px solid var(--rule-soft);
   overflow:hidden}
-#crashmap{display:block;width:100%;height:auto}
+/* the canvas has no height until 41k points have been fetched and sized, which
+   collapsed the figure and then jolted it open. The ratio is Massachusetts';
+   once JS sets an explicit height this is ignored. */
+#crashmap{display:block;width:100%;height:auto;aspect-ratio:1.58}
 .maphint{position:absolute;inset:0;display:grid;place-items:center;margin:0;
   font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.08em;color:var(--muted);
   transition:opacity 400ms}
