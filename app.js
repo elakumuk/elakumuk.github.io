@@ -1262,7 +1262,7 @@ if (location.hash === "#drawings") show("art", false);
   const pieces = [...document.querySelectorAll("[data-tracks]")];
   if (!pieces.length) return;
 
-  const TRACKS = [["all","All"], ["ai","AI systems"], ["ds","Data science"],
+  const TRACKS = [["all","All"], ["finance","Finance"], ["ai","AI systems"], ["ds","Data science"],
                   ["analytics","Analytics"], ["consulting","Consulting"]];
   const has = (n,t) => t === "all" ||
     (" " + n.dataset.tracks + " ").indexOf(" " + t + " ") > -1;

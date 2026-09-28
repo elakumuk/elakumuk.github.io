@@ -106,7 +106,7 @@
     <section class="section" id="work">
       <div class="section__head">
         <h2>Selected work</h2><span class="line"></span>
-        <span class="eyebrow">Four case studies &middot; three run live in this page</span>
+        <span class="eyebrow">Five case studies &middot; three run live in this page</span>
       </div>
       <p class="section__deck">The first number a dataset hands you is usually the one that
         hides the finding. Each of these is a different version of the same job: working out
@@ -123,7 +123,7 @@
       </div>
 
       <!-- ─── 01 · State Street ─── -->
-      <article class="cs rv" id="w-meta-labeling" data-tracks="ds consulting"
+      <article class="cs rv" id="w-meta-labeling" data-tracks="finance ds consulting"
                data-short="Multi-asset meta-labeling">
         <div class="cs__rail">
           <p class="cs__num" aria-hidden="true">01</p>
@@ -478,6 +478,69 @@
           </div>
         </div>
       </article>
+
+      <!-- ─── 05 · onchain research desk ─── -->
+      <article class="cs rv" id="w-onchain-desk" data-tracks="finance ds analytics ai"
+               data-short="Onchain research desk">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">05</p>
+          <p class="cs__tag">What you can own</p>
+          <p class="cs__org">Personal project<br>Live, updated weekly</p>
+          <p class="cs__when">Fall 2026</p>
+          <p class="cs__kind">Coinbase &amp; Kraken books<br>CoinGecko &middot; DefiLlama</p>
+        </div>
+        <div class="cs__main">
+          <p class="cs__q">Can you actually buy what the model wants to hold?</p>
+          <h3 class="cs__title">A token research desk where every number has to prove itself</h3>
+          <p class="cs__take">Twenty tokens profiled for tradable liquidity, value accrual to
+            holders, and how much a portfolio can own before the market stops absorbing it.</p>
+
+          <dl class="facts">
+            <div><dt>My role</dt>
+              <dd>Research questions &middot; liquidity and capacity design &middot; verification
+                  rules &middot; reviewing every memo conclusion against governance records</dd></div>
+            <div><dt>Method</dt>
+              <dd>Order-book walks for $100K&ndash;$10M orders &middot; Amihud illiquidity &middot;
+                  fees vs. token-holder revenue &middot; Ledoit-Wolf covariance &middot; positions
+                  capped at 10% of median daily volume</dd></div>
+          </dl>
+
+          <p class="cs__desc">Reported volume and tradable depth tell different stories. The desk
+            measures both, writes a memo per token from a registry of facts, and refuses to publish
+            if any number in a memo does not match its source. A language model may add commentary;
+            a deterministic verifier decides whether it ships.</p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">3<i>of 20</i></span><span class="l">Fill a $10M order within 15% of mid</span></div>
+                <div class="did"><span class="n">$256<i>M</i></span><span class="l">AAVE median daily volume</span></div>
+                <div class="did"><span class="n">$1.6<i>M</i></span><span class="l">AAVE depth within &plusmn;2% on US venues</span></div>
+                <div class="did em"><span class="n">17<i>of 20</i></span><span class="l">Inverse-vol positions capped at $1B AUM</span></div>
+                <div class="did em"><span class="n">1,212<i>/1,212</i></span><span class="l">Memo numbers verified</span></div>
+              </div>
+              <p class="didnote">Snapshot of 28 September 2026. At a billion dollars the capped
+                portfolio concentrates in bitcoin, ether and solana &mdash; it is effectively a
+                different strategy.</p>
+            </div>
+          </figure>
+
+          <div class="links links--cta">
+            <a class="btn btn--solid" href="https://elakumuk.github.io/onchain-research-desk/" target="_blank" rel="noopener">Open the live desk</a>
+            <a class="link" href="https://github.com/elakumuk/onchain-research-desk" target="_blank" rel="noopener">Code and methodology</a>
+          </div>
+
+          <p class="brought">The verifier guarantees a number matches its source, not that the
+            conclusion is right. When a memo said Aave&rsquo;s holder cash flow had stopped, I
+            checked governance before believing it &mdash; the DAO had paused buybacks.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Market microstructure</span>
+            <span class="chip">Tokenomics</span><span class="chip">Portfolio construction</span>
+            <span class="chip">GitHub Actions</span>
+          </div>
+        </div>
+      </article>
     </section>
 
     <!-- ═══════════ MORE WORK ═══════════ -->
@@ -487,11 +550,11 @@
         <span class="eyebrow">Shorter pieces, same habit</span>
       </div>
 
-      <!-- ─── 05 · foot traffic, DiD ─── -->
+      <!-- ─── 06 · foot traffic, DiD ─── -->
       <article class="cs cs--sm rv" id="w-foot-traffic" data-tracks="analytics consulting ds"
                data-short="Boston foot traffic, DiD">
         <div class="cs__rail">
-          <p class="cs__num" aria-hidden="true">05</p>
+          <p class="cs__num" aria-hidden="true">06</p>
           <p class="cs__tag">Where to look</p>
           <p class="cs__org">Brandeis BUS240F<br>Group project</p>
           <p class="cs__when">Spring 2026</p>
@@ -561,69 +624,6 @@
             <span class="chip">Python</span><span class="chip">pandas</span>
             <span class="chip">Difference-in-differences</span><span class="chip">Tableau</span>
             <span class="chip">Causal inference</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- ─── 06 · onchain research desk ─── -->
-      <article class="cs cs--sm rv" id="w-onchain-desk" data-tracks="ds analytics ai"
-               data-short="Onchain research desk">
-        <div class="cs__rail">
-          <p class="cs__num" aria-hidden="true">06</p>
-          <p class="cs__tag">What you can own</p>
-          <p class="cs__org">Personal project<br>Live, updated weekly</p>
-          <p class="cs__when">Fall 2026</p>
-          <p class="cs__kind">Coinbase &amp; Kraken books<br>CoinGecko &middot; DefiLlama</p>
-        </div>
-        <div class="cs__main">
-          <p class="cs__q">Can you actually buy what the model wants to hold?</p>
-          <h3 class="cs__title">A token research desk where every number has to prove itself</h3>
-          <p class="cs__take">Twenty tokens profiled for tradable liquidity, value accrual to
-            holders, and how much a portfolio can own before the market stops absorbing it.</p>
-
-          <dl class="facts">
-            <div><dt>My role</dt>
-              <dd>Research questions &middot; liquidity and capacity design &middot; verification
-                  rules &middot; reviewing every memo conclusion against governance records</dd></div>
-            <div><dt>Method</dt>
-              <dd>Order-book walks for $100K&ndash;$10M orders &middot; Amihud illiquidity &middot;
-                  fees vs. token-holder revenue &middot; Ledoit-Wolf covariance &middot; positions
-                  capped at 10% of median daily volume</dd></div>
-          </dl>
-
-          <p class="cs__desc">Reported volume and tradable depth tell different stories. The desk
-            measures both, writes a memo per token from a registry of facts, and refuses to publish
-            if any number in a memo does not match its source. A language model may add commentary;
-            a deterministic verifier decides whether it ships.</p>
-
-          <figure class="fig">
-            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
-            <div class="fig__body">
-              <div class="didrow">
-                <div class="did"><span class="n">3<i>of 20</i></span><span class="l">Fill a $10M order within 15% of mid</span></div>
-                <div class="did"><span class="n">$256<i>M</i></span><span class="l">AAVE median daily volume</span></div>
-                <div class="did"><span class="n">$1.6<i>M</i></span><span class="l">AAVE depth within &plusmn;2% on US venues</span></div>
-                <div class="did em"><span class="n">17<i>of 20</i></span><span class="l">Inverse-vol positions capped at $1B AUM</span></div>
-                <div class="did em"><span class="n">1,212<i>/1,212</i></span><span class="l">Memo numbers verified</span></div>
-              </div>
-              <p class="didnote">Snapshot of 28 September 2026. At a billion dollars the capped
-                portfolio concentrates in bitcoin, ether and solana &mdash; it is effectively a
-                different strategy.</p>
-            </div>
-          </figure>
-
-          <div class="links links--cta">
-            <a class="btn btn--solid" href="https://elakumuk.github.io/onchain-research-desk/" target="_blank" rel="noopener">Open the live desk</a>
-            <a class="link" href="https://github.com/elakumuk/onchain-research-desk" target="_blank" rel="noopener">Code and methodology</a>
-          </div>
-
-          <p class="brought">The verifier guarantees a number matches its source, not that the
-            conclusion is right. When a memo said Aave&rsquo;s holder cash flow had stopped, I
-            checked governance before believing it &mdash; the DAO had paused buybacks.</p>
-          <div class="chips">
-            <span class="chip">Python</span><span class="chip">Market microstructure</span>
-            <span class="chip">Tokenomics</span><span class="chip">Portfolio construction</span>
-            <span class="chip">GitHub Actions</span>
           </div>
         </div>
       </article>
@@ -886,6 +886,6 @@
   </main>
 </div>
 
-<script src="app.js?v=11ef1f3d" defer></script>
+<script src="app.js?v=1aa93068" defer></script>
 </body>
 </html>
