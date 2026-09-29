@@ -1299,6 +1299,12 @@ if (location.hash === "#drawings") show("art", false);
       if (first) first.classList.add("is-top");
     });
     count.textContent = n + (n === 1 ? " piece" : " pieces");
+    /* the ledger follows the same filter, row for row */
+    const rows = [...document.querySelectorAll(".ledger__row")];
+    rows.forEach(r => { r.hidden = !(track === "all" ||
+      (" " + r.dataset.ltracks + " ").indexOf(" " + track + " ") > -1); });
+    const sep = document.querySelector(".ledger__sep");
+    if (sep) sep.hidden = !rows.some(r => !r.hidden && r.classList.contains("ledger__row--sm"));
   }
 
   tracksEl.addEventListener("click", e => {
@@ -1328,4 +1334,91 @@ if (location.hash === "#drawings") show("art", false);
   window.addEventListener("resize", overflow);
   window.addEventListener("viewchange", () => setTimeout(overflow, 60));
   document.fonts && document.fonts.ready.then(overflow);
+})();
+
+/* ---------- plates: summary by default, the full case on request ----------
+   Progressive: without JS every case is open and no toggle is shown. With JS each
+   case collapses to its verdict, situation / what I did / outcome and links; the
+   depth stays laid out at its real width, so charts inside it never draw at 0px. */
+(function plates(){
+  const mores = [...document.querySelectorAll(".cs__more")];
+  if (!mores.length) return;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const items = mores.map(m => {
+    const cs = m.closest(".cs");
+    const btn = cs.querySelector(".cs__toggle");
+    const label = btn.querySelector("span");
+    function set(open, quiet){
+      btn.setAttribute("aria-expanded", open);
+      label.textContent = open ? "Close the full case" : "Read the full case";
+      m.inert = !open;
+      if (!quiet && !reduce){
+        m.classList.add("is-moving");
+        clearTimeout(m._t);
+        m._t = setTimeout(() => m.classList.remove("is-moving"), 620);
+      }
+      m.classList.toggle("is-closed", !open);
+      /* charts measure on resize; give them one once the row has opened */
+      if (open) setTimeout(() => window.dispatchEvent(new Event("resize")), quiet || reduce ? 0 : 580);
+    }
+    btn.hidden = false;
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") !== "true";
+      set(open);
+      if (!open){
+        const top = cs.getBoundingClientRect().top;
+        if (top < 0) cs.scrollIntoView({block: "start", behavior: reduce ? "auto" : "smooth"});
+      }
+    });
+    return {cs, set};
+  });
+  /* bulk changes (first paint, the Summary / Full switch) happen instantly; only a
+     single case opened by hand animates */
+  const instant = fn => {
+    document.documentElement.classList.add("plates-still");
+    fn();
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      document.documentElement.classList.remove("plates-still")));
+  };
+  instant(() => items.forEach(it => it.set(false, true)));
+
+  /* one control for reading depth, beside the track filter */
+  const row = document.querySelector(".workbar__row");
+  if (row){
+    const g = document.createElement("div");
+    g.className = "readmode"; g.setAttribute("role", "group");
+    g.setAttribute("aria-label", "Reading depth");
+    g.innerHTML = '<button type="button" data-open="0" aria-pressed="true">Summary</button>' +
+                  '<button type="button" data-open="1" aria-pressed="false">Full cases</button>';
+    g.addEventListener("click", e => {
+      const b = e.target.closest("button[data-open]");
+      if (!b) return;
+      [...g.children].forEach(x => x.setAttribute("aria-pressed", x === b));
+      const open = b.dataset.open === "1";
+      instant(() => items.forEach(it => it.set(open, true)));
+    });
+    row.appendChild(g);
+  }
+
+  /* a direct link to a case (from an email, a DM) arrives at its summary; a link to
+     something inside a case opens it */
+  const h = location.hash.slice(1);
+  const target = h && document.getElementById(h);
+  if (target){
+    const m = target.closest(".cs__more");
+    if (m) instant(() => items.find(it => it.cs.contains(m)).set(true, true));
+  }
+})();
+
+/* ---------- ledger: the first reads are struck through once, in order ---------- */
+(function ledger(){
+  const L = document.getElementById("ledger");
+  if (!L || !("IntersectionObserver" in window)) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;   // static: already struck
+  L.classList.add("is-armed");
+  new IntersectionObserver((es, obs) => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    requestAnimationFrame(() => L.classList.add("is-read"));
+    obs.disconnect();
+  }), {threshold: .25}).observe(L);
 })();

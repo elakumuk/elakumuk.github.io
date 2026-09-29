@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=IBM+Plex+Mono:wght@400;500&family=Karla:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap">
-<link rel="stylesheet" href="styles.css?v=75c645a5">
+<link rel="stylesheet" href="styles.css?v=7f3b9446">
 </head>
 <body>
 
@@ -71,7 +71,7 @@
       <ul class="hero__facts fade">
         <li>M.S. Business Analytics &middot; Brandeis</li>
         <li>State Street &middot; field project</li>
-        <li>Boston / New York</li>
+        <li>Open to relocation</li>
         <li class="is-open"><span class="dot" aria-hidden="true"></span>Available January 2027</li>
       </ul>
       <div class="hero__cta fade">
@@ -88,25 +88,11 @@
       </p>
     </header>
 
-    <!-- ═══════════ CREDIBILITY ═══════════ -->
-    <section class="cred" aria-label="Credentials at a glance">
-      <dl>
-        <div class="cred__i cred__i--key"><dt>Field project</dt>
-          <dd>State Street Investment&nbsp;Management</dd></div>
-        <div class="cred__i cred__i--key"><dt>Degree</dt>
-          <dd>M.S. Business Analytics, Brandeis &middot; Dec&nbsp;2026</dd></div>
-        <div class="cred__i"><dt>Works in</dt>
-          <dd>Python &middot; SQL &middot; R &middot; Tableau</dd></div>
-        <div class="cred__i"><dt>Methods</dt>
-          <dd>Causal inference &middot; experimentation &middot; AI systems</dd></div>
-      </dl>
-    </section>
 
     <!-- ═══════════ SELECTED WORK ═══════════ -->
     <section class="section" id="work">
       <div class="section__head">
         <h2>Selected work</h2><span class="line"></span>
-        <span class="eyebrow">Five case studies &middot; three run live in this page</span>
       </div>
       <p class="section__deck">The first number a dataset hands you is usually the one that
         hides the finding. Each of these is a different version of the same job: working out
@@ -120,6 +106,23 @@
           <div class="tracks" id="tracks" role="group" aria-label="Filter work by track"></div>
           <p class="workbar__count" id="workcount" role="status" aria-live="polite"></p>
         </div>
+      </div>
+
+      <!-- The ledger: every piece in one line, first read against what held up.
+           It is the navigation for the section and the thesis of the site at once. -->
+      <div class="ledger" id="ledger">
+        <div class="ledger__head" aria-hidden="true"><span></span><span>Question</span><span>First read</span><span></span><span>What held up</span><span></span></div>
+        <ol class="ledger__list" aria-label="All work at a glance: the first read, and what held up">
+        <li class="ledger__row" data-ltracks="finance ds consulting" style="--i:0"><a href="#w-meta-labeling"><span class="lg__n">01</span><span class="lg__q"><em>When can you trust a signal?</em><small>State Street &middot; field project</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">A model that looked strong in-sample</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>0.81 Sharpe, positive in six of six out-of-sample periods</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row" data-ltracks="finance ds analytics ai" style="--i:1"><a href="#w-onchain-desk"><span class="lg__n">02</span><span class="lg__q"><em>Can you actually buy what the model wants to hold?</em><small>Onchain research desk &middot; live</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">AAVE trades $256M a day</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>$1.6M sits within 2% of price on US venues</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row" data-ltracks="ds analytics consulting ai" style="--i:2"><a href="#w-llm-analyst"><span class="lg__n">03</span><span class="lg__q"><em>Can an LLM be your marketing analyst?</em><small>Brandeis &middot; causal study</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">+5.53 point lift, p&thinsp;&lt;&thinsp;0.001</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>Zero with controls &mdash; and the model accepted 5.53 anyway</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row" data-ltracks="analytics consulting ds" style="--i:3"><a href="#w-crash-dashboard"><span class="lg__n">04</span><span class="lg__q"><em>Who actually gets hurt on Massachusetts roads?</em><small>MassDOT crash intelligence</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">Motor vehicles dominate the counts</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>Pedestrian crashes are 11.1&times; as likely to kill or seriously injure</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row" data-ltracks="ai ds" style="--i:4"><a href="#w-ovrule"><span class="lg__n">05</span><span class="lg__q"><em>When do you stop the machine?</em><small>Ovrule &middot; live product</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">What the agent says it will do</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>What the action would do &mdash; refused before it runs</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__sep" aria-hidden="true"><span>More work</span></li>
+        <li class="ledger__row ledger__row--sm" data-ltracks="analytics consulting ds" style="--i:5"><a href="#w-foot-traffic"><span class="lg__n">06</span><span class="lg__q"><em>When is the obvious answer wrong?</em><small>Boston foot traffic &middot; DiD</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">In aggregate, a clean null</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>Declines in coffee shops and restaurants near universities</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row ledger__row--sm" data-ltracks="analytics consulting" style="--i:6"><a href="#w-olist"><span class="lg__n">07</span><span class="lg__q"><em>What does late delivery really cost?</em><small>Olist &middot; 100K+ orders</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">A logistics problem</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>A retention problem: 2.57 vs 4.29 stars</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row ledger__row--sm" data-ltracks="ai" style="--i:7"><a href="#w-jobhunter"><span class="lg__n">08</span><span class="lg__q"><em>What runs a job search at fifty companies?</em><small>JobHunter &middot; agent</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">A spreadsheet</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>A scheduled agent that watches postings and pushes matches</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        </ol>
       </div>
 
       <!-- ─── 01 · State Street ─── -->
@@ -138,6 +141,19 @@
           <p class="cs__take">Most models predict a direction. This one decides whether the
             direction has earned the right to be traded.</p>
 
+          <div class="finding">
+            <p class="finding__n">0.81<small>Sharpe</small></p>
+            <p class="finding__t">Walk-forward Sharpe of the recommended version, positive in six of six out-of-sample periods.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>A State Street portfolio team&rsquo;s multi-asset model &mdash; seven asset classes, about fifteen years of weekly data &mdash; looked strong on the data it was built on.</dd></div>
+            <div><dt>What I did</dt><dd>Designed the test around six rolling out-of-sample periods with the sample held fixed across every variant, and built the attribution, the two-layer cost model and the benchmark-relative weighting.</dd></div>
+            <div><dt>Outcome</dt><dd>The recommended version held up in every period. I owned the narrative and the Q&amp;A with the State Street stakeholder.</dd></div>
+          </dl>
+          <div class="cs__act">
+            <button class="cs__toggle" type="button" aria-expanded="true" aria-controls="more-w-meta-labeling" hidden><span>Read the full case</span><i aria-hidden="true"></i></button>
+          </div>
+          <div class="cs__more" id="more-w-meta-labeling"><div class="cs__more-in">
           <div class="flow" role="img" aria-label="A primary signal produces a directional view; a meta-model asks whether that view can be trusted here; the answer is to act, size down, or ignore.">
             <span class="flow__n"><b>Primary signal</b>directional view</span>
             <span class="flow__a" aria-hidden="true"></span>
@@ -170,8 +186,8 @@
               <div class="diagram" id="diagram"></div>
             </div>
             <figcaption class="fig__cap">
-              Structure only. Signal definitions, weights, and performance results remain
-              confidential to the sponsor &mdash; which is why there are no numbers on this one.
+              Structure only. Signal definitions and weights remain confidential to the
+              sponsor; the headline result is the walk-forward Sharpe above.
             </figcaption>
           </figure>
 
@@ -183,14 +199,92 @@
             <span class="chip">Walk-forward CV</span><span class="chip">Factor attribution</span>
             <span class="chip">LLM signal extraction</span>
           </div>
+          </div></div>
         </div>
       </article>
 
-      <!-- ─── 02 · LLM as marketing analyst ─── -->
+      <!-- ─── 02 · onchain research desk ─── -->
+      <article class="cs rv" id="w-onchain-desk" data-tracks="finance ds analytics ai"
+               data-short="Onchain research desk">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">02</p>
+          <p class="cs__tag">What you can own</p>
+          <p class="cs__org">Personal project<br>Live, updated weekly</p>
+          <p class="cs__when">Fall 2026</p>
+          <p class="cs__kind">Coinbase &amp; Kraken books<br>CoinGecko &middot; DefiLlama</p>
+        </div>
+        <div class="cs__main">
+          <p class="cs__q">Can you actually buy what the model wants to hold?</p>
+          <h3 class="cs__title">A token research desk where every number has to prove itself</h3>
+          <p class="cs__take">Twenty tokens profiled for tradable liquidity, value accrual to
+            holders, and how much a portfolio can own before the market stops absorbing it.</p>
+
+          <div class="finding">
+            <p class="finding__n">17<small>of 20</small></p>
+            <p class="finding__t">positions hit their liquidity cap in a $1B portfolio &mdash; at that size it becomes a different strategy.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>Crypto screens rank tokens by daily volume. A fund pays the order book, and needs to know whether a protocol&rsquo;s fees ever reach the people holding its token.</dd></div>
+            <div><dt>What I did</dt><dd>Walked live Coinbase and Kraken books for $100K&ndash;$10M orders, split protocol fees from holder revenue, capped each position at 10% of median daily volume, and put every memo number behind a verifier.</dd></div>
+            <div><dt>Outcome</dt><dd>AAVE trades $256M a day but has $1.6M within 2% of price on US venues. The desk republishes weekly, and all 1,212 memo numbers trace to a source.</dd></div>
+          </dl>
+          <div class="cs__act">
+            <div class="links links--cta">
+            <a class="btn btn--solid" href="https://elakumuk.github.io/onchain-research-desk/" target="_blank" rel="noopener">Open the live desk</a>
+            <a class="link" href="https://github.com/elakumuk/onchain-research-desk" target="_blank" rel="noopener">Code and methodology</a>
+          </div>
+            <button class="cs__toggle" type="button" aria-expanded="true" aria-controls="more-w-onchain-desk" hidden><span>Read the full case</span><i aria-hidden="true"></i></button>
+          </div>
+          <div class="cs__more" id="more-w-onchain-desk"><div class="cs__more-in">
+          <dl class="facts">
+            <div><dt>My role</dt>
+              <dd>Research questions &middot; liquidity and capacity design &middot; verification
+                  rules &middot; reviewing every memo conclusion against governance records</dd></div>
+            <div><dt>Method</dt>
+              <dd>Order-book walks for $100K&ndash;$10M orders &middot; Amihud illiquidity &middot;
+                  fees vs. token-holder revenue &middot; Ledoit-Wolf covariance &middot; positions
+                  capped at 10% of median daily volume</dd></div>
+          </dl>
+
+          <p class="cs__desc">Reported volume and tradable depth tell different stories. The desk
+            measures both, writes a memo per token from a registry of facts, and refuses to publish
+            if any number in a memo does not match its source. A language model may add commentary;
+            a deterministic verifier decides whether it ships.</p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">3<i>of 20</i></span><span class="l">Fill a $10M order within 15% of mid</span></div>
+                <div class="did"><span class="n">$256<i>M</i></span><span class="l">AAVE median daily volume</span></div>
+                <div class="did"><span class="n">$1.6<i>M</i></span><span class="l">AAVE depth within &plusmn;2% on US venues</span></div>
+                <div class="did em"><span class="n">17<i>of 20</i></span><span class="l">Inverse-vol positions capped at $1B AUM</span></div>
+                <div class="did em"><span class="n">1,212<i>/1,212</i></span><span class="l">Memo numbers verified</span></div>
+              </div>
+              <p class="didnote">Snapshot of 28 September 2026. At a billion dollars the capped
+                portfolio concentrates in bitcoin, ether and solana &mdash; it is effectively a
+                different strategy.</p>
+            </div>
+          </figure>
+
+
+          <p class="brought">The verifier guarantees a number matches its source, not that the
+            conclusion is right. When a memo said Aave&rsquo;s holder cash flow had stopped, I
+            checked governance before believing it &mdash; the DAO had paused buybacks.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Market microstructure</span>
+            <span class="chip">Tokenomics</span><span class="chip">Portfolio construction</span>
+            <span class="chip">GitHub Actions</span>
+          </div>
+          </div></div>
+        </div>
+      </article>
+
+      <!-- ─── 03 · LLM as marketing analyst ─── -->
       <article class="cs rv" id="w-llm-analyst" data-tracks="ds analytics consulting ai"
                data-short="LLM versus causal inference">
         <div class="cs__rail">
-          <p class="cs__num" aria-hidden="true">02</p>
+          <p class="cs__num" aria-hidden="true">03</p>
           <p class="cs__tag">When to believe</p>
           <p class="cs__org">Brandeis<br>Marketing Analytics</p>
           <p class="cs__when">Spring 2026</p>
@@ -213,6 +307,15 @@
               <span class="vn__l">Once you control for who was already engaged<br><em>the whole effect was selection bias</em></span>
             </div>
           </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>A campaign showed a +5.53 point lift in conversion, highly significant. The question was whether a language model, given the same data, could tell that apart from selection.</dd></div>
+            <div><dt>What I did</dt><dd>Ran the econometrics &mdash; naive difference, OLS with pre-treatment covariates, propensity matching with overlap diagnostics &mdash; and tested one model under four framings of the same prompt.</dd></div>
+            <div><dt>Outcome</dt><dd>With controls the effect went to zero and matching failed for lack of overlap. The model named unconfoundedness and SUTVA, then signed off on the 5.53.</dd></div>
+          </dl>
+          <div class="cs__act">
+            <button class="cs__toggle" type="button" aria-expanded="true" aria-controls="more-w-llm-analyst" hidden><span>Read the full case</span><i aria-hidden="true"></i></button>
+          </div>
+          <div class="cs__more" id="more-w-llm-analyst"><div class="cs__more-in">
 
           <p class="cs__desc">I gave a language model the same marketing campaign data I analysed
             properly, and checked whether it could tell correlation from causation. Users who saw
@@ -260,14 +363,15 @@
             <span class="chip">Propensity score matching</span>
             <span class="chip">Causal inference</span><span class="chip">LLM evaluation</span>
           </div>
+          </div></div>
         </div>
       </article>
 
-      <!-- ─── 03 · MassDOT ─── -->
+      <!-- ─── 04 · MassDOT ─── -->
       <article class="cs rv" id="w-crash-dashboard" data-tracks="analytics consulting ds"
                data-short="Massachusetts crash intelligence">
         <div class="cs__rail">
-          <p class="cs__num" aria-hidden="true">03</p>
+          <p class="cs__num" aria-hidden="true">04</p>
           <p class="cs__tag">What to count</p>
           <p class="cs__org">Brandeis MSBA<br>Team project</p>
           <p class="cs__when">Spring 2026</p>
@@ -279,6 +383,19 @@
           <p class="cs__take">Raw counts say the problem is motor vehicles, because that is where
             the volume is. Severity rates say something else entirely.</p>
 
+          <div class="finding">
+            <p class="finding__n">11.1&times;</p>
+            <p class="finding__t">A pedestrian crash is 11.1 times as likely as a motor-vehicle crash to kill or seriously injure someone.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>Massachusetts publishes every crash, but raw counts point at motor vehicles, because that is where the volume is.</dd></div>
+            <div><dt>What I did</dt><dd>Built the pipeline from MassDOT&rsquo;s ArcGIS services into SQLite &mdash; 661,375 records &mdash; and a killed-or-serious rule applied the same way to every road user.</dd></div>
+            <div><dt>Outcome</dt><dd>Ranked by severity instead of volume, the picture reverses: pedestrians and cyclists carry the risk. The bicycle killed-or-serious share fell 27.6% even as volume rose.</dd></div>
+          </dl>
+          <div class="cs__act">
+            <button class="cs__toggle" type="button" aria-expanded="true" aria-controls="more-w-crash-dashboard" hidden><span>Read the full case</span><i aria-hidden="true"></i></button>
+          </div>
+          <div class="cs__more" id="more-w-crash-dashboard"><div class="cs__more-in">
           <div class="tiles" id="tiles">
             <!-- These are the values. Nothing animates them and nothing replaces them,
                  so the page cannot publish a number that is not the result. -->
@@ -371,14 +488,15 @@
             <span class="chip">SQLite</span><span class="chip">ArcGIS REST</span>
             <span class="chip">MVC</span><span class="chip">pytest</span>
           </div>
+          </div></div>
         </div>
       </article>
 
-      <!-- ─── 04 · Ovrule ─── -->
+      <!-- ─── 05 · Ovrule ─── -->
       <article class="cs rv" id="w-ovrule" data-tracks="ai ds"
                data-short="Ovrule — decision receipts">
         <div class="cs__rail">
-          <p class="cs__num" aria-hidden="true">04</p>
+          <p class="cs__num" aria-hidden="true">05</p>
           <p class="cs__tag">When to stop</p>
           <p class="cs__org">Ovrule</p>
           <p class="cs__when">Apr 2026 &ndash; present</p>
@@ -390,6 +508,23 @@
           <p class="cs__take">Every other guardrail reads what an agent <em>says</em>. Ovrule reads
             what the action <em>does</em>.</p>
 
+          <div class="finding">
+            <p class="finding__n">Top&nbsp;7</p>
+            <p class="finding__t">of about fifty teams at Ship Season S26, presented live at Demo Day.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>AI agents now run commands with real consequences, and most guardrails read what an agent says rather than what its action would do.</dd></div>
+            <div><dt>What I did</dt><dd>Built every layer alone &mdash; schema, classifier, evaluation set, API, interface, npm SDK. Six rules read each proposed action; a single failure refuses it.</dd></div>
+            <div><dt>Outcome</dt><dd>A live product and a published npm package. A refused action never runs, and every verdict leaves a signed receipt a compliance team can read.</dd></div>
+          </dl>
+          <div class="cs__act">
+            <div class="links links--cta">
+            <a class="btn btn--solid" href="https://decision-receipt-lab.vercel.app" target="_blank" rel="noopener">Open the live product</a>
+            <a class="link" href="https://www.npmjs.com/package/ovrule-lab" target="_blank" rel="noopener">ovrule-lab on npm</a>
+          </div>
+            <button class="cs__toggle" type="button" aria-expanded="true" aria-controls="more-w-ovrule" hidden><span>Read the full case</span><i aria-hidden="true"></i></button>
+          </div>
+          <div class="cs__more" id="more-w-ovrule"><div class="cs__more-in">
           <div class="flow flow--wide" role="img" aria-label="An AI agent proposes an action; Ovrule classifies it against six rules; the verdict is allow or refuse; either way it emits a signed decision receipt.">
             <span class="flow__n"><b>AI agent</b>proposes an action</span>
             <span class="flow__a" aria-hidden="true"></span>
@@ -412,10 +547,6 @@
               <dd>Live product &middot; published npm package &middot; two lines to wrap an existing tool call</dd></div>
           </dl>
 
-          <div class="links links--cta">
-            <a class="btn btn--solid" href="https://decision-receipt-lab.vercel.app" target="_blank" rel="noopener">Open the live product</a>
-            <a class="link" href="https://www.npmjs.com/package/ovrule-lab" target="_blank" rel="noopener">ovrule-lab on npm</a>
-          </div>
 
           <figure class="fig">
             <div class="fig__bar"><span class="eyebrow">Product demo &middot; 58 seconds, silent, captioned</span></div>
@@ -476,78 +607,16 @@
             <span class="chip">TypeScript</span><span class="chip">LLM classifier</span>
             <span class="chip">Evals</span><span class="chip">npm SDK</span>
           </div>
+          </div></div>
         </div>
       </article>
 
-      <!-- ─── 05 · onchain research desk ─── -->
-      <article class="cs rv" id="w-onchain-desk" data-tracks="finance ds analytics ai"
-               data-short="Onchain research desk">
-        <div class="cs__rail">
-          <p class="cs__num" aria-hidden="true">05</p>
-          <p class="cs__tag">What you can own</p>
-          <p class="cs__org">Personal project<br>Live, updated weekly</p>
-          <p class="cs__when">Fall 2026</p>
-          <p class="cs__kind">Coinbase &amp; Kraken books<br>CoinGecko &middot; DefiLlama</p>
-        </div>
-        <div class="cs__main">
-          <p class="cs__q">Can you actually buy what the model wants to hold?</p>
-          <h3 class="cs__title">A token research desk where every number has to prove itself</h3>
-          <p class="cs__take">Twenty tokens profiled for tradable liquidity, value accrual to
-            holders, and how much a portfolio can own before the market stops absorbing it.</p>
-
-          <dl class="facts">
-            <div><dt>My role</dt>
-              <dd>Research questions &middot; liquidity and capacity design &middot; verification
-                  rules &middot; reviewing every memo conclusion against governance records</dd></div>
-            <div><dt>Method</dt>
-              <dd>Order-book walks for $100K&ndash;$10M orders &middot; Amihud illiquidity &middot;
-                  fees vs. token-holder revenue &middot; Ledoit-Wolf covariance &middot; positions
-                  capped at 10% of median daily volume</dd></div>
-          </dl>
-
-          <p class="cs__desc">Reported volume and tradable depth tell different stories. The desk
-            measures both, writes a memo per token from a registry of facts, and refuses to publish
-            if any number in a memo does not match its source. A language model may add commentary;
-            a deterministic verifier decides whether it ships.</p>
-
-          <figure class="fig">
-            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
-            <div class="fig__body">
-              <div class="didrow">
-                <div class="did"><span class="n">3<i>of 20</i></span><span class="l">Fill a $10M order within 15% of mid</span></div>
-                <div class="did"><span class="n">$256<i>M</i></span><span class="l">AAVE median daily volume</span></div>
-                <div class="did"><span class="n">$1.6<i>M</i></span><span class="l">AAVE depth within &plusmn;2% on US venues</span></div>
-                <div class="did em"><span class="n">17<i>of 20</i></span><span class="l">Inverse-vol positions capped at $1B AUM</span></div>
-                <div class="did em"><span class="n">1,212<i>/1,212</i></span><span class="l">Memo numbers verified</span></div>
-              </div>
-              <p class="didnote">Snapshot of 28 September 2026. At a billion dollars the capped
-                portfolio concentrates in bitcoin, ether and solana &mdash; it is effectively a
-                different strategy.</p>
-            </div>
-          </figure>
-
-          <div class="links links--cta">
-            <a class="btn btn--solid" href="https://elakumuk.github.io/onchain-research-desk/" target="_blank" rel="noopener">Open the live desk</a>
-            <a class="link" href="https://github.com/elakumuk/onchain-research-desk" target="_blank" rel="noopener">Code and methodology</a>
-          </div>
-
-          <p class="brought">The verifier guarantees a number matches its source, not that the
-            conclusion is right. When a memo said Aave&rsquo;s holder cash flow had stopped, I
-            checked governance before believing it &mdash; the DAO had paused buybacks.</p>
-          <div class="chips">
-            <span class="chip">Python</span><span class="chip">Market microstructure</span>
-            <span class="chip">Tokenomics</span><span class="chip">Portfolio construction</span>
-            <span class="chip">GitHub Actions</span>
-          </div>
-        </div>
-      </article>
     </section>
 
     <!-- ═══════════ MORE WORK ═══════════ -->
     <section class="section" id="more">
       <div class="section__head">
         <h2>More work</h2><span class="line"></span>
-        <span class="eyebrow">Shorter pieces, same habit</span>
       </div>
 
       <!-- ─── 06 · foot traffic, DiD ─── -->
@@ -871,6 +940,6 @@
   </main>
 </div>
 
-<script src="app.js?v=1aa93068" defer></script>
+<script src="app.js?v=0d7bc2d2" defer></script>
 </body>
 </html>

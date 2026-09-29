@@ -321,7 +321,7 @@ a{color:inherit}
   border-left:6px solid var(--rule);
   border-top:4px solid transparent;border-bottom:4px solid transparent}
 .vn__n{display:block;font-family:var(--f-display);font-size:clamp(2.25rem,4.6vw,3.25rem);
-  line-height:1;font-variant-numeric:tabular-nums;color:var(--muted)}
+  line-height:1;color:var(--muted)}
 .vn__n i{font-style:normal;font-size:.34em;margin-left:.16em;letter-spacing:.02em}
 .vn--eq .vn__n{color:var(--ink)}
 .vn__l{display:block;margin-top:.75rem;font-size:.8125rem;color:var(--muted);line-height:1.5}
@@ -740,3 +740,120 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.08em;color:var(--muted);
   transition:opacity 400ms}
 .maphint.gone{opacity:0;pointer-events:none}
+
+/* ════════════════════════════════════════════════════════════ LEDGER
+   Every piece on one line: the first read, crossed out, against what held up.
+   It is the section's navigation and the site's thesis in one object. The strike
+   is drawn, not typed: without JS it is simply there; with JS it is drawn once,
+   row by row, the first time the ledger enters the viewport. */
+.ledger{margin:.4rem 0 1.25rem}
+.ledger__head,.ledger__row>a{display:grid;align-items:baseline;gap:0 1.25rem;
+  grid-template-columns:2rem minmax(0,1.3fr) minmax(0,1fr) 1.6rem minmax(0,1.25fr) 1rem}
+.ledger__head{padding:0 .75rem .55rem;font-family:var(--f-mono);font-size:.625rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ledger__list{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink);
+  border-bottom:1px solid var(--rule)}
+.ledger__row[hidden],.ledger__sep[hidden]{display:none}
+.ledger__row>a{position:relative;padding:1rem .75rem 1.05rem;text-decoration:none;color:inherit;
+  border-top:1px solid var(--rule-soft);transition:background 200ms ease}
+.ledger__row:first-child>a{border-top:0}
+.ledger__row>a::before{content:"";position:absolute;left:0;top:-1px;bottom:0;width:2px;
+  background:var(--accent);transform:scaleY(0);transform-origin:top;
+  transition:transform 320ms cubic-bezier(.3,.7,.2,1)}
+.ledger__row>a:hover,.ledger__row>a:focus-visible{background:var(--surface)}
+.ledger__row>a:hover::before,.ledger__row>a:focus-visible::before{transform:scaleY(1)}
+.lg__n{font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.14em;color:var(--accent)}
+.lg__q em{display:block;font-family:var(--f-display);font-style:italic;font-size:1.1875rem;
+  line-height:1.25;letter-spacing:-.01em;color:var(--ink)}
+.lg__q small{display:block;margin-top:.3rem;font-family:var(--f-mono);font-size:.625rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.lg__first{font-size:.875rem;line-height:1.5;color:var(--muted)}
+.lg__strike{position:relative;background-image:linear-gradient(var(--ink-soft),var(--ink-soft));
+  background-repeat:no-repeat;background-position:0 58%;background-size:100% 1.5px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.lg__arrow{align-self:center;height:1px;background:var(--rule);position:relative;
+  transition:background 200ms}
+.lg__arrow::after{content:"";position:absolute;right:0;top:-3.5px;border-left:5px solid var(--rule);
+  border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;transition:border-color 200ms}
+.lg__held{font-size:.9375rem;line-height:1.5;font-weight:500;color:var(--ink)}
+.lg__go{font-family:var(--f-mono);font-size:.8125rem;color:var(--muted);justify-self:end;
+  transition:transform 260ms cubic-bezier(.3,.7,.2,1),color 200ms}
+.ledger__row>a:hover .lg__go{transform:translateX(4px);color:var(--accent)}
+.ledger__row>a:hover .lg__arrow{background:var(--accent-dim)}
+.ledger__row>a:hover .lg__arrow::after{border-left-color:var(--accent-dim)}
+.ledger__row--sm .lg__q em{font-size:1rem}
+.ledger__row--sm .lg__held{font-size:.875rem}
+.ledger__sep span{display:block;padding:1.35rem .75rem .5rem;border-top:1px solid var(--rule);
+  font-family:var(--f-mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ledger__sep+.ledger__row>a{border-top:0}
+/* drawn states, only once JS has armed the ledger */
+@media (prefers-reduced-motion: no-preference){
+  .ledger.is-armed .lg__strike{background-size:0 1.5px;
+    transition:background-size 620ms cubic-bezier(.55,.1,.25,1) calc(var(--i) * 110ms + 250ms)}
+  .ledger.is-armed .lg__held{opacity:0;transform:translateY(4px);
+    transition:opacity 480ms ease calc(var(--i) * 110ms + 700ms),transform 480ms ease calc(var(--i) * 110ms + 700ms)}
+  .ledger.is-armed.is-read .lg__strike{background-size:100% 1.5px}
+  .ledger.is-armed.is-read .lg__held{opacity:1;transform:none}
+}
+@media (max-width:760px){
+  .ledger__head{display:none}
+  .ledger__row>a{grid-template-columns:2rem minmax(0,1fr);grid-template-areas:"n q" ". f" ". h";
+    row-gap:.45rem;padding:.95rem .5rem 1rem}
+  .lg__n{grid-area:n}.lg__q{grid-area:q}.lg__first{grid-area:f}.lg__held{grid-area:h}
+  .lg__arrow,.lg__go{display:none}
+  .lg__first::before,.lg__held::before{display:block;font-family:var(--f-mono);font-size:.5625rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-bottom:.1rem}
+  .lg__first::before{content:"First read"}
+  .lg__held::before{content:"What held up"}
+}
+
+/* ════════════════════════════════════════════════════════════ PLATE
+   Each case reads in the same order: finding -> situation / what I did /
+   outcome -> the way in. The method, figures and demos sit behind "Read the
+   full case", collapsed by row height rather than display:none, so every chart
+   is laid out at its real width while it waits. */
+.finding{margin-top:1.6rem;display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem 1.6rem;
+  padding:1.05rem 0 1.1rem;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}
+.finding__n{font-family:var(--f-display);font-size:clamp(2.6rem,5.6vw,3.75rem);line-height:.95;
+  letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+.finding__n small{margin-left:.55rem;font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);vertical-align:.35em}
+.finding__t{flex:1 1 17rem;max-width:42ch;font-size:1rem;line-height:1.5;color:var(--ink-soft)}
+.vnums+.star,.finding+.star{margin-top:1.35rem}
+.star{margin:1.5rem 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.star>div{padding:0 1.35rem 0 0}
+.star>div+div{padding-left:1.35rem;border-left:1px solid var(--rule-soft)}
+.star dt{font-family:var(--f-mono);font-size:.625rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-dim);margin-bottom:.45rem}
+.star dd{margin:0;font-size:.875rem;line-height:1.62;color:var(--ink-soft)}
+.star>div:last-child dd{color:var(--ink)}
+@media (max-width:760px){
+  .star{grid-template-columns:1fr}
+  .star>div+div{padding:.9rem 0 0;margin-top:.9rem;border-left:0;border-top:1px solid var(--rule-soft)}
+}
+.cs__act{margin-top:1.6rem;display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1.25rem}
+.cs__act .links--cta{margin-top:0}
+.cs__toggle{appearance:none;background:transparent;cursor:pointer;display:inline-flex;align-items:center;
+  gap:.65rem;border:1px solid var(--rule);color:var(--ink);padding:.62rem .95rem;
+  font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;
+  transition:border-color 160ms,color 160ms}
+.cs__toggle:hover{border-color:var(--accent);color:var(--accent)}
+.cs__toggle i{width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:translateY(-2px) rotate(45deg);transition:transform 320ms cubic-bezier(.3,.7,.2,1)}
+.cs__toggle[aria-expanded="true"] i{transform:translateY(1px) rotate(-135deg)}
+.cs__more{display:grid;grid-template-rows:1fr;
+  transition:grid-template-rows 560ms cubic-bezier(.3,.7,.2,1),opacity 420ms ease}
+.cs__more-in{min-height:0}
+.cs__more.is-closed{grid-template-rows:0fr;opacity:0}
+.cs__more.is-closed .cs__more-in,.cs__more.is-moving .cs__more-in{overflow:hidden}
+.cs__more-in>:first-child{margin-top:1.75rem}
+@media (prefers-reduced-motion: reduce){.cs__more,.cs__toggle i{transition:none}}
+
+/* reading depth, next to the track filter */
+.readmode{display:flex;border:1px solid var(--rule);padding:2px;gap:2px;background:var(--paper);margin-left:auto}
+.readmode button{appearance:none;border:0;background:transparent;cursor:pointer;font-family:var(--f-mono);
+  font-size:.6875rem;letter-spacing:.06em;color:var(--muted);padding:.34rem .7rem;transition:background 140ms,color 140ms}
+.readmode button:hover{color:var(--ink)}
+.readmode button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+@media (max-width:760px){.readmode{margin-left:0}}
+.plates-still .cs__more,.plates-still .cs__toggle i{transition:none!important}
