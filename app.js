@@ -278,17 +278,24 @@ bSTbl.addEventListener("click", () => {
         methods. The hollow mark is the one you should not believe.
    ══════════════════════════════════════════════════════════════ */
 const METHODS = [
-  {name:"Naive difference in means",  est:5.53,  note:"t = 6.49, p < 0.001", ok:true},
-  {name:"OLS with controls",          est:-0.02, note:"p = 0.997",           ok:true, em:true},
-  {name:"Propensity score matching",  est:13.10, note:"overlap fails",       ok:false}
+  {name:"Naive difference in means",     est:5.53,  note:"no adjustment",             ok:true},
+  {name:"OLS, pre-treatment controls",   est:5.52,  note:"p < 0.001",                 ok:true, em:true},
+  {name:"Propensity score matching",     est:5.95,  note:"1:1 nearest neighbour",     ok:true, em:true},
+  {name:"Inverse-propensity weighting",  est:5.51,  note:"weights clipped 0.01–0.99",  ok:true, em:true},
+  {name:"OLS + impressions & clicks",    est:-0.02, note:"controls for mediators",    ok:false}
 ];
 function drawCoef(){
   const cf = document.getElementById("coef");
-  const W2 = 720, H2 = 210, L2 = 214, R2 = 30, T2 = 26, B2 = 34;
-  const dom = [-3, 15];
+  const W2 = 720, H2 = 262, L2 = 224, R2 = 40, T2 = 26, B2 = 34;
+  const dom = [-2, 8];
   const x = v => L2 + (v - dom[0]) / (dom[1] - dom[0]) * (W2 - L2 - R2);
   cf.innerHTML = "";
-  [0,5,10,15].forEach(t => {
+  /* the band every correctly specified estimate falls in */
+  cf.appendChild(el("rect",{x:x(5.5),y:T2,width:x(6)-x(5.5),height:H2-T2-B2,
+    fill:css("--accent"),opacity:.09}));
+  const bl = el("text",{class:"axis-t",x:x(5.75),y:T2-9,"text-anchor":"middle"});
+  bl.textContent = "correctly specified"; cf.appendChild(bl);
+  [0,2,4,6,8].forEach(t => {
     cf.appendChild(el("line",{class:"gridline",x1:x(t),x2:x(t),y1:T2,y2:H2-B2}));
     const l = el("text",{class:"axis-t",x:x(t),y:H2-B2+17,"text-anchor":"middle"});
     l.textContent = (t>0?"+":"") + t; cf.appendChild(l);

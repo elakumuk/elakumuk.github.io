@@ -17,7 +17,7 @@ Three of the charts are built from actual project output, embedded as data in `a
 |---|---|
 | Massachusetts crash outcomes | MassDOT IMPACT open crash data, feature services 2021–2025, aggregated with the same KSI and road-user rules the original project uses |
 | H-1B sub-category scatter | `subcategory_breakdown.csv` from the BUS240F difference-in-differences pipeline |
-| Method comparison | OLS / naive / PSM estimates from the Marketing Analytics report |
+| Method comparison | Naive, OLS (pre-treatment controls and with mediators), PSM and IPW estimates from the final Marketing Analytics analysis, re-run on the source data |
 
 Nothing on the page is illustrative data dressed up as a result. Where a figure *is* an
 illustration — the Ovrule `guard()` demo — its caption says so.

@@ -115,7 +115,7 @@
         <ol class="ledger__list" aria-label="All work at a glance: the first read, and what held up">
         <li class="ledger__row" data-ltracks="finance ds consulting" style="--i:0"><a href="#w-meta-labeling"><span class="lg__n">01</span><span class="lg__q"><em>When can you trust a signal?</em><small>State Street &middot; field project</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">A model that looked strong in-sample</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>0.81 Sharpe, positive in six of six out-of-sample periods</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
         <li class="ledger__row" data-ltracks="finance ds analytics ai" style="--i:1"><a href="#w-onchain-desk"><span class="lg__n">02</span><span class="lg__q"><em>Can you actually buy what the model wants to hold?</em><small>Onchain research desk &middot; live</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">AAVE trades $256M a day</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>$1.6M sits within 2% of price on US venues</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row" data-ltracks="ds analytics consulting ai" style="--i:2"><a href="#w-llm-analyst"><span class="lg__n">03</span><span class="lg__q"><em>Can an LLM be your marketing analyst?</em><small>Brandeis &middot; causal study</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">+5.53 point lift, p&thinsp;&lt;&thinsp;0.001</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>Zero with controls &mdash; and the model accepted 5.53 anyway</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
+        <li class="ledger__row" data-ltracks="ds analytics consulting ai" style="--i:2"><a href="#w-llm-analyst"><span class="lg__n">03</span><span class="lg__q"><em>Can an LLM be your marketing analyst?</em><small>Brandeis &middot; causal study</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">A formal regression: zero effect</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>+5.5 points once only pre-treatment variables are controlled</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
         <li class="ledger__row" data-ltracks="analytics consulting ds" style="--i:3"><a href="#w-crash-dashboard"><span class="lg__n">04</span><span class="lg__q"><em>Who actually gets hurt on Massachusetts roads?</em><small>MassDOT crash intelligence</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">Motor vehicles dominate the counts</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>Pedestrian crashes are 11.1&times; as likely to kill or seriously injure</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
         <li class="ledger__row" data-ltracks="ai ds" style="--i:4"><a href="#w-ovrule"><span class="lg__n">05</span><span class="lg__q"><em>When do you stop the machine?</em><small>Ovrule &middot; live product</small></span><span class="lg__first"><span class="sr-only">First read: </span><span class="lg__strike">What the agent says it will do</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">What held up: </span>What the action would do &mdash; refused before it runs</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
         <li class="ledger__sep" aria-hidden="true"><span>More work</span></li>
@@ -292,75 +292,76 @@
         </div>
         <div class="cs__main">
           <p class="cs__q">Can an LLM be your marketing analyst?</p>
-          <h3 class="cs__title">Same campaign, three methods, three different answers</h3>
-          <p class="cs__take">It named every assumption it needed to check, and then signed off on
-            the number those assumptions rule out.</p>
+          <h3 class="cs__title">Two AI analysts, two opposite mistakes</h3>
+          <p class="cs__take">One stopped at the naive number. The other controlled away the
+            campaign&rsquo;s own effect. Getting it right meant knowing which variables the campaign
+            itself caused.</p>
 
           <div class="vnums">
             <div class="vn">
-              <span class="vn__n">+5.53<i>pp</i></span>
-              <span class="vn__l">Apparent campaign lift<br><em>naive treatment minus control, highly significant</em></span>
+              <span class="vn__n">&minus;0.02<i>pp</i></span>
+              <span class="vn__l">What a formal-looking regression reported<br><em>it controlled for impressions and clicks, which the campaign causes</em></span>
             </div>
             <span class="vnums__a" aria-hidden="true"></span>
             <div class="vn vn--eq">
-              <span class="vn__n">&asymp;&thinsp;0<i>pp</i></span>
-              <span class="vn__l">Once you control for who was already engaged<br><em>the whole effect was selection bias</em></span>
+              <span class="vn__n">+5.5<i>pp</i></span>
+              <span class="vn__l">With pre-treatment controls only<br><em>OLS, matching and weighting all agree</em></span>
             </div>
           </div>
           <dl class="star">
-            <div><dt>Situation</dt><dd>A campaign showed a +5.53 point lift in conversion, highly significant. The question was whether a language model, given the same data, could tell that apart from selection.</dd></div>
-            <div><dt>What I did</dt><dd>Ran the econometrics &mdash; naive difference, OLS with pre-treatment covariates, propensity matching with overlap diagnostics &mdash; and tested one model under four framings of the same prompt.</dd></div>
-            <div><dt>Outcome</dt><dd>With controls the effect went to zero and matching failed for lack of overlap. The model named unconfoundedness and SUTVA, then signed off on the 5.53.</dd></div>
+            <div><dt>Situation</dt><dd>A targeted, non-randomized campaign across 5,000 users showed a +5.53 point lift in conversion. I gave two language models the same data and asked whether the campaign caused it.</dd></div>
+            <div><dt>What I did</dt><dd>Ran the analysis with pre-treatment controls only &mdash; OLS, propensity matching and inverse-propensity weighting &mdash; and audited each model&rsquo;s answer against it.</dd></div>
+            <div><dt>Outcome</dt><dd>The campaign works: every correctly specified estimate lands between +5.5 and +6.0 points. Gemini reported the naive number as causal; the regression Claude Code wrote controlled for the mediators and collapsed it to zero.</dd></div>
           </dl>
           <div class="cs__act">
             <button class="cs__toggle" type="button" aria-expanded="true" aria-controls="more-w-llm-analyst" hidden><span>Read the full case</span><i aria-hidden="true"></i></button>
           </div>
           <div class="cs__more" id="more-w-llm-analyst"><div class="cs__more-in">
+          <p class="cs__desc">The campaign was targeted, not randomized, so the naive lift mixes the
+            campaign with who was chosen for it. The trap is the next step. Impressions and clicks
+            are caused by the campaign; controlling for them measures its effect with its own
+            mechanism held fixed, which is why a regression with four controls reports zero. With
+            baseline covariates only, OLS, matching and weighting agree, and the treated and control
+            groups overlap almost completely on their pre-treatment propensity.</p>
 
-          <p class="cs__desc">I gave a language model the same marketing campaign data I analysed
-            properly, and checked whether it could tell correlation from causation. Users who saw
-            more impressions were already the more engaged users. Control for the covariates and
-            the effect goes to zero. Propensity score matching does not rescue it either &mdash;
-            the two groups separate almost perfectly on propensity, so there is no overlap to
-            match on. That failure is itself a result: not every method works on every dataset.</p>
-
-          <p class="cs__insight">The model cited unconfoundedness, SUTVA and the need for
-            regression controls &mdash; and then accepted the 5.53 figure anyway. It knew every
-            concept and could not execute one of them.</p>
+          <p class="cs__insight">Rigor is specification discipline, not variable count. A
+            regression that controls for a mediator is more dangerous than a naive comparison,
+            because it looks like method.</p>
 
           <dl class="facts">
             <div><dt>My role</dt>
-              <dd>Study design &middot; the econometrics &middot; the protocol the model was judged against</dd></div>
+              <dd>Study design &middot; the specification &middot; the audit each model was judged against</dd></div>
             <div><dt>Method</dt>
-              <dd>Naive difference &middot; OLS with pre-treatment covariates &middot; propensity
-                  score matching &middot; overlap diagnostics &middot; prompt-framing sensitivity</dd></div>
+              <dd>Naive difference &middot; OLS with pre-treatment covariates &middot; 1:1 propensity
+                  matching &middot; inverse-propensity weighting &middot; mediation decomposition</dd></div>
           </dl>
 
           <figure class="fig">
             <div class="fig__bar">
-              <span class="eyebrow">Same data, three methods, three different answers</span>
+              <span class="eyebrow">Same data, five estimates</span>
             </div>
             <div class="fig__body">
               <div class="chartwrap" id="coefwrap">
-                <svg id="coef" viewBox="0 0 720 210" role="img"
-                     aria-label="Estimated effect of the ad campaign on conversion under three methods. The naive difference gives plus 5.53 percentage points. OLS with controls gives approximately zero. Propensity score matching gives plus 13.10 points but is unreliable because the groups do not overlap."></svg>
+                <svg id="coef" viewBox="0 0 720 262" role="img"
+                     aria-label="Estimated effect of the campaign on conversion under five specifications. Naive difference plus 5.53 points; OLS with pre-treatment controls plus 5.52; propensity score matching plus 5.95; inverse-propensity weighting plus 5.51. OLS that also controls for impressions and clicks gives minus 0.02, because those variables are caused by the campaign."></svg>
               </div>
-              <p class="didnote">Estimated effect on conversion, in percentage points. The
-                propensity-score estimate is drawn hollow because the overlap assumption fails
-                &mdash; it is shown to be discounted, not believed.</p>
+              <p class="didnote">Estimated effect on conversion, in percentage points. The hollow
+                point also controls for impressions and clicks, which the campaign itself causes: it
+                measures the effect with the mechanism held fixed, a different quantity rather than a
+                more careful version of the same one.</p>
             </div>
             <figcaption class="fig__cap">
-              A reader who stops at the first method walks away with a campaign that works. The
-              honest answer is that this campaign did nothing measurable.
+              Total effect about +5.5 points; with the mediators held fixed, about zero; the
+              difference runs through impressions and clicks. Source: Kaggle digital-marketing
+              campaign data, 5,000 users; coursework, Brandeis Marketing Analytics.
             </figcaption>
           </figure>
 
-          <p class="brought">The most dangerous way to use one of these models is to ask it to
-            confirm something you already believe. Given a leading prompt it pushed back &mdash;
-            and then engaged with the biased framing anyway.</p>
+          <p class="brought">Asked directly, Gemini rated its own confidence in the causal claim 4 out
+            of 10 &mdash; and in the plain prompt still reported the naive 5.53 as the effect.</p>
           <div class="chips">
             <span class="chip">Python</span><span class="chip">OLS</span>
-            <span class="chip">Propensity score matching</span>
+            <span class="chip">Propensity score matching</span><span class="chip">IPW</span>
             <span class="chip">Causal inference</span><span class="chip">LLM evaluation</span>
           </div>
           </div></div>
@@ -940,6 +941,6 @@
   </main>
 </div>
 
-<script src="app.js?v=0d7bc2d2" defer></script>
+<script src="app.js?v=5879f814" defer></script>
 </body>
 </html>
