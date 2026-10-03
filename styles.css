@@ -2,10 +2,10 @@
    TOKENS — light and dark, both hand-specified.
    ════════════════════════════════════════════════════════════ */
 :root {
-  --paper:#FFFFFF; --surface:#F6F7F9; --surface-2:#ECEEF2;
-  --ink:#111827; --ink-soft:#374151; --muted:#6B7280;
-  --rule:#D1D5DB; --rule-soft:#E5E7EB;
-  --accent:#1E3A6E; --accent-dim:#5A6F96;
+  --paper:#FAF9F6; --surface:#F0F3F0; --surface-2:#E5EBE7;
+  --ink:#20312E; --ink-soft:#475650; --muted:#65726B;
+  --rule:#CED7CF; --rule-soft:#E2E7E0;
+  --accent:#245C50; --accent-dim:#52786D;
   --smudge-rgb:34,32,40; --smudge-max:0.34;
   /* categorical series — validated for CVD on this surface */
   --s1:#2E5FA8; --s2:#BE4B1E; --s3:#7E3D96;
@@ -14,7 +14,7 @@
   /* deliberately theme-independent: the mat behind artwork never flips */
   --mat:#E4E1D9;
 
-  --f-display:"Inter","Helvetica Neue",Arial,sans-serif;
+  --f-display:"Lora",Georgia,serif;
   --f-body:"Inter","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,monospace;
   --rail-w:15.5rem; --pad-x:clamp(1.25rem,4vw,3.5rem); --measure:63ch;
@@ -815,3 +815,56 @@ h1,h2,h3{font-weight:600;letter-spacing:-.015em}
   font-size:.75rem;color:var(--muted);text-decoration:none}
 .art-hero .back:hover{color:var(--accent)}
 .lg__q em,.cs__q,.mini__take,.art-hero h1,.plate figcaption .t,.lb__cap .t,.zoomcap.resolved{font-style:normal}
+
+/* Visual refinement: warm paper, editorial headings, quiet project framing. */
+.main{max-width:100rem;margin-right:auto}
+.rail{background:var(--surface);border-right-color:var(--rule-soft)}
+.rail__face{width:4rem;height:4rem;border-radius:14px;object-position:center 35%}
+.rail__name{font-weight:500;font-size:1.65rem;letter-spacing:-.035em}
+.rail__role{letter-spacing:.025em}
+.railnav a{padding:.32rem 0}
+.rail__cv,.btn,.cs__toggle{border-radius:7px}
+.hero{padding-top:clamp(3rem,8vh,5.5rem);padding-bottom:3.5rem}
+.hero__name{font-weight:500;font-size:clamp(3.25rem,6.5vw,5.5rem);line-height:1.08;letter-spacing:-.055em}
+.hero__role{font-family:var(--f-body);font-weight:500;font-size:clamp(1.125rem,2vw,1.5rem);margin-top:1rem}
+.hero__lede{max-width:54ch;margin-top:1.2rem;line-height:1.7}
+.hero__facts{gap:.55rem;margin-top:1.7rem;font-family:var(--f-body);font-size:.8125rem}
+.hero__facts li,.hero__facts li:first-child{margin:0;padding:.4rem .7rem;border:1px solid var(--rule-soft);border-radius:6px;background:var(--surface)}
+.hero__facts .is-open{border-color:var(--rule);color:var(--accent)}
+.btn{font-family:var(--f-body);font-size:.8125rem;letter-spacing:0;padding:.72rem 1.1rem;font-weight:500}
+.btn--solid{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.btn--solid:hover{background:var(--ink);border-color:var(--ink)}
+.hero__links{margin-left:.35rem;font-family:var(--f-body);font-size:.8125rem}
+.section__head h2{font-weight:500;font-size:clamp(1.8rem,3vw,2.35rem);letter-spacing:-.04em}
+.section__head .line{background:var(--rule-soft)}
+.ledger{border:1px solid var(--rule);border-radius:12px;overflow:hidden;background:var(--paper)}
+.ledger__head{background:var(--surface);padding:.8rem 1rem}
+.ledger__row>a{padding:1.1rem 1rem}
+.lg__q em{font-family:var(--f-body);font-weight:600;letter-spacing:-.02em}
+.lg__held{color:var(--accent)}
+.ledger.is-armed .lg__held,.ledger.is-armed.is-read .lg__held{opacity:1;transform:none;transition:none}
+.cs__q{font-weight:500;font-size:clamp(1.65rem,3vw,2.3rem);letter-spacing:-.035em;line-height:1.25}
+.cs__org{font-weight:500;line-height:1.4}
+.cs__title{color:var(--accent);font-size:1rem}
+.finding{border-top-color:var(--rule-soft)}
+.fig,.facts{border-radius:9px;overflow:hidden}
+.chip{border-radius:5px;background:var(--surface)}
+.readmode,.tracks{border-radius:7px;overflow:hidden}
+.readmode button,.tracks button{border-radius:4px}
+.closing{border-radius:12px;background:var(--surface);padding:2.5rem;margin-top:3rem}
+.closing__q{font-weight:500;letter-spacing:-.035em}
+@media(max-width:900px){
+  .rail{background:var(--paper)}
+  .rail__face{width:2.25rem;height:2.25rem;border-radius:7px}
+  .rail__name{font-size:1.125rem}
+  .main{max-width:none}
+}
+@media(max-width:640px){
+  .hero{padding-bottom:2.5rem}
+  .hero__name{font-size:clamp(3rem,12vw,4rem)}
+  .hero__facts{flex-direction:row;gap:.4rem}
+  .hero__facts li{font-size:.75rem}
+  .hero__links{margin-left:0;gap:1.2rem}
+  .ledger__row>a{padding:1.05rem .75rem}
+  .closing{padding:1.5rem}
+}
