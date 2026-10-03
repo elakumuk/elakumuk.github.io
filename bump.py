@@ -7,7 +7,7 @@ import hashlib, re, pathlib
 root = pathlib.Path(__file__).parent
 html = (root / "index.html").read_text()
 
-for name, pat in [("styles.css", r'href="styles\.css(?:\?v=[0-9a-f]+)?"'),
+for name, pat in [("design.css", r'href="design\.css(?:\?v=[0-9a-f]+)?"'), ("styles.css", r'href="styles\.css(?:\?v=[0-9a-f]+)?"'),
                   ("app.js",     r'src="app\.js(?:\?v=[0-9a-f]+)?"')]:
     h = hashlib.md5((root / name).read_bytes()).hexdigest()[:8]
     attr = "href" if name.endswith(".css") else "src"
