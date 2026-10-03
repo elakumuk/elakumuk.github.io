@@ -23,72 +23,62 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lora:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="styles.css?v=13c3caaf">
+<link rel="stylesheet" href="design.css?v=1558dffd">
 </head>
 <body>
 
 <div class="shell">
-  <aside class="rail">
-    <div>
-      <img class="rail__face" src="assets/portrait.jpg" width="240" height="240"
-           alt="Ela Kumuk" loading="lazy" decoding="async">
-      <div class="rail__name">Ela<br>Kumuk</div>
-      <div class="rail__role">Business&nbsp;&amp;&nbsp;Data&nbsp;Analyst<br>M.S.&nbsp;Business&nbsp;Analytics</div>
-    </div>
+  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="#top" aria-label="Ela Kumuk, back to top">
+      <img src="assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
     <nav class="railnav" id="railnav" aria-label="Page sections">
-      <a href="#work">Selected work</a>
-      <a href="#more">More work</a>
-      <a href="#experience">Experience</a>
-      <a href="#about">About</a>
-      <a href="#education">Education</a>
-      <a href="#toolkit">Toolkit</a>
-      <a href="#contact">Contact</a>
+      <a href="#work">Work</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a>
     </nav>
-    <div class="rail__foot">
-      <a class="rail__cv" href="assets/Ela_Kumuk_Resume.pdf" download>R&eacute;sum&eacute; &darr;</a>
-      <a href="mailto:elakumuk@brandeis.edu">elakumuk@brandeis.edu</a>
-      <a href="https://www.linkedin.com/in/elakumuk" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/elakumuk" target="_blank" rel="noopener">GitHub</a>
-    </div>
+    <a class="header-cv" href="assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
   </aside>
 
   <main class="main">
   <div class="view" id="view-work" aria-label="Work">
 
-    <header class="hero">
-      <h1 class="hero__name fade">Ela Kumuk</h1>
-      <p class="hero__role fade">Business &amp; Data Analyst</p>
-      <p class="hero__lede fade">
-        I build models and analyses for finance, consulting and data teams, and test whether
-        they hold up before anyone acts on them &mdash; from investment signals with State Street
-        to causal studies and AI tools in production.
-      </p>
-      <ul class="hero__facts fade">
-        <li>M.S. Business Analytics &middot; Brandeis</li>
-        <li>State Street &middot; field project</li>
-        <li>Open to relocation</li>
-        <li class="is-open"><span class="dot" aria-hidden="true"></span>Available January 2027</li>
-      </ul>
-      <div class="hero__cta fade">
-        <a class="btn btn--solid" href="#work">View selected work</a>
-        <a class="btn" href="assets/Ela_Kumuk_Resume.pdf" download>R&eacute;sum&eacute; <span class="btn__x">PDF</span></a>
-        <span class="hero__links">
-          <a href="https://www.linkedin.com/in/elakumuk" target="_blank" rel="noopener">LinkedIn</a>
-          <a href="https://github.com/elakumuk" target="_blank" rel="noopener">GitHub</a>
-          <a href="mailto:elakumuk@brandeis.edu">Email</a>
-        </span>
+    <header class="hero" id="top">
+      <div class="hero-copy">
+        <p class="hero-eyebrow"><span class="status-dot" aria-hidden="true"></span>Available January 2027 <span class="hero-eyebrow__divider">/</span> Open to relocation</p>
+        <h1 class="hero__name">From messy data<br>to <span>clear decisions.</span></h1>
+        <p class="hero__lede">I&rsquo;m Ela, a business analytics graduate student at Brandeis. I turn complex questions into analyses, tools, and recommendations people can use.</p>
+        <div class="hero__cta">
+          <a class="btn btn--solid" href="#work">Explore my work <span aria-hidden="true">&darr;</span></a>
+          <a class="btn btn--quiet" href="assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">View r&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+        </div>
+        <p class="hero-social"><a href="https://www.linkedin.com/in/elakumuk" target="_blank" rel="noopener">LinkedIn &nearr;</a><a href="https://github.com/elakumuk" target="_blank" rel="noopener">GitHub &nearr;</a><a href="mailto:elakumuk@brandeis.edu">Email &nearr;</a></p>
       </div>
+      <a class="feature-preview" href="#w-meta-labeling" aria-label="Read the State Street graduate field project">
+        <div class="preview-top"><span class="preview-label">A closer look at my work</span><span class="preview-index">01 / 08</span></div>
+        <div class="preview-client">State Street<span>Graduate field project &middot; Brandeis</span></div>
+        <div class="signal-flow" aria-label="Market data feeds a signal, validation tests it, then it informs a decision">
+          <span><i aria-hidden="true">01</i>Market data</span><b aria-hidden="true">&rarr;</b><span><i aria-hidden="true">02</i>Signal</span><b aria-hidden="true">&rarr;</b><span class="signal-flow__active"><i aria-hidden="true">03</i>Validation</span>
+        </div>
+        <div class="preview-results"><div><strong>0.81</strong><span>Walk-forward Sharpe</span></div><div><strong>6<span>/6</span></strong><span>Positive out-of-sample periods</span></div></div>
+        <div class="preview-bottom"><span>Testing a signal before acting on it.</span><span class="circle-arrow" aria-hidden="true">&nearr;</span></div>
+      </a>
     </header>
+    <div class="proof-strip" aria-label="Background at a glance">
+      <div><span class="proof-label">Education</span><strong>Brandeis University</strong><span>M.S. Business Analytics &middot; Dec 2026</span></div>
+      <div><span class="proof-label">Business experience</span><strong>Analysis meets operations</strong><span>Retail analytics &middot; founder &middot; research</span></div>
+      <div><span class="proof-label">Core toolkit</span><strong>SQL &middot; Python &middot; Excel</strong><span>Tableau &middot; Power BI &middot; R</span></div>
+    </div>
 
 
     <!-- ═══════════ SELECTED WORK ═══════════ -->
     <section class="section" id="work">
       <div class="section__head">
-        <h2>Selected work</h2><span class="line"></span>
+        <h2>Good questions. Useful answers.</h2><span class="section-kicker">Selected work / 2026</span>
       </div>
-      <p class="section__deck">Each project below shows the initial result and the finding that
-        held up after testing. Filter by the kind of role you are hiring for.</p>
+      <p class="section__deck">Explore the question, my contribution, and the evidence behind each result.
+        Choose a focus below, or start with a case that interests you.</p>
 
       <!-- Every piece declares its tracks in data-tracks; this control reads them, so a
            reader can cut the section down to the kind of role they are hiring for.
@@ -102,20 +92,18 @@
 
       <!-- The ledger: every piece in one line, first read against what held up.
            It is the navigation for the section and the thesis of the site at once. -->
-      <div class="ledger" id="ledger">
-        <div class="ledger__head" aria-hidden="true"><span></span><span>Question</span><span>Initial result</span><span></span><span>Finding</span><span></span></div>
-        <ol class="ledger__list" aria-label="All work at a glance: the initial result, and the finding">
-        <li class="ledger__row" data-ltracks="finance ds consulting" style="--i:0"><a href="#w-meta-labeling"><span class="lg__n">01</span><span class="lg__q"><em>When can you trust a signal?</em><small>State Street &middot; field project</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">A model that looked strong in-sample</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>0.81 Sharpe, positive in six of six out-of-sample periods</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row" data-ltracks="finance ds analytics ai" style="--i:1"><a href="#w-onchain-desk"><span class="lg__n">02</span><span class="lg__q"><em>Can you actually buy what the model wants to hold?</em><small>Onchain research desk &middot; live</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">AAVE trades $256M a day</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>$1.6M sits within 2% of price on US venues</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row" data-ltracks="ds analytics consulting ai" style="--i:2"><a href="#w-llm-analyst"><span class="lg__n">03</span><span class="lg__q"><em>Can an LLM be your marketing analyst?</em><small>Brandeis &middot; causal study</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">A formal regression: zero effect</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>+5.5 points once only pre-treatment variables are controlled</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row" data-ltracks="analytics consulting ds" style="--i:3"><a href="#w-crash-dashboard"><span class="lg__n">04</span><span class="lg__q"><em>Who actually gets hurt on Massachusetts roads?</em><small>MassDOT crash intelligence</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">Motor vehicles dominate the counts</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>Pedestrian crashes are 11.1&times; as likely to kill or seriously injure</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row" data-ltracks="ai ds" style="--i:4"><a href="#w-ovrule"><span class="lg__n">05</span><span class="lg__q"><em>When do you stop the machine?</em><small>Ovrule &middot; live product</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">What the agent says it will do</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>What the action would do &mdash; refused before it runs</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__sep" aria-hidden="true"><span>More work</span></li>
-        <li class="ledger__row ledger__row--sm" data-ltracks="analytics consulting ds" style="--i:5"><a href="#w-foot-traffic"><span class="lg__n">06</span><span class="lg__q"><em>When is the obvious answer wrong?</em><small>Boston foot traffic &middot; DiD</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">In aggregate, a clean null</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>Declines in coffee shops and restaurants near universities</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row ledger__row--sm" data-ltracks="analytics consulting" style="--i:6"><a href="#w-olist"><span class="lg__n">07</span><span class="lg__q"><em>What does late delivery really cost?</em><small>Olist &middot; 100K+ orders</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">A logistics problem</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>A retention problem: 2.57 vs 4.29 stars</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        <li class="ledger__row ledger__row--sm" data-ltracks="ai" style="--i:7"><a href="#w-jobhunter"><span class="lg__n">08</span><span class="lg__q"><em>What runs a job search at fifty companies?</em><small>JobHunter &middot; agent</small></span><span class="lg__first"><span class="sr-only">Initial result: </span><span class="lg__strike">A spreadsheet</span></span><span class="lg__arrow" aria-hidden="true"></span><span class="lg__held"><span class="sr-only">Finding: </span>A scheduled agent that watches postings and pushes matches</span><span class="lg__go" aria-hidden="true">&rarr;</span></a></li>
-        </ol>
-      </div>
+<div class="ledger project-grid" id="ledger"><ol class="ledger__list">
+<li class="ledger__row project-card--featured" data-ltracks="finance ds consulting"><a class="project-card" href="#w-meta-labeling"><div class="project-visual project-visual--signal" aria-hidden="true"><div class="visual-label">State Street</div><div class="visual-stats"><div><strong>0.81</strong><span>Walk-forward Sharpe</span></div><div><strong>6 / 6</strong><span>Positive out-of-sample periods</span></div></div><span class="visual-grid"></span></div><div class="project-card__body"><div class="project-card__meta"><span>Graduate field project</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>Testing an investment signal before trading it</h3><p>Walk-forward validation, transaction costs, and attribution across seven asset classes.</p><div class="project-card__footer"><span>Python &middot; Validation &middot; Finance</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row" data-ltracks="analytics consulting ds"><a class="project-card" href="#w-crash-dashboard"><div class="project-visual project-visual--crash" aria-hidden="true"><div class="visual-label">MassDOT</div><div class="visual-stats"><div><strong>661,375</strong><span>Crash records normalized</span></div><div><strong>2021–25</strong><span>Years of coverage</span></div></div><span class="visual-grid"></span></div><div class="project-card__body"><div class="project-card__meta"><span>Team project</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>Finding the risk behind the raw counts</h3><p>A consistent severity measure across 661,375 Massachusetts crash records.</p><div class="project-card__footer"><span>SQL &middot; Data pipelines &middot; Dashboards</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row" data-ltracks="ds analytics consulting ai"><a class="project-card" href="#w-llm-analyst"><div class="project-visual project-visual--marketing" aria-hidden="true"><div class="visual-label">Marketing analytics</div><div class="visual-stats"><div><strong>5,000</strong><span>Users in the study</span></div><div><strong>5</strong><span>Estimate specifications</span></div></div><span class="visual-grid"></span></div><div class="project-card__body"><div class="project-card__meta"><span>Coursework study</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>When two AI analysts get the answer wrong</h3><p>Comparing campaign-effect estimates and auditing the controls behind them.</p><div class="project-card__footer"><span>Python &middot; Causal inference &middot; AI</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row" data-ltracks="finance ds analytics ai"><a class="project-card" href="#w-onchain-desk"><div class="project-visual project-visual--liquidity" aria-hidden="true"><div class="visual-label">Onchain research desk</div><div class="visual-stats"><div><strong>20</strong><span>Tokens profiled</span></div><div><strong>1,355</strong><span>Memo numbers verified</span></div></div><span class="visual-grid"></span></div><div class="project-card__body"><div class="project-card__meta"><span>Personal project · live</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>Reported volume isn’t tradable liquidity</h3><p>A research workflow for liquidity, holder revenue, and portfolio capacity.</p><div class="project-card__footer"><span>Python &middot; Research &middot; Verification</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row" data-ltracks="ai ds"><a class="project-card" href="#w-ovrule"><div class="project-visual project-visual--product" aria-hidden="true"><div class="visual-label">Ovrule</div><div class="visual-stats"><div><strong>Top 7</strong><span>Ship Season S26 teams</span></div><div><strong>npm</strong><span>Published SDK</span></div></div><span class="visual-grid"></span></div><div class="project-card__body"><div class="project-card__meta"><span>Shipped product</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>Making AI actions accountable</h3><p>An action-checking product with decision receipts, a live demo, and an npm SDK.</p><div class="project-card__footer"><span>TypeScript &middot; Product &middot; Evals</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row ledger__row--sm" data-ltracks="analytics consulting ds"><a class="project-card" href="#w-foot-traffic"><div class="project-card__body"><div class="project-card__meta"><span>Group project</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>Looking beyond the aggregate</h3><p>Exploring neighborhood and business-category patterns in foot traffic.</p><div class="project-card__footer"><span>Python &middot; DiD &middot; Tableau</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row ledger__row--sm" data-ltracks="analytics consulting"><a class="project-card" href="#w-olist"><div class="project-card__body"><div class="project-card__meta"><span>Personal project</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>What late delivery looks like to a customer</h3><p>Customer segmentation and delivery analysis across 100K+ orders.</p><div class="project-card__footer"><span>SQL &middot; Cohorts &middot; RFM</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+<li class="ledger__row ledger__row--sm" data-ltracks="ai"><a class="project-card" href="#w-jobhunter"><div class="project-card__body"><div class="project-card__meta"><span>Personal project</span><span class="project-card__arrow" aria-hidden="true">&nearr;</span></div><h3>A more systematic job search</h3><p>A scheduled posting watcher, contact CRM, and portfolio pipeline.</p><div class="project-card__footer"><span>Python &middot; SQLite &middot; Automation</span><span class="project-card__read">Read case <span aria-hidden="true">&rarr;</span></span></div></div></a></li>
+</ol></div>
+
+<div class="case-intro"><span class="section-kicker">Behind the work</span><h2>The decisions, the methods,<br>and my contribution.</h2><p>Short summaries first. Open any case for the methodology and supporting detail.</p></div>
 
       <!-- ─── 01 · State Street ─── -->
       <article class="cs rv" id="w-meta-labeling" data-tracks="finance ds consulting"
