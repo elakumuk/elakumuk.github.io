@@ -1,4 +1,11 @@
 "use strict";
+/* Preserve project links from the previous one-page portfolio. */
+const CASE_ROUTES = {"w-meta-labeling": "state-street", "w-crash-dashboard": "crash-intelligence", "w-llm-analyst": "marketing-analysis", "w-onchain-desk": "onchain-research", "w-ovrule": "ovrule", "w-foot-traffic": "foot-traffic", "w-olist": "olist", "w-jobhunter": "jobhunter"};
+if (!document.body.classList.contains("case-page")) {
+  const route = CASE_ROUTES[location.hash.slice(1)];
+  if (route) location.replace("cases/" + route + ".html");
+}
+
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 /* ══════════════════════════════════════════════════════════════
@@ -40,6 +47,7 @@ function el(n, a){ const e = document.createElementNS(NS,n);
   for (const k in a) e.setAttribute(k, a[k]); return e; }
 
 function drawChart(animate){
+  if (!svg) return;
   const M = MEASURES[measure];
   const x = i => PL + i * (W - PL - PR) / (YEARS.length - 1);
   const y = v => PT + (1 - (v - M.dom[0]) / (M.dom[1] - M.dom[0])) * (H - PT - PB);
@@ -118,10 +126,11 @@ function wireHover(x,y,M){
 }
 
 /* legend + table */
-document.getElementById("legend").innerHTML = MODES.map(m =>
+if (document.getElementById("legend")) document.getElementById("legend").innerHTML = MODES.map(m =>
   "<span><i style='background:var(" + m.v + ")'></i>" + m.name + "</span>").join("");
 
 function buildTable(){
+  if (!document.getElementById("tablewrap")) return;
   const M = MEASURES[measure];
   let h = "<table class='data'><caption class='eyebrow' style='text-align:left;padding:.4rem 0'>" +
     M.label + "</caption><thead><tr><th>Year</th>" +
@@ -141,9 +150,9 @@ function setMeasure(m){
   bIdx.setAttribute("aria-pressed",  m === "idx");
   drawChart(true); buildTable();
 }
-bRate.addEventListener("click", () => setMeasure("rate"));
-bIdx .addEventListener("click", () => setMeasure("idx"));
-bTbl .addEventListener("click", () => {
+bRate?.addEventListener("click", () => setMeasure("rate"));
+bIdx?.addEventListener("click", () => setMeasure("idx"));
+bTbl?.addEventListener("click", () => {
   const on = tblWrap.hidden;
   tblWrap.hidden = !on; bTbl.setAttribute("aria-pressed", on);
 });
@@ -165,6 +174,7 @@ const SW = 720, SH = 360, SL = 52, SR = 26, ST = 22, SB = 46;
 const XD = [-35, 60], YD = [28, 2000];
 
 function drawScatter(animate){
+  if (!sc) return;
   const x = v => SL + (v - XD[0]) / (XD[1] - XD[0]) * (SW - SL - SR);
   const ly = Math.log(YD[0]), lh = Math.log(YD[1]) - ly;
   const y = n => ST + (1 - (Math.log(n) - ly) / lh) * (SH - ST - SB);
@@ -251,12 +261,13 @@ function wireScatter(x,y){
   hit.addEventListener("mouseleave", () => { tip2.style.opacity = 0; });
 }
 
-document.getElementById("legend2").innerHTML = CATS.map(c =>
+if (document.getElementById("legend2")) document.getElementById("legend2").innerHTML = CATS.map(c =>
   "<span><i style='background:var(" + c.v + ");height:8px;width:8px;border-radius:50%'></i>" +
   c.name + "</span>").join("") +
   "<span style='color:var(--muted)'>· vertical axis = sample size (log)</span>";
 
 (function scatterTable(){
+  if (!document.getElementById("stablewrap")) return;
   let h = "<div style='max-height:18rem;overflow:auto'><table class='data'>" +
     "<caption class='eyebrow' style='text-align:left;padding:.4rem 0'>" +
     "All 134 sub-categories with at least 30 locations</caption><thead><tr>" +
@@ -268,7 +279,7 @@ document.getElementById("legend2").innerHTML = CATS.map(c =>
   document.getElementById("stablewrap").innerHTML = h + "</tbody></table></div>";
 })();
 const bSTbl = document.getElementById("s-tbl"), sTblWrap = document.getElementById("stablewrap");
-bSTbl.addEventListener("click", () => {
+bSTbl?.addEventListener("click", () => {
   const on = sTblWrap.hidden;
   sTblWrap.hidden = !on; bSTbl.setAttribute("aria-pressed", on);
 });
@@ -286,6 +297,7 @@ const METHODS = [
 ];
 function drawCoef(){
   const cf = document.getElementById("coef");
+  if (!cf) return;
   const W2 = 720, H2 = 262, L2 = 224, R2 = 40, T2 = 26, B2 = 34;
   const dom = [-2, 8];
   const x = v => L2 + (v - dom[0]) / (dom[1] - dom[0]) * (W2 - L2 - R2);
@@ -333,6 +345,7 @@ function drawCoef(){
    2 · SSGA PIPELINE DIAGRAM
    ══════════════════════════════════════════════════════════════ */
 (function diagram(){
+  if (!document.getElementById("diagram")) return;
   const boxes = [
     [8,  18, 118, 40, "Market data",     "index-level returns"],
     [8,  76, 118, 40, "Macro data",      "regime indicators"],
@@ -406,15 +419,15 @@ const REASONS = {
 };
 
 const presetsEl = document.getElementById("presets");
-presetsEl.innerHTML = PRESETS.map((p,i) =>
+if (presetsEl) presetsEl.innerHTML = PRESETS.map((p,i) =>
   '<button type="button" data-i="' + i + '">Example ' + (i+1) + '</button>').join("");
-presetsEl.addEventListener("click", e => {
+presetsEl?.addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   document.getElementById("scenario").value = PRESETS[+b.dataset.i];
 });
 
 const rulesEl = document.getElementById("rules");
-rulesEl.innerHTML = RULES.map(r =>
+if (rulesEl) rulesEl.innerHTML = RULES.map(r =>
   '<li id="r-' + r.id + '"><span class="mark">·</span><span class="rn">' + r.name +
   '</span><span class="rv">—</span></li>').join("");
 
@@ -475,10 +488,10 @@ function type(steps, done){
   timer = setTimeout(tick, TYPE_MS);
 }
 
-receiptEl.addEventListener("click", () => { if (activeTyper) activeTyper.skip(); });
+receiptEl?.addEventListener("click", () => { if (activeTyper) activeTyper.skip(); });
 
 const runbtn = document.getElementById("runbtn");
-runbtn.addEventListener("click", () => {
+runbtn?.addEventListener("click", () => {
   const s = document.getElementById("scenario").value.trim();
   if (!s) return;
   runbtn.disabled = true;
@@ -540,7 +553,7 @@ const PLATES = [
   {n:"05", title:"Winter Mediterranean", medium:MED, year:2025, dims:"30 × 22 in",   src:"assets/plate-6.jpg"},
   {n:"06", title:"Trace",                medium:MED, year:2025, dims:"30 × 22 in",   src:"assets/plate-2.jpg"}
 ];
-document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
+if (document.getElementById("plates")) document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
   const inner = p.src
     ? '<img src="' + p.src + '" alt="' + p.title + ' — ' + p.medium.toLowerCase() + ', ' +
       p.dims + ', ' + p.year + '" loading="lazy">'
@@ -630,6 +643,7 @@ document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
    4b · LIGHTBOX — the drawings at size, which is how drawings work
    ══════════════════════════════════════════════════════════════ */
 (function lightbox(){
+  if (!document.getElementById("plates")) return;
   const lb = document.createElement("div");
   lb.className = "lb";
   lb.setAttribute("role", "dialog");
@@ -703,15 +717,15 @@ const railnav = document.getElementById("railnav");
 function show(name, push){
   Object.keys(tabs).forEach(k => {
     const on = k === name;
-    tabs[k].panel.hidden = !on;
+    if (tabs[k].panel) tabs[k].panel.hidden = !on;
   });
   railnav.style.display = name === "work" ? "" : "none";
   if (push) history.replaceState(null, "", name === "art" ? "#drawings" : "#top");
   window.scrollTo(0,0);
   window.dispatchEvent(new Event("viewchange"));
 }
-tabs.work.link.addEventListener("click", e => { e.preventDefault(); show("work", true); });
-tabs.art .link.addEventListener("click", e => { e.preventDefault(); show("art",  true); });
+tabs.work.link?.addEventListener("click", e => { e.preventDefault(); show("work", true); });
+tabs.art.link?.addEventListener("click", e => { e.preventDefault(); show("art",  true); });
 
 /* ══════════════════════════════════════════════════════════════
    6 · SCROLL REVEALS + COUNT-UP
@@ -776,7 +790,7 @@ new MutationObserver(repaint)
 drawChart(false); drawScatter(false); drawCoef(); buildTable();
 
 /* animate each chart once, the first time it is actually seen */
-new IntersectionObserver((es,obs) => es.forEach(e => {
+if (document.getElementById("scatterwrap")) new IntersectionObserver((es,obs) => es.forEach(e => {
   if (!e.isIntersecting) return;
   obs.unobserve(e.target);
   (e.target.id === "scatterwrap" ? drawScatter : drawChart)(true);
@@ -856,7 +870,7 @@ if (location.hash === "#drawings") show("art", false);
   function load(){
     if (D || loading) return;
     loading = true;
-    fetch("assets/crashes-2025.json")
+    fetch("/assets/crashes-2025.json")
       .then(r => r.json())
       .then(j => {
         const raw = b64(j.xy);
@@ -998,6 +1012,7 @@ if (location.hash === "#drawings") show("art", false);
    case collapses to its verdict, situation / what I did / outcome and links; the
    depth stays laid out at its real width, so charts inside it never draw at 0px. */
 (function plates(){
+  if (document.body.classList.contains("case-page")) return;
   const mores = [...document.querySelectorAll(".cs__more")];
   if (!mores.length) return;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;

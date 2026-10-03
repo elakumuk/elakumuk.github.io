@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Massachusetts crash intelligence — Ela Kumuk</title>
+<meta name="description" content="Massachusetts crash intelligence. A project by Ela Kumuk, Business &amp; Data Analyst.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/crash-intelligence.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Massachusetts crash intelligence — Ela Kumuk">
+<meta property="og:description" content="Business &amp; Data Analyst. Models and analyses for finance, consulting and data teams — tested before anyone acts on them. Available January 2027.">
+<meta property="og:url" content="https://elakumuk.github.io/cases/crash-intelligence.html">
+<meta property="og:image" content="https://elakumuk.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Massachusetts crash intelligence — Ela Kumuk">
+<meta name="twitter:description" content="Business &amp; Data Analyst. M.S. Business Analytics, Brandeis. Available January 2027.">
+<meta name="twitter:image" content="https://elakumuk.github.io/assets/og.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e3">
+<link rel="stylesheet" href="/design.css?v=91268728">
+</head>
+<body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
+      <img src="/assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a>
+    </nav>
+    <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+  </aside>
+
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 02 / 08</span></div><article class="cs" id="w-crash-dashboard" data-tracks="analytics consulting ds"
+               data-short="Massachusetts crash intelligence">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">04</p>
+          <p class="cs__tag">What to count</p>
+          <p class="cs__org">Brandeis MSBA<br>Team project</p>
+          <p class="cs__when">Spring 2026</p>
+          <p class="cs__kind">MassDOT IMPACT open data<br>ArcGIS feature services</p>
+        </div>
+        <div class="cs__main">
+          <h1 class="cs__q">Who actually gets hurt on Massachusetts roads?</h1>
+          <h3 class="cs__title">Massachusetts crash intelligence</h3>
+          <p class="cs__take">Raw counts say the problem is motor vehicles, because that is where
+            the volume is. Severity rates say something else entirely.</p>
+
+          <div class="finding">
+            <p class="finding__n">11.1&times;</p>
+            <p class="finding__t">A pedestrian crash is 11.1 times as likely as a motor-vehicle crash to kill or seriously injure someone.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>Massachusetts publishes every crash, but raw counts point at motor vehicles, because that is where the volume is.</dd></div>
+            <div><dt>What I did</dt><dd>Built the pipeline from MassDOT&rsquo;s ArcGIS services into SQLite &mdash; 661,375 records &mdash; and a killed-or-serious rule applied the same way to every road user.</dd></div>
+            <div><dt>Outcome</dt><dd>Ranked by severity instead of volume, the picture reverses: pedestrians and cyclists carry the risk. The bicycle killed-or-serious share fell 27.6% even as volume rose.</dd></div>
+          </dl>
+          
+          <div class="cs__more" id="more-w-crash-dashboard"><div class="cs__more-in">
+          <div class="tiles" id="tiles">
+            <!-- These are the values. Nothing animates them and nothing replaces them,
+                 so the page cannot publish a number that is not the result. -->
+            <div class="tile"><span class="n">661,375</span>
+              <span class="l">Crash records pulled live from MassDOT and normalised</span></div>
+            <div class="tile"><span class="n">2021&ndash;25</span>
+              <span class="l">Years of coverage, revised as records close</span></div>
+            <div class="tile"><span class="n">11.1&times;</span>
+              <span class="l">A pedestrian crash is this many times more likely to be killed-or-serious than a motor-vehicle crash</span></div>
+            <div class="tile"><span class="n">&minus;27.6%</span>
+              <span class="l">Change in the share of bicycle crashes that are killed-or-serious, even as volume rose 47.6%</span></div>
+          </div>
+
+          <p class="cs__desc">A dashboard over the state&rsquo;s open crash record system, pulled
+            live from MassDOT&rsquo;s ArcGIS feature services, normalised into SQLite, and filtered
+            by date, road user, hour and street. Built on an MVC split so the data layer, the
+            filters and the views stay independently testable. I also assembled a small panel of
+            municipal traffic-board approvals &mdash; stop signs, stop-ahead treatments, reflective
+            striping &mdash; with their approval dates, so specific intersections can be studied
+            before and after an intervention.</p>
+
+          <dl class="facts">
+            <div><dt>My role</dt>
+              <dd>Data pipeline &middot; grouping methodology &middot; dashboard design</dd></div>
+            <div><dt>Method</dt>
+              <dd>ArcGIS REST ingestion &middot; SQLite normalisation &middot; KSI classification rule
+                  &middot; MVC split with pytest coverage</dd></div>
+          </dl>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">Massachusetts crashes by road user</span>
+              <div class="seg" role="group" aria-label="Chart measure">
+                <button id="m-rate" aria-pressed="true">KSI share</button>
+                <button id="m-idx" aria-pressed="false">Volume, 2021=100</button>
+              </div>
+              <div class="seg" role="group" aria-label="Chart display">
+                <button id="m-tbl" aria-pressed="false">Table</button>
+              </div>
+            </div>
+            <div class="fig__body">
+              <div class="chartwrap" id="chartwrap">
+                <svg id="chart" viewBox="0 0 720 300" role="img"
+                     aria-label="Line chart of Massachusetts crash outcomes by road user, 2021 to 2025"></svg>
+                <div class="tip" id="tip" role="status" aria-live="polite"></div>
+              </div>
+              <div class="legend" id="legend"></div>
+              <div id="tablewrap" hidden></div>
+            </div>
+            <figcaption class="fig__cap">
+              KSI = killed or suspected serious injury, classified with the same rule the project
+              uses. Source: MassDOT IMPACT open crash data, feature services 2021&ndash;2025, queried
+              August 2026. Recent years are provisional and revised as records close.
+            </figcaption>
+          </figure>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">Massachusetts, drawn only from its crashes</span>
+              <div class="seg" role="group" aria-label="Road users shown">
+                <button id="mp-mv"   aria-pressed="true">Motor vehicle</button>
+                <button id="mp-ped"  aria-pressed="true">Pedestrian</button>
+                <button id="mp-bike" aria-pressed="true">Bicyclist</button>
+              </div>
+              <div class="seg" role="group" aria-label="Severity filter">
+                <button id="mp-ksi" aria-pressed="false">Killed or serious only</button>
+              </div>
+            </div>
+            <div class="fig__body">
+              <div class="mapwrap" id="mapwrap">
+                <canvas id="crashmap" role="img"
+                  aria-label="A map of Massachusetts formed entirely from the locations of 2025 crashes. No basemap is drawn — the road network appears out of the crash points themselves. Pedestrian and cyclist crashes concentrate in Boston, Cambridge, Worcester and Springfield."></canvas>
+                <p class="maphint" id="maphint">loading 41,308 crash locations&hellip;</p>
+              </div>
+              <div class="legend" id="maplegend"></div>
+            </div>
+            <figcaption class="fig__cap">
+              Every 2025 crash with usable coordinates, plotted with no basemap underneath: the
+              state and its road network are made only of the crashes themselves. All 3,308
+              pedestrian and cyclist crashes are shown; motor-vehicle crashes are a random sample
+              of 38,000 from 124,102, which keeps the file smaller than one photograph without
+              changing the shape.
+            </figcaption>
+          </figure>
+
+          <p class="brought">I studied psychology before I studied analytics. How people misread a
+            base rate is not a footnote to me &mdash; it is the thing I was trained on.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Streamlit</span>
+            <span class="chip">SQLite</span><span class="chip">ArcGIS REST</span>
+            <span class="chip">MVC</span><span class="chip">pytest</span>
+          </div>
+          </div></div>
+        </div>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="state-street.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="marketing-analysis.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=6e9adc4a" defer></script></body></html>

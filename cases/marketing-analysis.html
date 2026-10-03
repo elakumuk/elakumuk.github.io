@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing analysis: auditing AI estimates — Ela Kumuk</title>
+<meta name="description" content="Marketing analysis: auditing AI estimates. A project by Ela Kumuk, Business &amp; Data Analyst.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/marketing-analysis.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Marketing analysis: auditing AI estimates — Ela Kumuk">
+<meta property="og:description" content="Business &amp; Data Analyst. Models and analyses for finance, consulting and data teams — tested before anyone acts on them. Available January 2027.">
+<meta property="og:url" content="https://elakumuk.github.io/cases/marketing-analysis.html">
+<meta property="og:image" content="https://elakumuk.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Marketing analysis: auditing AI estimates — Ela Kumuk">
+<meta name="twitter:description" content="Business &amp; Data Analyst. M.S. Business Analytics, Brandeis. Available January 2027.">
+<meta name="twitter:image" content="https://elakumuk.github.io/assets/og.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e3">
+<link rel="stylesheet" href="/design.css?v=91268728">
+</head>
+<body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
+      <img src="/assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a>
+    </nav>
+    <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+  </aside>
+
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 03 / 08</span></div><article class="cs" id="w-llm-analyst" data-tracks="ds analytics consulting ai"
+               data-short="LLM versus causal inference">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">03</p>
+          <p class="cs__tag">When to believe</p>
+          <p class="cs__org">Brandeis<br>Marketing Analytics</p>
+          <p class="cs__when">Spring 2026</p>
+          <p class="cs__kind">Coursework study<br>5,000 users &middot; 10 campaigns</p>
+        </div>
+        <div class="cs__main">
+          <h1 class="cs__q">Can an LLM be your marketing analyst?</h1>
+          <h3 class="cs__title">Two AI analysts, two opposite mistakes</h3>
+          <p class="cs__take">One stopped at the naive number. The other controlled away the
+            campaign&rsquo;s own effect. Getting it right meant knowing which variables the campaign
+            itself caused.</p>
+
+          <div class="vnums">
+            <div class="vn">
+              <span class="vn__n">&minus;0.02<i>pp</i></span>
+              <span class="vn__l">What a formal-looking regression reported<br><em>it controlled for impressions and clicks, which the campaign causes</em></span>
+            </div>
+            <span class="vnums__a" aria-hidden="true"></span>
+            <div class="vn vn--eq">
+              <span class="vn__n">+5.5<i>pp</i></span>
+              <span class="vn__l">With pre-treatment controls only<br><em>OLS, matching and weighting all agree</em></span>
+            </div>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>A targeted, non-randomized campaign across 5,000 users showed a +5.53 point lift in conversion. I gave two language models the same data and asked whether the campaign caused it.</dd></div>
+            <div><dt>What I did</dt><dd>Ran the analysis with pre-treatment controls only &mdash; OLS, propensity matching and inverse-propensity weighting &mdash; and audited each model&rsquo;s answer against it.</dd></div>
+            <div><dt>Outcome</dt><dd>The campaign works: every correctly specified estimate lands between +5.5 and +6.0 points. Gemini reported the naive number as causal; the regression Claude Code wrote controlled for the mediators and collapsed it to zero.</dd></div>
+          </dl>
+          
+          <div class="cs__more" id="more-w-llm-analyst"><div class="cs__more-in">
+          <p class="cs__desc">The campaign was targeted, not randomized, so the naive lift mixes the
+            campaign with who was chosen for it. The trap is the next step. Impressions and clicks
+            are caused by the campaign; controlling for them measures its effect with its own
+            mechanism held fixed, which is why a regression with four controls reports zero. With
+            baseline covariates only, OLS, matching and weighting agree, and the treated and control
+            groups overlap almost completely on their pre-treatment propensity.</p>
+
+          <p class="cs__insight">Rigor is specification discipline, not variable count. A
+            regression that controls for a mediator is more dangerous than a naive comparison,
+            because it looks like method.</p>
+
+          <dl class="facts">
+            <div><dt>My role</dt>
+              <dd>Study design &middot; the specification &middot; the audit each model was judged against</dd></div>
+            <div><dt>Method</dt>
+              <dd>Naive difference &middot; OLS with pre-treatment covariates &middot; 1:1 propensity
+                  matching &middot; inverse-propensity weighting &middot; mediation decomposition</dd></div>
+          </dl>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">Same data, five estimates</span>
+            </div>
+            <div class="fig__body">
+              <div class="chartwrap" id="coefwrap">
+                <svg id="coef" viewBox="0 0 720 262" role="img"
+                     aria-label="Estimated effect of the campaign on conversion under five specifications. Naive difference plus 5.53 points; OLS with pre-treatment controls plus 5.52; propensity score matching plus 5.95; inverse-propensity weighting plus 5.51. OLS that also controls for impressions and clicks gives minus 0.02, because those variables are caused by the campaign."></svg>
+              </div>
+              <p class="didnote">Estimated effect on conversion, in percentage points. The hollow
+                point also controls for impressions and clicks, which the campaign itself causes: it
+                measures the effect with the mechanism held fixed, a different quantity rather than a
+                more careful version of the same one.</p>
+            </div>
+            <figcaption class="fig__cap">
+              Total effect about +5.5 points; with the mediators held fixed, about zero; the
+              difference runs through impressions and clicks. Source: Kaggle digital-marketing
+              campaign data, 5,000 users; coursework, Brandeis Marketing Analytics.
+            </figcaption>
+          </figure>
+
+          <p class="brought">Asked directly, Gemini rated its own confidence in the causal claim 4 out
+            of 10 &mdash; and in the plain prompt still reported the naive 5.53 as the effect.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">OLS</span>
+            <span class="chip">Propensity score matching</span><span class="chip">IPW</span>
+            <span class="chip">Causal inference</span><span class="chip">LLM evaluation</span>
+          </div>
+          </div></div>
+        </div>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="crash-intelligence.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="onchain-research.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=6e9adc4a" defer></script></body></html>

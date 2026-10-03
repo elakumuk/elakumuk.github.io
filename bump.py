@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""Stamp styles.css and app.js with a content hash so a changed file can never
-be served from a stale cache. GitHub Pages sends max-age=600, which is long
-enough for a deploy to look broken. Run this before every commit."""
-import hashlib, re, pathlib
+"""Stamp shared assets on the homepage and case pages after every change."""
+import hashlib
+import pathlib
+import re
 
 root = pathlib.Path(__file__).parent
-html = (root / "index.html").read_text()
-
-for name, pat in [("design.css", r'href="design\.css(?:\?v=[0-9a-f]+)?"'), ("styles.css", r'href="styles\.css(?:\?v=[0-9a-f]+)?"'),
-                  ("app.js",     r'src="app\.js(?:\?v=[0-9a-f]+)?"')]:
-    h = hashlib.md5((root / name).read_bytes()).hexdigest()[:8]
-    attr = "href" if name.endswith(".css") else "src"
-    html = re.sub(pat, f'{attr}="{name}?v={h}"', html)
-    print(f"{name} -> ?v={h}")
-
-(root / "index.html").write_text(html)
+for page in [root / 'index.html', *sorted((root / 'cases').glob('*.html'))]:
+    html = page.read_text()
+    for name in ['design.css', 'styles.css', 'app.js']:
+        digest = hashlib.sha256((root / name).read_bytes()).hexdigest()[:8]
+        attr = 'src' if name.endswith('.js') else 'href'
+        pattern = rf'{attr}="(/?){re.escape(name)}(?:\?v=[0-9a-f]+)?"'
+        html = re.sub(pattern, lambda m: f'{attr}="{m[1]}{name}?v={digest}"', html)
+    page.write_text(html)
+print('Stamped shared assets on homepage and all case pages.')
