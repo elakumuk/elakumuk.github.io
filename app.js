@@ -696,25 +696,22 @@ document.getElementById("plates").innerHTML = PLATES.map((p,i) => {
    5 · VIEW SWITCH
    ══════════════════════════════════════════════════════════════ */
 const tabs = {
-  work:{btn:document.getElementById("tab-work"), panel:document.getElementById("view-work")},
-  art: {btn:document.getElementById("tab-art"),  panel:document.getElementById("view-art")}
+  work:{link:document.getElementById("to-work"), panel:document.getElementById("view-work")},
+  art: {link:document.getElementById("to-art"),  panel:document.getElementById("view-art")}
 };
 const railnav = document.getElementById("railnav");
 function show(name, push){
   Object.keys(tabs).forEach(k => {
     const on = k === name;
-    tabs[k].btn.setAttribute("aria-selected", on ? "true" : "false");
     tabs[k].panel.hidden = !on;
   });
   railnav.style.display = name === "work" ? "" : "none";
   if (push) history.replaceState(null, "", name === "art" ? "#drawings" : "#top");
   window.scrollTo(0,0);
-  running = name === "work";
-  if (running){ start(); resize(); }
   window.dispatchEvent(new Event("viewchange"));
 }
-tabs.work.btn.addEventListener("click", () => show("work", true));
-tabs.art .btn.addEventListener("click", () => show("art",  true));
+tabs.work.link.addEventListener("click", e => { e.preventDefault(); show("work", true); });
+tabs.art .link.addEventListener("click", e => { e.preventDefault(); show("art",  true); });
 
 /* ══════════════════════════════════════════════════════════════
    6 · SCROLL REVEALS + COUNT-UP
@@ -768,333 +765,14 @@ window.addEventListener("viewchange", () => setTimeout(moveDot, 0));
   .forEach(id => { const n = document.getElementById(id); if (n) sio.observe(n); });
 
 /* ══════════════════════════════════════════════════════════════
-   7 · HERO — charcoal that follows the hand
-
-   Rebuilt. The old version walked a 190x110 pixel buffer in JS and scaled it
-   about seven times up, which is what destroyed the grain, and it lived inside
-   a canvas clipped to the text column, so the smudge was sliced off on a
-   straight vertical line beside the E of Ela and the K of Kumuk.
-
-   Now three surfaces are composited each frame:
-
-     mask  soft elliptical blobs along the recent path of the cursor, stretched
-           along the direction of travel so a sweep reads as one stroke instead
-           of a row of dots. Drawn as radial gradients — the GPU does this, no
-           per-pixel loop.
-     tex   the charcoal itself: ink-coloured tooth built once per resize at the
-           real pixel size of the canvas. Two frequencies — "Drift" downsampled
-           for the broad tonal masses, tileable value noise for the grain that
-           has to stay sharp. Only the low frequency is ever upscaled, which is
-           the whole fix.
-     edge  a falloff painted in so the smudge fades out before the edge of the
-           sheet rather than being cut by it.
-
-   The hero rests as clean paper: with nothing on the trail the canvas clears
-   and the loop stops.
+   7 · CHART LIFECYCLE
    ══════════════════════════════════════════════════════════════ */
-const cv = document.getElementById("smudge"), ctx = cv.getContext("2d");
-const hero = document.querySelector(".hero");
-const off  = document.createElement("canvas"), octx = off.getContext("2d");
-const tex  = document.createElement("canvas"), tctx = tex.getContext("2d");
-const edge = document.createElement("canvas"), ectx = edge.getContext("2d");
-
-/* The mark is laid into a buffer that persists between frames and is lifted a
-   little each frame, rather than redrawn from a list of live points. Charcoal
-   does not vanish the instant the hand leaves; it sits and is slowly rubbed
-   out. It is also cheaper - the cost of a frame no longer grows with how long
-   the stroke is. */
-const mask = document.createElement("canvas"), mctx = mask.getContext("2d");
-const FADE = 0.030;         // fraction of the mark lifted per frame (~4s to gone)
-let VW = 0, VH = 0, S = 1;  // canvas size in CSS px, and its backing-store scale
-let CAP = 0.3;              // --smudge-max: how black the charcoal is allowed to get
-let NOISE = null, LOW = null;
-let charge = 0;             // roughly how much mark is left, so the loop knows to stop
-let running = true, last = 0, rafId = null;
-
-function inkColor(){
-  const v = css("--smudge-rgb").split(",");
-  return [+v[0]||0, +v[1]||0, +v[2]||0];
-}
-
-/* ---------- what the hand has done since the last frame ---------- */
-let pending = [], hover = false, lastX = -1, lastY = -1;
-
-hero.addEventListener("pointermove", e => {
-  const r = hero.getBoundingClientRect();
-  const x = e.clientX - r.left, y = e.clientY - r.top;
-  const dx = lastX < 0 ? 0 : x - lastX, dy = lastY < 0 ? 0 : y - lastY;
-  lastX = x; lastY = y;
-  hover = e.pointerType === "mouse";
-  /* a pointermove can jump 200px. Step along the gap so a fast sweep lays a
-     continuous stroke rather than a dotted line. */
-  const n = Math.max(1, Math.min(8, Math.round(Math.hypot(dx, dy) / 22)));
-  for (let i = 1; i <= n; i++)
-    pending.push({x: x - dx*(1 - i/n), y: y - dy*(1 - i/n), dx: dx, dy: dy});
-  if (pending.length > 24) pending.splice(0, pending.length - 24);
-  start();
-}, {passive:true});
-
-const away = () => { hover = false; lastX = lastY = -1; };
-hero.addEventListener("pointerleave",  away);
-hero.addEventListener("pointercancel", away);
-hero.addEventListener("pointerup",     away);
-
-/* ---------- the two textures ---------- */
-
-/* Tileable value noise: every term is an integer multiple of a full turn in
-   both axes, so the 256px tile repeats without a seam. The sines give the
-   organic mid frequencies, a cheap integer hash gives the finest tooth. */
-function buildNoise(){
-  const N = 192, c = document.createElement("canvas");
-  c.width = c.height = N;
-  const x2 = c.getContext("2d"), id = x2.createImageData(N, N), d = id.data;
-  const rgb = inkColor();
-
-  const hash = (x, y, s) => {
-    let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(s, 1442695041)) >>> 0;
-    h = (h ^ (h >>> 13)) >>> 0;
-    h = Math.imul(h, 1274126177) >>> 0;
-    return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
-  };
-  const sm = t => t * t * (3 - 2 * t);
-  /* one octave of value noise on a P x P lattice. P divides N and the lattice
-     wraps, so the tile has no seam. */
-  function oct(x, y, P, seed){
-    const g = N / P;
-    const cx = Math.floor(x / g), cy = Math.floor(y / g);
-    const fx = sm(x / g - cx), fy = sm(y / g - cy);
-    const x0 = cx % P, x1 = (cx + 1) % P, y0 = cy % P, y1 = (cy + 1) % P;
-    const a = hash(x0, y0, seed), b = hash(x1, y0, seed);
-    const e = hash(x0, y1, seed), f = hash(x1, y1, seed);
-    const t = a + (b - a) * fx;
-    return t + ((e + (f - e) * fx) - t) * fy;
-  }
-
-  /* Sums of sines gave this a woven, moire look — regular enough to read as a
-     texture map rather than paper. Value noise across six octaves, finest cell
-     two pixels, is irregular the way a sheet's tooth actually is. */
-  const OCT = [[6,0.14,1], [12,0.19,2], [24,0.23,3], [48,0.25,4], [96,0.19,5]];
-  const f32 = new Float32Array(N * N);
-  let lo = 1, hi = 0;
-  for (let y = 0; y < N; y++){
-    for (let x = 0; x < N; x++){
-      let n = 0;
-      for (let k = 0; k < OCT.length; k++) n += oct(x, y, OCT[k][0], OCT[k][2]) * OCT[k][1];
-      f32[y*N + x] = n;
-      if (n < lo) lo = n;
-      if (n > hi) hi = n;
-    }
-  }
-  const span = Math.max(1e-3, hi - lo);
-  for (let i = 0; i < N*N; i++){
-    /* the contrast window is what puts holes in it: charcoal sits on the high
-       points of the sheet and misses the pits, and a deposit with no paper
-       showing through is an airbrush, not a stick. */
-    let a = ((f32[i] - lo) / span - 0.24) / 0.56;
-    a = a < 0 ? 0 : a > 1 ? 1 : a;
-    a = Math.pow(a, 0.78);
-    const k = i * 4;
-    d[k] = rgb[0]; d[k+1] = rgb[1]; d[k+2] = rgb[2];
-    d[k+3] = (0.10 + a * 0.90) * 255;
-  }
-  x2.putImageData(id, 0, 0);
-  return c;
-}
-
-/* "Drift" reduced to alpha only — the broad masses of the drawing, nothing
-   else. This is the one surface that gets upscaled, and it is the one that
-   can afford to be: it carries no detail worth losing. */
-function buildLow(im){
-  const w = 190, h = 110, c = document.createElement("canvas");
-  c.width = w; c.height = h;
-  const x2 = c.getContext("2d", {willReadFrequently:true});
-  x2.drawImage(im, 0, 0, w, h);
-  let px; try { px = x2.getImageData(0, 0, w, h); } catch(e){ return null; }
-  const d = px.data, f = new Float32Array(w*h);
-  let lo = 1, hi = 0;
-  for (let i = 0; i < w*h; i++){
-    // luminance, inverted: charcoal is dark on paper, we want pigment high
-    const l = (d[i*4]*0.299 + d[i*4+1]*0.587 + d[i*4+2]*0.114) / 255;
-    const v = 1 - l;
-    f[i] = v; if (v < lo) lo = v; if (v > hi) hi = v;
-  }
-  const span = Math.max(1e-3, hi - lo);
-  for (let i = 0; i < w*h; i++){
-    const v = (f[i] - lo) / span;
-    d[i*4] = d[i*4+1] = d[i*4+2] = 0;
-    d[i*4+3] = (0.52 + v * 0.48) * 255;
-  }
-  x2.putImageData(px, 0, 0);
-  return c;
-}
-
-function buildTex(){
-  if (!VW || !VH) return;
-  if (!NOISE) NOISE = buildNoise();
-  /* the tooth is the paper, so it holds still under a mark that now persists */
-  const w = Math.ceil(VW), h = Math.ceil(VH);
-  tex.width = w; tex.height = h;
-  tctx.setTransform(1,0,0,1,0,0);
-  tctx.globalCompositeOperation = "source-over";
-  tctx.fillStyle = tctx.createPattern(NOISE, "repeat");
-  tctx.fillRect(0, 0, w, h);
-  if (LOW){
-    tctx.globalCompositeOperation = "destination-in";
-    tctx.drawImage(LOW, 0, 0, w, h);
-  }
-  if (edge.width > 1){
-    /* the falloff at the edge of the sheet is baked in here rather than
-       composited every frame — it never changes between resizes */
-    tctx.globalCompositeOperation = "destination-in";
-    tctx.drawImage(edge, 0, 0, w, h);
-  }
-  tctx.globalCompositeOperation = "source-over";
-  CAP = parseFloat(css("--smudge-max")) || 0.3;
-}
-
-/* The sheet has edges. Fade into them instead of letting the clip cut. */
-function buildEdge(){
-  const w = Math.max(1, Math.ceil(VW)), h = Math.max(1, Math.ceil(VH));
-  edge.width = w; edge.height = h;
-  ectx.setTransform(1,0,0,1,0,0);
-  ectx.globalCompositeOperation = "source-over";
-  ectx.fillStyle = "#000";
-  ectx.fillRect(0, 0, w, h);
-  ectx.globalCompositeOperation = "destination-out";
-  const fx = Math.min(72, w * 0.09), fy = Math.min(64, h * 0.14);
-  [[0,0,fx,0], [w,0,w-fx,0], [0,0,0,fy], [0,h,0,h-fy]].forEach(([x0,y0,x1,y1]) => {
-    const g = ectx.createLinearGradient(x0, y0, x1, y1);
-    g.addColorStop(0, "rgba(0,0,0,1)");
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ectx.fillStyle = g;
-    ectx.fillRect(0, 0, w, h);
-  });
-  ectx.globalCompositeOperation = "source-over";
-}
-
-/* ---------- the frame ---------- */
-function blob(c, p, R, a){
-  const sp = Math.min(1, Math.hypot(p.dx, p.dy) / 70);   // how fast the hand moved
-  c.save();
-  c.translate(p.x, p.y);
-  if (sp > 0.02) c.rotate(Math.atan2(p.dy, p.dx));
-  c.scale(1 + sp * 0.8, 1 / (1 + sp * 0.28));            // a sweep smears
-  const g = c.createRadialGradient(0, 0, 0, 0, 0, R);
-  g.addColorStop(0,    "rgba(0,0,0," + a.toFixed(3) + ")");
-  g.addColorStop(0.28, "rgba(0,0,0," + (a * 0.66).toFixed(3) + ")");
-  g.addColorStop(0.62, "rgba(0,0,0," + (a * 0.22).toFixed(3) + ")");
-  g.addColorStop(1,    "rgba(0,0,0,0)");
-  c.fillStyle = g;
-  c.beginPath(); c.arc(0, 0, R, 0, 6.283185); c.fill();
-  c.restore();
-}
-
-/* the stick, not the whole hero: a mark you can place, not a cloud you sit in */
-const brush = () => Math.max(96, Math.min(210, VW * 0.115));
-
-/* lay down whatever the hand did this frame */
-function stamp(){
-  const R = brush();
-  mctx.globalCompositeOperation = "source-over";
-  if (pending.length){
-    for (let i = 0; i < pending.length; i++) blob(mctx, pending[i], R, 0.50);
-    pending.length = 0;
-    charge = 1;
-  } else if (hover && lastX >= 0){
-    /* a resting hand keeps pressing, but settles rather than going black */
-    blob(mctx, {x:lastX, y:lastY, dx:0, dy:0}, R, 0.20);
-    charge = 1;
-  }
-}
-
-/* and rub a little of the whole thing away */
-function lift(){
-  mctx.globalCompositeOperation = "destination-out";
-  mctx.fillStyle = "rgba(0,0,0," + FADE + ")";
-  mctx.fillRect(0, 0, VW, VH);
-  mctx.globalCompositeOperation = "source-over";
-  charge *= 1 - FADE;
-}
-
-function render(){
-  if (!VW || !VH) return;
-  ctx.clearRect(0, 0, VW, VH);
-  if (charge <= 0.004) return;                // the hero rests as clean paper
-
-  octx.globalCompositeOperation = "source-over";
-  octx.clearRect(0, 0, VW, VH);
-  octx.drawImage(mask, 0, 0, VW, VH);              // the shape that was drawn
-  /* squared. A linear falloff is an airbrush; charcoal has a core that is
-     nearly solid and an edge that breaks up fast, and squaring the alpha is
-     what the first version of this effect did to get there. */
-  octx.globalCompositeOperation = "source-in";
-  octx.drawImage(mask, 0, 0, VW, VH);
-  octx.drawImage(tex, 0, 0, VW, VH);          // tooth, and the sheet's edge, in one
-  octx.globalCompositeOperation = "source-over";
-
-  ctx.globalAlpha = CAP;
-  ctx.drawImage(off, 0, 0, VW, VH);
-  ctx.globalAlpha = 1;
-}
-
-function resize(){
-  const r = cv.getBoundingClientRect();
-  if (!r.width || !r.height) return;
-  VW = r.width; VH = r.height;
-  /* 1x on purpose: the grain is authored in CSS pixels, so a larger backing
-     store interpolates the same tile at 2.25x the fill rate and looks no
-     sharper. Six full-canvas composites a frame have to stay cheap. */
-  S = 1;
-  const w = Math.max(1, Math.round(VW * S)), h = Math.max(1, Math.round(VH * S));
-  cv.width = w;   cv.height = h;   ctx.setTransform(S, 0, 0, S, 0, 0);
-  off.width = w;  off.height = h;  octx.setTransform(S, 0, 0, S, 0, 0);
-  mask.width = w; mask.height = h; mctx.setTransform(S, 0, 0, S, 0, 0);
-  charge = 0;                     // resizing the buffer wipes the mark with it
-  buildEdge(); buildTex(); render();
-}
-
-function tick(now){
-  rafId = null;
-  if (!running || reduced.matches || document.hidden) return;
-  if (now - last >= 32){
-    last = now;
-    stamp(); lift(); render();
-    if (charge <= 0.004){                     // nothing left to draw — stop the loop
-      mctx.clearRect(0, 0, VW, VH);
-      return;
-    }
-  }
-  rafId = requestAnimationFrame(tick);
-}
-function start(){
-  if (rafId !== null || !running || reduced.matches || document.hidden) return;
-  last = 0; rafId = requestAnimationFrame(tick);
-}
-
-(function loadPlate(){
-  const im = new Image();
-  im.crossOrigin = "anonymous";
-  im.decoding = "async";
-  im.onload = () => { LOW = buildLow(im); buildTex(); render(); };
-  im.src = PLATES[2].src;   // "Drift"
-})();
-
-/* the ink colour flips with the theme, so the tooth has to be rebuilt */
-function retheme(){ NOISE = null; buildTex(); render(); }
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", retheme);
-new MutationObserver(retheme)
-  .observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
-
-window.addEventListener("resize", () => { resize(); drawChart(false); });
-document.addEventListener("visibilitychange", () => { if (!document.hidden) start(); });
-reduced.addEventListener("change", () => { render(); start(); });
-function repaint(){ setTimeout(() => { render(); drawChart(false); drawScatter(false); drawCoef(); buildTable(); }, 40); }
+window.addEventListener("resize", () => drawChart(false));
+function repaint(){ setTimeout(() => { drawChart(false); drawScatter(false); drawCoef(); buildTable(); }, 40); }
 window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", repaint);
 new MutationObserver(repaint)
   .observe(document.documentElement, {attributes:true, attributeFilter:["data-theme"]});
 
-document.fonts && document.fonts.ready.then(resize);
-resize(); start();
 drawChart(false); drawScatter(false); drawCoef(); buildTable();
 
 /* animate each chart once, the first time it is actually seen */
@@ -1225,34 +903,6 @@ if (location.hash === "#drawings") show("art", false);
   }), {rootMargin:"200px"}).observe(wrap);
 })();
 
-/* ── paper parallax ──────────────────────────────────────────────
-   The grain drifts a few pixels against the cursor, which is what keeps
-   the digital sections feeling like the same sheet as the drawings. Only
-   a custom property changes; the overlay is moved with transform, so
-   nothing repaints. rAF is used here as a throttle, not a loop — it is
-   scheduled only when a new pointer position has arrived.              */
-(function paperParallax(){
-  if (reduced.matches) return;
-  const root = document.documentElement;
-  let px = 0, py = 0, queued = false;
-  function apply(){
-    queued = false;
-    root.style.setProperty("--gx", px.toFixed(1) + "px");
-    root.style.setProperty("--gy", py.toFixed(1) + "px");
-  }
-  window.addEventListener("pointermove", e => {
-    if (e.pointerType !== "mouse") return;
-    px = (e.clientX / innerWidth  - 0.5) * -10;   // ±5px, below conscious notice
-    py = (e.clientY / innerHeight - 0.5) * -10;
-    if (!queued){ queued = true; requestAnimationFrame(apply); }
-  }, {passive:true});
-  reduced.addEventListener("change", () => {
-    if (reduced.matches){
-      root.style.setProperty("--gx", "0px");
-      root.style.setProperty("--gy", "0px");
-    }
-  });
-})();
 
 /* ══════════════════════════════════════════════════════════════
    10 · WORK — track filter

@@ -1,27 +1,27 @@
 /* ════════════════════════════════════════════════════════════
-   TOKENS — light: charcoal on paper.  dark: paper on charcoal.
+   TOKENS — light and dark, both hand-specified.
    ════════════════════════════════════════════════════════════ */
 :root {
-  --paper:#E6E3DC; --surface:#EFEDE8; --surface-2:#DEDAD1;
-  --ink:#16151A; --ink-soft:#3A3840; --muted:#6B6770;
-  --rule:#C9C5BC; --rule-soft:#D6D2CA;
-  --accent:#2D3E5E; --accent-dim:#5C6B87;
+  --paper:#FFFFFF; --surface:#F6F7F9; --surface-2:#ECEEF2;
+  --ink:#111827; --ink-soft:#374151; --muted:#6B7280;
+  --rule:#D1D5DB; --rule-soft:#E5E7EB;
+  --accent:#1E3A6E; --accent-dim:#5A6F96;
   --smudge-rgb:34,32,40; --smudge-max:0.34;
   /* categorical series — validated for CVD on this surface */
   --s1:#2E5FA8; --s2:#BE4B1E; --s3:#7E3D96;
   --ok:#2F6B43; --bad:#A8341F;
-  --grid:#D3CFC6;
+  --grid:#E5E7EB;
   /* deliberately theme-independent: the mat behind artwork never flips */
   --mat:#E4E1D9;
 
-  --f-display:"Bodoni Moda","Didot","Times New Roman",serif;
-  --f-body:"Karla","Helvetica Neue",Arial,sans-serif;
+  --f-display:"Inter","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Inter","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono","SFMono-Regular",Menlo,monospace;
   --rail-w:15.5rem; --pad-x:clamp(1.25rem,4vw,3.5rem); --measure:63ch;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper:#131317; --surface:#1A1A1F; --surface-2:#212127;
+    --paper:#0F1115; --surface:#171A20; --surface-2:#1F232A;
     --ink:#E8E5DE; --ink-soft:#C6C2BC; --muted:#8E8A93;
     --rule:#33323A; --rule-soft:#26262C;
     --accent:#94ADDC; --accent-dim:#6C82AC;
@@ -35,7 +35,7 @@
   }
 }
 :root[data-theme="dark"] {
-  --paper:#131317; --surface:#1A1A1F; --surface-2:#212127;
+  --paper:#0F1115; --surface:#171A20; --surface-2:#1F232A;
   --ink:#E8E5DE; --ink-soft:#C6C2BC; --muted:#8E8A93;
   --rule:#33323A; --rule-soft:#26262C;
   --accent:#94ADDC; --accent-dim:#6C82AC;
@@ -53,18 +53,6 @@
 figure{margin:0}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);
   font-size:1rem;line-height:1.62;-webkit-font-smoothing:antialiased}
-/* paper tooth over the whole page — the site is a sheet, not a screen */
-body::after{content:"";position:fixed;inset:-40px;pointer-events:none;z-index:90;
-  opacity:.42;mix-blend-mode:overlay;
-  /* oversized by 40px so the parallax shift never exposes an edge; only
-     transform moves, so the grain never repaints */
-  transform:translate3d(var(--gx,0px),var(--gy,0px),0);
-  will-change:transform;
-  background-image:url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
-<filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/>\
-<feColorMatrix type='saturate' values='0'/></filter>\
-<rect width='160' height='160' filter='url(%23g)'/></svg>")}
 
 h1,h2,h3,h4{text-wrap:balance;margin:0;font-weight:400}
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
@@ -90,12 +78,6 @@ a{color:inherit}
 .rail__name{font-family:var(--f-display);font-size:1.5rem;line-height:1.1}
 .rail__role{margin-top:.5rem;font-family:var(--f-mono);font-size:.6875rem;
   letter-spacing:.08em;color:var(--muted);line-height:1.7}
-.switch{display:flex;border:1px solid var(--rule);padding:3px;gap:3px}
-.switch button{flex:1;appearance:none;border:0;background:transparent;cursor:pointer;
-  font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);padding:.5rem .25rem;transition:background 140ms,color 140ms}
-.switch button:hover{color:var(--ink)}
-.switch button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
 .railnav{display:flex;flex-direction:column;gap:.55rem;position:relative}
 /* one indicator that slides between links, instead of each link growing its own */
 .railnav__dot{position:absolute;left:0;top:0;width:.55rem;height:1px;
@@ -132,15 +114,10 @@ a{color:inherit}
   overflow:hidden}
 .hero::after{content:"";position:absolute;z-index:1;bottom:0;
   left:var(--pad-x);right:var(--pad-x);height:1px;background:var(--rule)}
-/* canvas is a replaced element: inset alone will not stretch it past its
-   intrinsic 300x150, so the size is set explicitly */
-#smudge{position:absolute;inset:0;width:100%;height:100%;
-  pointer-events:none;z-index:0}
 .hero>*{position:relative;z-index:1}
 
 .hero__name{font-family:var(--f-display);font-size:clamp(2.75rem,7.2vw,4.75rem);
   line-height:.98;letter-spacing:-.02em}
-.hero__name em{font-style:italic}
 /* the positioning line, not the name, is what a recruiter needs in the first
    second — so it gets the display face and sits directly under the wordmark */
 .hero__role{margin-top:.85rem;font-family:var(--f-display);
@@ -162,11 +139,6 @@ a{color:inherit}
 .hero__links a{color:var(--muted);text-decoration:none;padding-bottom:2px;
   border-bottom:1px solid transparent;transition:color 140ms,border-color 140ms}
 .hero__links a:hover{color:var(--accent);border-bottom-color:var(--accent-dim)}
-/* personality, kept — but below the professional read, not in front of it */
-.hero__aside{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--rule-soft);
-  font-family:var(--f-display);font-style:italic;font-size:1.0625rem;line-height:1.45;
-  color:var(--muted);max-width:52ch}
-
 /* ── buttons ── */
 .btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--f-mono);
   font-size:.75rem;letter-spacing:.06em;text-decoration:none;color:var(--ink);
@@ -198,37 +170,6 @@ a{color:inherit}
 /* the credibility strip already closes with a rule and its own padding */
 .cred+.section{padding-top:clamp(2.25rem,5vh,3.25rem)}
 
-/* Charcoal wipe on section entry. Pure CSS scroll-driven animation — no JS, no
-   canvas, and only opacity + transform are animated, so it stays on the
-   compositor. Browsers without animation-timeline simply never see it. */
-@supports (animation-timeline: view()){
-  @media (prefers-reduced-motion: no-preference){
-    #view-work .section::before{
-      content:"";position:absolute;inset:-2.5rem 0 auto 0;height:10rem;
-      pointer-events:none;z-index:2;opacity:0;
-      background-size:200px 200px;
-      background-image:url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>\
-<filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='4' stitchTiles='stitch'/>\
-<feColorMatrix type='saturate' values='0'/></filter>\
-<rect width='200' height='200' filter='url(%23w)'/></svg>");
-      -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 85%);
-              mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 85%);
-      mix-blend-mode:multiply;
-      animation:wipe linear both;
-      animation-timeline:view();
-      animation-range:entry 0% entry 55%;
-    }
-    :root[data-theme="dark"] #view-work .section::before{mix-blend-mode:screen}
-    @media (prefers-color-scheme: dark){
-      :root:not([data-theme="light"]) #view-work .section::before{mix-blend-mode:screen}
-    }
-    @keyframes wipe{
-      from{opacity:.38;transform:translate3d(0,-1.1rem,0)}
-      to  {opacity:0;  transform:translate3d(0,0,0)}
-    }
-  }
-}
 .section__head{display:flex;align-items:baseline;gap:1rem;margin-bottom:2.25rem;flex-wrap:wrap}
 .section__head .line{flex:1 1 2rem}
 /* names the thread through the section once, so the case-study questions can
@@ -265,7 +206,7 @@ a{color:inherit}
 .cs__kind{margin-top:.8rem;font-size:.75rem;color:var(--muted);line-height:1.6}
 .cs__main{min-width:0}
 
-.cs__q{font-family:var(--f-display);font-style:italic;letter-spacing:-.012em;
+.cs__q{font-family:var(--f-display);font-weight:600;letter-spacing:-.012em;
   font-size:clamp(1.5rem,2.9vw,2.0625rem);line-height:1.18;color:var(--ink)}
 .cs__title{margin-top:.6rem;font-family:var(--f-body);font-weight:500;font-size:1.125rem;
   line-height:1.4;color:var(--ink)}
@@ -337,7 +278,7 @@ a{color:inherit}
 .mini__meta .cs__num{margin:0;letter-spacing:.18em}
 .mini h4{font-family:var(--f-body);font-weight:500;font-size:1rem;line-height:1.35;
   color:var(--ink)}
-.mini__take{font-family:var(--f-display);font-style:italic;font-size:1rem;line-height:1.4;
+.mini__take{font-family:var(--f-display);font-weight:600;font-size:1rem;line-height:1.4;
   color:var(--ink)}
 .mini p{font-size:.875rem;color:var(--ink-soft);line-height:1.65}
 .mini p b{font-weight:500;color:var(--ink)}
@@ -569,7 +510,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 /* ════════════════════════════════════════════════════════════ DRAWINGS */
 .art-hero{padding:clamp(4rem,11vh,7rem) 0 clamp(2.5rem,6vh,3.5rem);
   border-bottom:1px solid var(--rule)}
-.art-hero h1{font-family:var(--f-display);font-style:italic;
+.art-hero h1{font-family:var(--f-display);font-weight:600;
   font-size:clamp(2.4rem,6.5vw,4.25rem);line-height:1.02;max-width:16ch}
 .art-hero .deck{margin-top:1.4rem;font-family:var(--f-mono);font-size:.8125rem;color:var(--muted)}
 .statement{max-width:var(--measure);display:flex;flex-direction:column;gap:1.1rem}
@@ -603,7 +544,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .plate__empty{font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted)}
 .plate figcaption{margin-top:.75rem;font-size:.875rem;line-height:1.5}
-.plate figcaption .t{font-family:var(--f-display);font-style:italic;font-size:1rem}
+.plate figcaption .t{font-family:var(--f-display);font-weight:600;font-size:1rem}
 .plate figcaption .m{display:block;font-family:var(--f-mono);font-size:.6875rem;
   color:var(--muted);margin-top:.2rem;line-height:1.6}
 .plate figcaption .pn{display:block;font-family:var(--f-mono);font-size:.625rem;
@@ -628,7 +569,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   background:var(--ink);border:2px solid var(--paper);cursor:grab}
 .zoomcap{margin-top:.7rem;font-family:var(--f-mono);font-size:.75rem;color:var(--muted);
   min-height:1.4em;transition:color 200ms}
-.zoomcap.resolved{color:var(--ink);font-family:var(--f-display);font-style:italic;
+.zoomcap.resolved{color:var(--ink);font-family:var(--f-display);font-weight:600;
   font-size:1rem}
 
 /* ════════════════════════════════════════════════════════════ LIGHTBOX */
@@ -643,7 +584,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   transform:scale(.985);transition:transform 320ms cubic-bezier(.2,.7,.3,1)}
 .lb.open img{transform:none}
 .lb__cap{color:#E8E5DE;text-align:center;padding-top:1.1rem;line-height:1.5}
-.lb__cap .t{font-family:var(--f-display);font-style:italic;font-size:1.125rem}
+.lb__cap .t{font-family:var(--f-display);font-weight:600;font-size:1.125rem}
 .lb__cap .m{display:block;font-family:var(--f-mono);font-size:.6875rem;
   color:#96929A;margin-top:.3rem;letter-spacing:.03em}
 .lb button{position:absolute;appearance:none;background:transparent;border:0;cursor:pointer;
@@ -681,7 +622,6 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
   .rail>div:first-child{display:flex;align-items:center;gap:.6rem}
   .rail__face{width:2rem;height:2rem;margin:0}
   .rail__role,.railnav,.rail__foot{display:none}
-  .switch{margin-left:auto}
   .main{margin-left:0}
   .entry{grid-template-columns:1fr;gap:.65rem}
   .item__meta{flex-direction:row;gap:.9rem;align-items:baseline}
@@ -763,7 +703,7 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .ledger__row>a:hover,.ledger__row>a:focus-visible{background:var(--surface)}
 .ledger__row>a:hover::before,.ledger__row>a:focus-visible::before{transform:scaleY(1)}
 .lg__n{font-family:var(--f-mono);font-size:.6875rem;letter-spacing:.14em;color:var(--accent)}
-.lg__q em{display:block;font-family:var(--f-display);font-style:italic;font-size:1.1875rem;
+.lg__q em{display:block;font-family:var(--f-display);font-weight:600;font-size:1.1875rem;
   line-height:1.25;letter-spacing:-.01em;color:var(--ink)}
 .lg__q small{display:block;margin-top:.3rem;font-family:var(--f-mono);font-size:.625rem;
   letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -857,3 +797,21 @@ video.demo-vid{width:100%;display:block;background:#000;border:1px solid var(--r
 .readmode button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 @media (max-width:760px){.readmode{margin-left:0}}
 .plates-still .cs__more,.plates-still .cs__toggle i{transition:none!important}
+
+/* ════════════════════════════════════════════════════════════ PLAIN TYPE
+   One sans family throughout: headings carry weight, not an editorial face. */
+h1,h2,h3{font-weight:600;letter-spacing:-.015em}
+.hero__name{font-weight:700;letter-spacing:-.03em}
+.hero__role{font-weight:500;color:var(--accent)}
+.closing__q em{font-style:normal;color:var(--muted)}
+.cs__take em,.story p em,.vn__l em{font-style:normal;font-weight:600}
+
+/* outside work: one quiet link, not a section of its own */
+.outside{margin-top:2.5rem;padding-top:1.1rem;border-top:1px solid var(--rule-soft);
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem 1rem;font-size:.875rem}
+.outside a{color:var(--muted);text-decoration:none}
+.outside a:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.art-hero .back{display:inline-block;margin-bottom:1.5rem;font-family:var(--f-mono);
+  font-size:.75rem;color:var(--muted);text-decoration:none}
+.art-hero .back:hover{color:var(--accent)}
+.lg__q em,.cs__q,.mini__take,.art-hero h1,.plate figcaption .t,.lb__cap .t,.zoomcap.resolved{font-style:normal}
