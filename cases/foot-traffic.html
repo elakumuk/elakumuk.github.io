@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boston foot traffic — Ela Kumuk</title>
+<meta name="description" content="Boston foot traffic. A project by Ela Kumuk, Business &amp; Data Analyst.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/foot-traffic.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Boston foot traffic — Ela Kumuk">
+<meta property="og:description" content="Business &amp; Data Analyst. Models and analyses for finance, consulting and data teams — tested before anyone acts on them. Available January 2027.">
+<meta property="og:url" content="https://elakumuk.github.io/cases/foot-traffic.html">
+<meta property="og:image" content="https://elakumuk.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Boston foot traffic — Ela Kumuk">
+<meta name="twitter:description" content="Business &amp; Data Analyst. M.S. Business Analytics, Brandeis. Available January 2027.">
+<meta name="twitter:image" content="https://elakumuk.github.io/assets/og.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e3">
+<link rel="stylesheet" href="/design.css?v=91268728">
+</head>
+<body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
+      <img src="/assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a>
+    </nav>
+    <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+  </aside>
+
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 06 / 08</span></div><article class="cs cs--sm" id="w-foot-traffic" data-tracks="analytics consulting ds"
+               data-short="Boston foot traffic, DiD">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">06</p>
+          <p class="cs__tag">Where to look</p>
+          <p class="cs__org">Brandeis BUS240F<br>Group project</p>
+          <p class="cs__when">Spring 2026</p>
+          <p class="cs__kind">Advan POI visit data<br>Boston &amp; Cambridge</p>
+        </div>
+        <div class="cs__main">
+          <h1 class="cs__q">When is the obvious answer wrong?</h1>
+          <h3 class="cs__title">The aggregate said nothing. The sub-categories did not.</h3>
+          <p class="cs__take">A difference-in-differences around the September 2025 H-1B
+            proclamation that reads as a clean null &mdash; until you stop trusting the average.</p>
+
+          <dl class="facts">
+            <div><dt>My role</dt>
+              <dd>Data pipeline &middot; grouping rules &middot; the disaggregation that found it</dd></div>
+            <div><dt>Method</dt>
+              <dd>65,360 POI-month rows filtered to 37,524 on a privacy-reliability threshold
+                  &middot; postal codes grouped into tech, university and control areas &middot; mix
+                  comparison to check the control group was comparable</dd></div>
+          </dl>
+
+          <p class="cs__desc">At the aggregate level there is nothing to report &mdash; the
+            contrasts are small and point in inconsistent directions. Disaggregated, a pattern
+            appears in exactly the places where daily life happens, and it appears on the largest
+            samples in the dataset.</p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">What the aggregate says</span></div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">+2.06<i>%</i></span><span class="l">Tech areas</span></div>
+                <div class="did"><span class="n">&minus;1.10<i>%</i></span><span class="l">University areas</span></div>
+                <div class="did"><span class="n">&minus;0.24<i>%</i></span><span class="l">Control areas</span></div>
+                <div class="did em"><span class="n">+2.3<i>pp</i></span><span class="l">DiD, tech vs control</span></div>
+                <div class="did em"><span class="n">&minus;0.86<i>pp</i></span><span class="l">DiD, university vs control</span></div>
+              </div>
+              <p class="didnote">Change in average visits per point of interest, January 2025 to
+                January 2026. Read alone, this is a null result.</p>
+            </div>
+          </figure>
+
+          <figure class="fig">
+            <div class="fig__bar">
+              <span class="eyebrow">What the sub-categories say</span>
+              <div class="seg" role="group" aria-label="Chart display">
+                <button id="s-tbl" aria-pressed="false">Table</button>
+              </div>
+            </div>
+            <div class="fig__body">
+              <div class="chartwrap" id="scatterwrap">
+                <svg id="scatter" viewBox="0 0 720 360" role="img"
+                     aria-label="Scatter plot. Each point is a business sub-category, positioned by its percentage change in visits and by how many locations are in the sample. The largest samples showing declines are coffee shops and full-service restaurants in university areas."></svg>
+                <div class="tip" id="tip2" role="status" aria-live="polite"></div>
+              </div>
+              <div class="legend" id="legend2"></div>
+              <div id="stablewrap" hidden></div>
+            </div>
+            <figcaption class="fig__cap">
+              134 sub-categories with at least 30 locations. Vertical axis is sample size on a log
+              scale, so the points you should believe sit near the top. Source: Advan POI data;
+              coursework analysis, Brandeis BUS240F.
+            </figcaption>
+          </figure>
+
+          <p class="brought">The finding only appeared after I stopped trusting the average &mdash;
+            and it survives because it sits on the biggest samples, not the biggest percentages.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">pandas</span>
+            <span class="chip">Difference-in-differences</span><span class="chip">Tableau</span>
+            <span class="chip">Causal inference</span>
+          </div>
+        </div>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="ovrule.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="olist.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=6e9adc4a" defer></script></body></html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onchain research desk — Ela Kumuk</title>
+<meta name="description" content="Onchain research desk. A project by Ela Kumuk, Business &amp; Data Analyst.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/onchain-research.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Onchain research desk — Ela Kumuk">
+<meta property="og:description" content="Business &amp; Data Analyst. Models and analyses for finance, consulting and data teams — tested before anyone acts on them. Available January 2027.">
+<meta property="og:url" content="https://elakumuk.github.io/cases/onchain-research.html">
+<meta property="og:image" content="https://elakumuk.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Onchain research desk — Ela Kumuk">
+<meta name="twitter:description" content="Business &amp; Data Analyst. M.S. Business Analytics, Brandeis. Available January 2027.">
+<meta name="twitter:image" content="https://elakumuk.github.io/assets/og.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e3">
+<link rel="stylesheet" href="/design.css?v=91268728">
+</head>
+<body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
+      <img src="/assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a>
+    </nav>
+    <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+  </aside>
+
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 04 / 08</span></div><article class="cs" id="w-onchain-desk" data-tracks="finance ds analytics ai"
+               data-short="Onchain research desk">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">02</p>
+          <p class="cs__tag">What you can own</p>
+          <p class="cs__org">Personal project<br>Live, updated weekly</p>
+          <p class="cs__when">Fall 2026</p>
+          <p class="cs__kind">Coinbase &amp; Kraken books<br>CoinGecko &middot; DefiLlama &middot; Coin Metrics</p>
+        </div>
+        <div class="cs__main">
+          <h1 class="cs__q">Can you actually buy what the model wants to hold?</h1>
+          <h3 class="cs__title">A token research desk where every number has to prove itself</h3>
+          <p class="cs__take">Twenty tokens profiled for tradable liquidity, value accrual to
+            holders, and how much a portfolio can own before the market stops absorbing it.</p>
+
+          <div class="finding">
+            <p class="finding__n">17<small>of 20</small></p>
+            <p class="finding__t">positions hit their liquidity cap in a $1B portfolio &mdash; at that size it becomes a different strategy.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>Crypto screens rank tokens by daily volume. A fund pays the order book, and needs to know whether a protocol&rsquo;s fees ever reach the people holding its token.</dd></div>
+            <div><dt>What I did</dt><dd>Walked live Coinbase and Kraken books for $100K&ndash;$10M orders, split protocol fees from holder revenue, capped each position at 10% of median daily volume, and put every memo number behind a verifier.</dd></div>
+            <div><dt>Outcome</dt><dd>AAVE trades $256M a day but has $1.6M within 2% of price on US venues. On a point-in-time universe since 2016, a $100M fund has fit every month since August 2020; a $1B fund never has for long.</dd></div>
+          </dl>
+          <div class="cs__act">
+            <div class="links links--cta">
+            <a class="btn btn--solid" href="https://elakumuk.github.io/onchain-research-desk/" target="_blank" rel="noopener">Open the live desk</a>
+            <a class="link" href="https://github.com/elakumuk/onchain-research-desk" target="_blank" rel="noopener">Code and methodology</a>
+          </div>
+            
+          </div>
+          <div class="cs__more" id="more-w-onchain-desk"><div class="cs__more-in">
+          <dl class="facts">
+            <div><dt>My role</dt>
+              <dd>Research questions &middot; liquidity and capacity design &middot; verification
+                  rules &middot; reviewing every memo conclusion against governance records</dd></div>
+            <div><dt>Method</dt>
+              <dd>Order-book walks for $100K&ndash;$10M orders &middot; Amihud illiquidity &middot;
+                  fees vs. token-holder revenue &middot; Ledoit-Wolf covariance &middot; positions
+                  capped at 10% of median daily volume &middot; point-in-time universe since 2016,
+                  dead coins included</dd></div>
+          </dl>
+
+          <p class="cs__desc">Reported volume and tradable depth tell different stories. The desk
+            measures both, writes a memo per token from a registry of facts, and refuses to publish
+            if any number in a memo does not match its source. A language model may add commentary;
+            a deterministic verifier decides whether it ships.</p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">3<i>of 20</i></span><span class="l">Fill a $10M order within 15% of mid</span></div>
+                <div class="did"><span class="n">$256<i>M</i></span><span class="l">AAVE median daily volume</span></div>
+                <div class="did"><span class="n">$1.6<i>M</i></span><span class="l">AAVE depth within &plusmn;2% on US venues</span></div>
+                <div class="did em"><span class="n">17<i>of 20</i></span><span class="l">Inverse-vol positions capped at $1B AUM</span></div>
+                <div class="did em"><span class="n">1,355<i>/1,355</i></span><span class="l">Memo numbers verified</span></div>
+              </div>
+              <p class="didnote">Snapshot of 28 September 2026. At a billion dollars the capped
+                portfolio concentrates in bitcoin, ether and solana &mdash; it is effectively a
+                different strategy.</p>
+            </div>
+          </figure>
+
+
+          <p class="brought">The verifier guarantees a number matches its source, not that the
+            conclusion is right. When a memo said Aave&rsquo;s holder cash flow had stopped, I
+            checked governance before believing it &mdash; the DAO had paused buybacks.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Market microstructure</span>
+            <span class="chip">Tokenomics</span><span class="chip">Portfolio construction</span>
+            <span class="chip">GitHub Actions</span>
+          </div>
+          </div></div>
+        </div>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="marketing-analysis.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="ovrule.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=6e9adc4a" defer></script></body></html>
