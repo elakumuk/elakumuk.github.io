@@ -1,6 +1,6 @@
 "use strict";
 /* Preserve project links from the previous one-page portfolio. */
-const CASE_ROUTES = {"w-meta-labeling": "state-street", "w-crash-dashboard": "crash-intelligence", "w-llm-analyst": "marketing-analysis", "w-onchain-desk": "onchain-research", "w-ovrule": "ovrule", "w-foot-traffic": "foot-traffic", "w-olist": "olist", "w-jobhunter": "jobhunter"};
+const CASE_ROUTES = {"w-meta-labeling": "state-street", "w-audit-lab": "strategy-audit-lab", "w-crash-dashboard": "crash-intelligence", "w-llm-analyst": "marketing-analysis", "w-onchain-desk": "onchain-research", "w-ovrule": "ovrule", "w-foot-traffic": "foot-traffic", "w-olist": "olist", "w-jobhunter": "jobhunter"};
 if (!document.body.classList.contains("case-page")) {
   const route = CASE_ROUTES[location.hash.slice(1)];
   if (route) location.replace("cases/" + route + ".html");

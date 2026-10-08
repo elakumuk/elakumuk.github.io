@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategy audit lab — Ela Kumuk</title>
+<meta name="description" content="Strategy audit lab. A project by Ela Kumuk, Business &amp; Data Analyst.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/strategy-audit-lab.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Strategy audit lab — Ela Kumuk">
+<meta property="og:description" content="Business &amp; Data Analyst. Models and analyses for finance, consulting and data teams — tested before anyone acts on them. Available January 2027.">
+<meta property="og:url" content="https://elakumuk.github.io/cases/strategy-audit-lab.html">
+<meta property="og:image" content="https://elakumuk.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Strategy audit lab — Ela Kumuk">
+<meta name="twitter:description" content="Business &amp; Data Analyst. M.S. Business Analytics, Brandeis. Available January 2027.">
+<meta name="twitter:image" content="https://elakumuk.github.io/assets/og.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e380863d8f">
+<link rel="stylesheet" href="/design.css?v=91268728a7fa85d9">
+</head>
+<body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
+      <img src="/assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a>
+    </nav>
+    <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+  </aside>
+
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 02 / 09</span></div><article class="cs" id="w-audit-lab" data-tracks="finance ds ai"
+               data-short="Strategy audit lab">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">02</p>
+          <p class="cs__tag">Quant research</p>
+          <p class="cs__org">Personal project<br>Python &middot; 64 tests</p>
+          <p class="cs__when">Fall 2026</p>
+          <p class="cs__kind">10 ETFs &middot; Ken French T-bills<br>2008&ndash;2026, monthly</p>
+        </div>
+        <div class="cs__main">
+          <h1 class="cs__q">Is this backtest evidence, or the best of many coin flips?</h1>
+          <h3 class="cs__title">An AI agent proposes trading strategies. An auditor tries to reject them.</h3>
+          <p class="cs__take">A research lab that counts every strategy ever tried and passes only
+            results that survive deflated Sharpe, sub-period stability and alpha over a 60/40 portfolio.</p>
+
+          <div class="finding">
+            <p class="finding__n">1.17<small>&rarr; &minus;0.37</small></p>
+            <p class="finding__t">Sharpe of the one strategy that passed, in research and then on locked
+              holdout data. I logged the prediction that it would fail before opening the holdout.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>Try enough ideas and the best backtest looks impressive by luck alone.
+              An allocator or risk team has to know whether a result is evidence or the winner of a large search.</dd></div>
+            <div><dt>What I did</dt><dd>Built a backtest engine where strategies are JSON specs, never code, an
+              auditor with three tests, and an append-only ledger so no tried idea can be hidden. An LLM agent
+              proposes strategies under a fixed trial budget and sees research data only.</dd></div>
+            <div><dt>Outcome</dt><dd>Across 500 simulated searches, the best of 200 pure-noise strategies passed a
+              naive test every time and the auditor never. No textbook strategy passed. When the agent was also shown
+              past returns, it built portfolios from the in-sample winners, and that is the only way a strategy got through.</dd></div>
+          </dl>
+          <div class="cs__more" id="more-w-audit-lab"><div class="cs__more-in">
+          <dl class="facts">
+            <div><dt>The auditor</dt>
+              <dd>Deflated Sharpe &ge; 0.95 given every trial &middot; positive in at least 5 of 6
+                  sub-periods &middot; deflated alpha over 60/40 &ge; 0.95 &middot; probability of
+                  backtest overfitting (CSCV) reported for each search</dd></div>
+            <div><dt>Guardrails</dt>
+              <dd>One timing rule tested by corrupting future data &middot; every leak test checked by
+                  planting the bug it should catch &middot; 10 bps costs, cash at T-bills &middot;
+                  2022 onward locked as a holdout</dd></div>
+          </dl>
+
+          <p class="cs__desc">The agent writes specs, not code, so it cannot leak future data into a
+            result. It sees assets as letters and periods as numbers, which keeps a model trained
+            through 2024 from using what it already knows about 2022. An information ablation across
+            three seeds showed what it does with more: shown each asset&rsquo;s past returns, it picked the
+            winners, a search the ledger never counted.</p>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">100<i>% vs 0%</i></span><span class="l">Best of 200 noise strategies passes: naive test vs auditor</span></div>
+                <div class="did"><span class="n">99<i>%</i></span><span class="l">A real Sharpe-2.0 edge among 200 tries still found</span></div>
+                <div class="did"><span class="n">0<i>of 6</i></span><span class="l">Textbook baselines that pass</span></div>
+                <div class="did em"><span class="n">1.22<i>vs 0.80</i></span><span class="l">Agent&rsquo;s best Sharpe with past returns shown vs risk stats only</span></div>
+                <div class="did em"><span class="n">&minus;0.37<i>vs 0.30</i></span><span class="l">Holdout Sharpe: passing strategy vs 60/40</span></div>
+              </div>
+              <p class="didnote">Research window May 2008 to December 2021, holdout January 2022 to August 2026.
+                Simulation figures from 500 searches of 200 strategies over 164 months.</p>
+            </div>
+          </figure>
+
+          <p class="brought">One strategy over 56 months in one rate regime is consistent with the
+            snooping explanation, not proof of it. The lasting change is in the design: the agent
+            now sees risk statistics only, and past returns reach it only through counted trials.</p>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Backtesting</span>
+            <span class="chip">Deflated Sharpe</span><span class="chip">LLM agents</span>
+            <span class="chip">Automated testing</span>
+          </div>
+          </div></div>
+        </div>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="state-street.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="crash-intelligence.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=7967d13a8bd207f8" defer></script></body></html>
