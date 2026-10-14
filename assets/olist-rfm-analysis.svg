@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" role="img" aria-labelledby="title desc">
+  <title id="title">Olist RFM segments among delivered-order customers</title>
+  <desc id="desc">Horizontal bars show 39,152 Regular customers, 36,139 New Customers, 15,366 Lost customers, 1,596 Loyal customers, 987 At Risk customers, and 117 Champions, based on the refreshed SQL analysis.</desc>
+  <rect width="900" height="470" fill="#fbfaf7"/>
+  <text x="42" y="50" fill="#22231f" font-family="Arial, sans-serif" font-size="24" font-weight="700">Customer segments · delivered-order customers</text>
+  <text x="42" y="78" fill="#66665f" font-family="Arial, sans-serif" font-size="14">RFM segments · 93,357 customers · counts from the refreshed SQL analysis</text>
+  <g font-family="Arial, sans-serif" font-size="15" fill="#30312d">
+    <text x="42" y="135">Regular</text><text x="42" y="190">New Customers</text><text x="42" y="245">Lost</text>
+    <text x="42" y="300">Loyal</text><text x="42" y="355">At Risk</text><text x="42" y="410">Champions</text>
+  </g>
+  <g fill="#e8e5dd">
+    <rect x="205" y="113" width="560" height="28" rx="4"/><rect x="205" y="168" width="560" height="28" rx="4"/>
+    <rect x="205" y="223" width="560" height="28" rx="4"/><rect x="205" y="278" width="560" height="28" rx="4"/>
+    <rect x="205" y="333" width="560" height="28" rx="4"/><rect x="205" y="388" width="560" height="28" rx="4"/>
+  </g>
+  <g fill="#5d7665">
+    <rect x="205" y="113" width="522" height="28" rx="4"/><rect x="205" y="168" width="482" height="28" rx="4"/>
+    <rect x="205" y="223" width="205" height="28" rx="4"/><rect x="205" y="278" width="21" height="28" rx="4"/>
+    <rect x="205" y="333" width="13" height="28" rx="4"/><rect x="205" y="388" width="4" height="28" rx="2"/>
+  </g>
+  <g fill="#30312d" font-family="Arial, sans-serif" font-size="15" font-weight="700">
+    <text x="780" y="133">39,152</text><text x="700" y="188">36,139</text><text x="423" y="243">15,366</text>
+    <text x="239" y="298">1,596</text><text x="231" y="353">987</text><text x="222" y="408">117</text>
+  </g>
+  <text x="42" y="449" fill="#66665f" font-family="Arial, sans-serif" font-size="13">About 97% of delivered-order customers bought once; frequency bands avoid splitting a large tie arbitrarily.</text>
+</svg>

@@ -285,8 +285,8 @@ bSTbl?.addEventListener("click", () => {
 });
 
 /* ══════════════════════════════════════════════════════════════
-   1d · METHOD COMPARISON — a coefficient plot. Same data, three
-        methods. The hollow mark is the one you should not believe.
+   1d · METHOD COMPARISON — observational estimates across five
+        specifications. These point estimates do not establish causality.
    ══════════════════════════════════════════════════════════════ */
 const METHODS = [
   {name:"Naive difference in means",     est:5.53,  note:"no adjustment",             ok:true},
@@ -302,11 +302,11 @@ function drawCoef(){
   const dom = [-2, 8];
   const x = v => L2 + (v - dom[0]) / (dom[1] - dom[0]) * (W2 - L2 - R2);
   cf.innerHTML = "";
-  /* the band every correctly specified estimate falls in */
+  /* the band containing the pre-treatment adjusted point estimates */
   cf.appendChild(el("rect",{x:x(5.5),y:T2,width:x(6)-x(5.5),height:H2-T2-B2,
     fill:css("--accent"),opacity:.09}));
   const bl = el("text",{class:"axis-t",x:x(5.75),y:T2-9,"text-anchor":"middle"});
-  bl.textContent = "correctly specified"; cf.appendChild(bl);
+  bl.textContent = "pre-treatment estimates"; cf.appendChild(bl);
   [0,2,4,6,8].forEach(t => {
     cf.appendChild(el("line",{class:"gridline",x1:x(t),x2:x(t),y1:T2,y2:H2-B2}));
     const l = el("text",{class:"axis-t",x:x(t),y:H2-B2+17,"text-anchor":"middle"});
@@ -315,9 +315,9 @@ function drawCoef(){
   cf.appendChild(el("line",{x1:x(0),x2:x(0),y1:T2,y2:H2-B2,
     stroke:css("--muted"),"stroke-width":1}));
   const zl = el("text",{class:"axis-t",x:x(0),y:T2-9,"text-anchor":"middle"});
-  zl.textContent = "no effect"; cf.appendChild(zl);
+  zl.textContent = "zero estimate"; cf.appendChild(zl);
   const xl = el("text",{class:"axis-t",x:(L2+W2-R2)/2,y:H2-6,"text-anchor":"middle"});
-  xl.textContent = "estimated effect on conversion (percentage points)"; cf.appendChild(xl);
+  xl.textContent = "estimated association with conversion (percentage points)"; cf.appendChild(xl);
 
   const step = (H2 - T2 - B2) / METHODS.length;
   METHODS.forEach((m,i) => {

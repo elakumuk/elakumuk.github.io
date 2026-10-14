@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
 <link rel="stylesheet" href="/styles.css?v=248fb2e380863d8f">
-<link rel="stylesheet" href="/design.css?v=91268728a7fa85d9">
+<link rel="stylesheet" href="/design.css?v=8a5e0e1926fa14d7">
 </head>
 <body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
     <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
@@ -59,9 +59,9 @@
         <div class="cs__main">
           <h1 class="cs__q">Can an LLM be your marketing analyst?</h1>
           <h3 class="cs__title">Two AI analysts, two opposite mistakes</h3>
-          <p class="cs__take">One stopped at the naive number. The other controlled away the
-            campaign&rsquo;s own effect. Getting it right meant knowing which variables the campaign
-            itself caused.</p>
+          <p class="cs__take">One stopped at the naive number. The other controlled for post-campaign
+            variables and answered a different question. Understanding the difference meant identifying
+            which variables may sit on the campaign&rsquo;s causal pathway.</p>
 
           <div class="vnums">
             <div class="vn">
@@ -71,22 +71,24 @@
             <span class="vnums__a" aria-hidden="true"></span>
             <div class="vn vn--eq">
               <span class="vn__n">+5.5<i>pp</i></span>
-              <span class="vn__l">With pre-treatment controls only<br><em>OLS, matching and weighting all agree</em></span>
+              <span class="vn__l">Adjusted estimate<br><em>assumption-dependent; not experimental evidence</em></span>
             </div>
           </div>
           <dl class="star">
-            <div><dt>Situation</dt><dd>A targeted, non-randomized campaign across 5,000 users showed a +5.53 point lift in conversion. I gave two language models the same data and asked whether the campaign caused it.</dd></div>
+            <div><dt>Situation</dt><dd>A targeted, non-randomized campaign across 5,000 users had a +5.53 percentage-point observed conversion difference. I gave two language models the same data and asked whether the campaign caused it.</dd></div>
             <div><dt>What I did</dt><dd>Ran the analysis with pre-treatment controls only &mdash; OLS, propensity matching and inverse-propensity weighting &mdash; and audited each model&rsquo;s answer against it.</dd></div>
-            <div><dt>Outcome</dt><dd>The campaign works: every correctly specified estimate lands between +5.5 and +6.0 points. Gemini reported the naive number as causal; the regression Claude Code wrote controlled for the mediators and collapsed it to zero.</dd></div>
+            <div><dt>Outcome</dt><dd>Pre-treatment adjusted estimates cluster around +5.5 percentage points. Gemini treated the naive difference as causal; the regression Claude Code wrote controlled for post-treatment mediators and estimated a different quantity near zero. Because assignment was not randomized, these results do not establish a causal campaign effect.</dd></div>
           </dl>
           
           <div class="cs__more" id="more-w-llm-analyst"><div class="cs__more-in">
           <p class="cs__desc">The campaign was targeted, not randomized, so the naive lift mixes the
             campaign with who was chosen for it. The trap is the next step. Impressions and clicks
-            are caused by the campaign; controlling for them measures its effect with its own
-            mechanism held fixed, which is why a regression with four controls reports zero. With
+            may be caused by the campaign; controlling for them changes the estimand and can block
+            part of the pathway being studied, which helps explain why a regression with four controls reports near zero. With
             baseline covariates only, OLS, matching and weighting agree, and the treated and control
-            groups overlap almost completely on their pre-treatment propensity.</p>
+            groups overlap on their pre-treatment propensity, which supports comparison within the observed covariates but does not rule out unmeasured confounding.</p>
+
+          <p class="cs__insight">Interpretation: the adjusted estimates are consistent with a positive campaign effect under the assumptions of no important unmeasured confounding and adequate overlap. A randomized test or stronger identification strategy would be needed to claim causality.</p>
 
           <p class="cs__insight">Rigor is specification discipline, not variable count. A
             regression that controls for a mediator is more dangerous than a naive comparison,
@@ -107,16 +109,17 @@
             <div class="fig__body">
               <div class="chartwrap" id="coefwrap">
                 <svg id="coef" viewBox="0 0 720 262" role="img"
-                     aria-label="Estimated effect of the campaign on conversion under five specifications. Naive difference plus 5.53 points; OLS with pre-treatment controls plus 5.52; propensity score matching plus 5.95; inverse-propensity weighting plus 5.51. OLS that also controls for impressions and clicks gives minus 0.02, because those variables are caused by the campaign."></svg>
+                     aria-label="Observational estimates of campaign and conversion differences under five specifications. Naive difference plus 5.53 points; OLS with pre-treatment controls plus 5.52; propensity score matching plus 5.95; inverse-propensity weighting plus 5.51. OLS that also controls for impressions and clicks gives minus 0.02. Estimates are assumption-dependent and do not establish causality."></svg>
               </div>
-              <p class="didnote">Estimated effect on conversion, in percentage points. The hollow
-                point also controls for impressions and clicks, which the campaign itself causes: it
-                measures the effect with the mechanism held fixed, a different quantity rather than a
-                more careful version of the same one.</p>
+              <p class="didnote">Point estimates in percentage points; uncertainty intervals are not shown. The hollow
+                point also controls for impressions and clicks, which may be post-treatment variables.
+                That specification answers a different question and is not a more careful estimate of
+                the same quantity.</p>
             </div>
             <figcaption class="fig__cap">
-              Total effect about +5.5 points; with the mediators held fixed, about zero; the
-              difference runs through impressions and clicks. Source: Kaggle digital-marketing
+              Pre-treatment adjusted estimates cluster around +5.5 points. The mediator-adjusted
+              estimate is a different quantity, not a more careful estimate of the total effect.
+              Observational data cannot establish causality without additional assumptions. Source: Kaggle digital-marketing
               campaign data, 5,000 users; coursework, Brandeis Marketing Analytics.
             </figcaption>
           </figure>
@@ -130,4 +133,4 @@
           </div>
           </div></div>
         </div>
-      </article><nav class="case-pagination" aria-label="Other projects"><a href="crash-intelligence.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="onchain-research.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=7967d13a8bd207f8" defer></script></body></html>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="crash-intelligence.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="onchain-research.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=63c3d151e528e079" defer></script></body></html>

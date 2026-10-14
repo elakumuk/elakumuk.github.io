@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
 <link rel="stylesheet" href="/styles.css?v=248fb2e380863d8f">
-<link rel="stylesheet" href="/design.css?v=91268728a7fa85d9">
+<link rel="stylesheet" href="/design.css?v=8a5e0e1926fa14d7">
 </head>
 <body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
     <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
@@ -47,14 +47,53 @@
     <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
   </aside>
 
-<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 08 / 09</span></div><article class="cs cs--note" id="w-olist"><div class="cs__rail"><p class="cs__kind"><span class="cs__num" aria-hidden="true">07</span>
-            Personal project &middot; Spring 2026</p></div><div class="cs__main">
-          <h1 class="cs__q">What late delivery really costs</h1>
-          <p class="mini__take">A logistics problem showing up as a retention problem.</p>
-          <p>An RFM segmentation over 100,000+ Olist marketplace transactions, splitting the base
-            into high-value, dormant and churn-risk cohorts. Orders arriving late score
-            <b>2.57 out of 5</b> against <b>4.29</b> for on-time orders.</p>
-          <p class="mini__role"><span>My role</span> Whole project &mdash; segmentation, delivery analysis, cohorts</p>
-          <div class="chips"><span class="chip">SQL</span><span class="chip">pandas</span>
-            <span class="chip">RFM</span><span class="chip">Cohort analysis</span></div>
-        </div></article><nav class="case-pagination" aria-label="Other projects"><a href="foot-traffic.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="jobhunter.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=7967d13a8bd207f8" defer></script></body></html>
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 08 / 09</span></div>
+<article class="cs cs--sm" id="w-olist" data-tracks="analytics consulting ds">
+  <div class="cs__rail">
+    <p class="cs__num" aria-hidden="true">07</p>
+    <p class="cs__tag">Where to act</p>
+    <p class="cs__org">Olist<br>Brazilian marketplace</p>
+    <p class="cs__when">Personal project<br>Spring 2026</p>
+    <p class="cs__kind">99,441 orders<br>2016–2018</p>
+  </div>
+  <div class="cs__main">
+    <h1 class="cs__q">How delivery delays relate to customer reviews</h1>
+    <h3 class="cs__title">A logistics problem showing up in customer reviews</h3>
+    <p class="cs__take">I analyzed delivery performance and customer segments to identify where an operations team could focus its retention and service work.</p>
+
+    <dl class="star">
+      <div><dt>Situation</dt><dd>Olist’s public marketplace dataset contains nearly 100,000 orders, customer records, delivery dates, payments, and reviews. The business question: which customer and delivery patterns deserve attention?</dd></div>
+      <div><dt>What I did</dt><dd>Built SQL analyses and a pandas workflow for delivery performance, review scores, sales trends, and RFM segmentation. I verified that <code>customer_id</code> is an order-level key and used <code>customer_unique_id</code> for person-level repeat-purchase analysis.</dd></div>
+      <div><dt>What the data shows</dt><dd>Among reviewed delivered orders, late deliveries averaged 2.57/5 versus 4.29/5 for on-time or early deliveries. This is an association in observational data, not proof that lateness alone caused the lower ratings.</dd></div>
+    </dl>
+
+    <div class="tiles">
+      <div class="tile"><span class="n">99,441</span><span class="l">Orders in the marketplace dataset</span></div>
+      <div class="tile"><span class="n">97.0%</span><span class="l">90,557 of 93,358 customers with delivered orders bought once, keyed by customer_unique_id</span></div>
+      <div class="tile"><span class="n">2.57 vs 4.29</span><span class="l">Average review score: late vs on-time or early reviewed deliveries</span></div>
+      <div class="tile"><span class="n">54% vs 9.2%</span><span class="l">Share of 1–2 star reviews: late vs on-time or early deliveries</span></div>
+    </div>
+
+    <figure class="fig">
+      <div class="fig__bar"><span class="eyebrow">Delivery timing and customer reviews</span></div>
+      <div class="fig__body"><img class="olist-chart" src="/assets/olist-delivery-analysis.png" alt="Charts comparing delivery timing with customer review scores, including review ratings by lateness band." loading="lazy"></div>
+      <figcaption class="fig__cap">Descriptive comparisons from 96,353 reviewed deliveries. Longer delays coincide with lower review scores; other factors may also explain the relationship.</figcaption>
+    </figure>
+
+    <figure class="fig">
+      <div class="fig__bar"><span class="eyebrow">Customer segmentation and data-key decision</span></div>
+      <div class="fig__body"><img class="olist-chart" src="/assets/olist-rfm-analysis.svg" alt="RFM segment counts for delivered-order customers: Regular 39,152; New Customers 36,139; Lost 15,366; Loyal 1,596; At Risk 987; Champions 117." loading="lazy"></div>
+      <figcaption class="fig__cap">The person-level key matters: grouping by the order-level customer_id would make nearly every order appear to be a different customer. I use customer_unique_id for customer frequency. With about 97% of this delivered-order customer cohort buying once, fixed frequency bands avoid arbitrary splits among tied values.</figcaption>
+    </figure>
+
+    <div class="facts">
+      <div><dt>Business recommendations</dt><dd>Prioritize investigating the longest-delay lanes, where observed review scores are lowest. Treat the 97% one-time-buyer rate as a retention opportunity, then validate a win-back intervention with a controlled test before scaling it.</dd></div>
+      <div><dt>Limits</dt><dd>This is a historical public dataset from 2016–2018. The review comparisons are descriptive; the analysis does not isolate delivery delay from product, seller, geography, or customer differences.</dd></div>
+      <div><dt>My role</dt><dd>End-to-end analysis &middot; SQL query design &middot; customer-key validation &middot; Python analysis &middot; recommendations</dd></div>
+    </div>
+
+    <div class="chips"><span class="chip">SQL</span><span class="chip">Python</span><span class="chip">pandas</span><span class="chip">SQLite</span><span class="chip">RFM</span><span class="chip">Data validation</span></div>
+    <p class="cs__take"><a class="link" href="https://github.com/elakumuk/olist-ecommerce-analysis" target="_blank" rel="noopener">GitHub repository &nearr;</a> &middot; <a class="link" href="https://github.com/elakumuk/olist-ecommerce-analysis/blob/main/olist_analysis.ipynb" target="_blank" rel="noopener">Analysis notebook &nearr;</a> &middot; <a class="link" href="https://github.com/elakumuk/olist-ecommerce-analysis/tree/main/sql_analysis" target="_blank" rel="noopener">SQL files &nearr;</a></p>
+  </div>
+</article>
+<nav class="case-pagination" aria-label="Other projects"><a href="foot-traffic.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="jobhunter.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=63c3d151e528e079" defer></script></body></html>

@@ -159,6 +159,7 @@ button{font-family:var(--f-body)}
 .fig__bar{background:var(--surface);padding:1rem}
 .fig__body{padding:1.25rem}
 .fig__cap{padding:0 1.25rem 1.25rem}
+.olist-chart{display:block;width:100%;height:auto;border:1px solid var(--rule-soft)}
 .seg{border-radius:6px}
 .seg button{font-family:var(--f-body);font-size:.65rem;border-radius:4px;min-height:30px}
 .chip{border-radius:5px;background:var(--surface);font-family:var(--f-body);font-size:.65rem}
@@ -408,3 +409,7 @@ button{font-family:var(--f-body)}
 .case-footer p{font-family:var(--f-display);font-size:1.6rem;margin:0 0 .75rem}
 .case-footer a{color:var(--ink);font-size:.9rem}
 @media(max-width:640px){.tracks button{min-height:44px}.work-output{height:auto;min-height:150px}.project-visual--signal .work-output{height:auto;min-height:120px}.project-visual--output{padding:1rem}.case-breadcrumb{padding-top:1.4rem}.case-pagination{flex-wrap:wrap}.case-page .cs{padding-top:2rem}}
+
+/* Card result line: one plain-language outcome under the description */
+.project-card__body>p:has(+.project-card__result){margin-bottom:.75rem}
+.project-card__body>p.project-card__result{color:var(--ink);font-size:.8rem;line-height:1.5;margin:0 0 1.25rem;padding-left:.7rem;border-left:2px solid var(--accent)}
