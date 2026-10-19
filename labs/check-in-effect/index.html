@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A no-data-collection prototype for a behavioral finance experiment on investment feedback frequency.">
+<title>The Check-In Effect — experiment prototype</title>
+<link rel="stylesheet" href="styles.css">
+<style>.no-update{min-height:115px;display:grid;place-items:center;margin:15px 0;background:repeating-linear-gradient(135deg,#f7f9f6,#f7f9f6 9px,#f0f4ef 9px,#f0f4ef 18px);color:#677873;font:12px 'DM Mono',monospace}</style>
+</head>
+<body>
+<main class="lab">
+<header class="top"><a href="/cases/check-in-effect.html">&larr; Research protocol</a><span>ELA KUMUK &nbsp; / &nbsp; BEHAVIORAL FINANCE</span></header>
+<section class="intro"><p class="eyebrow">Interactive protocol prototype · not a study</p><h1>The Check-In<br><em>Effect</em></h1><p class="lede">When the market gets rough, does seeing losses more often change how you feel—and how much risk you choose?</p><p class="notice"><strong>Prototype only.</strong> Historical U.S. market returns for 2020 are used to build the hypothetical portfolio path. Your answers stay in this browser session and are not saved or transmitted. No financial advice.</p></section>
+<section class="panel" id="study" aria-live="polite">
+<div class="panel-head"><span id="step-label">SETUP</span><span id="condition-label">RANDOM ASSIGNMENT</span></div>
+<div id="screen">
+<h2>Take part in a short decision exercise</h2><p>You will see a hypothetical investment move through a volatile period. At selected points, you will receive a performance update and choose an allocation. The underlying return series is the U.S. market excess return plus the one-month Treasury bill rate; your chosen risky-asset share is combined with that same bill rate. This is not a test of intelligence or investing skill.</p><ul class="setup-list"><li>One fictional portfolio; no real money</li><li>Allocation choices use a 0–100% scale</li><li>About 3 minutes; you can stop at any time</li></ul><button id="start" class="button" disabled>Loading verified return data…</button>
+</div>
+</section>
+<section class="explain"><h2>What this prototype is testing</h2><p>The eventual study will randomize participants across two independent factors: how often performance is shown and how often an allocation can be changed. This demo exercises that flow only; its tiny convenience sample cannot test a hypothesis. Historical data source: <a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html" target="_blank" rel="noopener">Kenneth French Data Library</a> (monthly Fama/French factors; 202608 archive vintage).</p><div class="factor-grid"><div><span>A · FEEDBACK</span><strong>Monthly / quarterly</strong><p>How frequently the same underlying path is summarized.</p></div><div><span>B · DECISION</span><strong>Monthly / quarterly</strong><p>How frequently participants can revise their allocation.</p></div></div></section>
+<footer><a href="/">Ela Kumuk</a><span>Research protocol &amp; code are being developed in public.</span></footer>
+</main><script src="app.js" defer></script>
+</body></html>

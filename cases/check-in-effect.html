@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Check-In Effect — Ela Kumuk</title>
+<meta name="description" content="A preregisterable behavioral-finance experiment on investment feedback frequency, loss perception, and portfolio decisions.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/check-in-effect.html">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e380863d8f">
+<link rel="stylesheet" href="/design.css?v=8a5e0e1926fa14d7">
+<style>.no-update{min-height:110px;display:grid;place-items:center;margin:15px 0;background:repeating-linear-gradient(135deg,#f7f9f6,#f7f9f6 9px,#f0f4ef 9px,#f0f4ef 18px);color:#677873;font:12px 'IBM Plex Mono',monospace}</style>
+</head>
+<body class="case-page"><div class="shell"><aside class="rail" aria-label="Site header">
+<a class="brand" href="/" aria-label="Ela Kumuk, back to top"><img src="/assets/portrait.jpg" width="40" height="40" alt=""><span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span></a>
+<nav class="railnav" aria-label="Page sections"><a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav><a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+</aside><main class="main">
+<div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 10 / 10</span></div>
+<article class="cs" data-tracks="finance analytics ds">
+<div class="cs__rail"><p class="cs__num" aria-hidden="true">10</p><p class="cs__tag">Behavioral finance</p><p class="cs__org">Independent research<br>Experimental design</p><p class="cs__when">Protocol in progress</p><p class="cs__kind">Historical stress episode<br>2 &times; 2 randomized design</p></div>
+<div class="cs__main">
+<p class="cs__tag">Research question</p><h1 class="cs__q">Does seeing investment losses more often change what people feel—and what they do?</h1>
+<h3 class="cs__title">A controlled experiment separating feedback frequency from trading flexibility.</h3>
+<p class="cs__take">The Check-In Effect uses the 2020 COVID-19 drawdown and recovery as a historical market stimulus. It is a research protocol and interface prototype—not a completed human-subject study, financial forecast, or investment recommendation.</p>
+<div class="finding"><p class="finding__n">2 &times; 2</p><p class="finding__t">Randomly vary how often participants see performance and how often they may change an allocation. This separates frequent feedback from frequent trading opportunities.</p></div>
+<dl class="star">
+<div><dt>Why this question</dt><dd>More frequent evaluation can make short-term losses more salient. But if participants also get more chances to trade, an apparent “feedback effect” may actually be a flexibility effect. Earlier experimental work explicitly disentangled these mechanisms; this design makes that separation central.</dd></div>
+<div><dt>Historical episode</dt><dd>January–December 2020 U.S. equity-market monthly returns, including the COVID shock and subsequent recovery. The archived stimulus is the 202608-vintage monthly Fama/French factor series from Kenneth French&rsquo;s Data Library. For risky weight <code>w</code>, monthly portfolio return is <code>RF + w × (Mkt-RF)</code>; the remaining weight earns the one-month Treasury bill rate. All arms receive the same underlying returns; this is an experimental stimulus, not a causal analysis of real 2020 investors.</dd></div>
+<div><dt>Primary outcome</dt><dd>Terminal risky-asset allocation at the common 12-month endpoint. Everyone is observed at the same horizon, including participants who had fewer opportunities to revise their allocation. Common quarter-end allocations and repeated state ratings are secondary outcomes.</dd></div>
+<div><dt>Psychological outcomes</dt><dd>Perceived-risk and unease ratings at shared quarter-end checkpoints, after the allocation decision, so every condition receives the same measurement prompts at the same points. Pre-task investment experience and self-reported risk attitude are separate baseline context, not one blended “investor psychology score.”</dd></div>
+</dl>
+<div class="cs__more"><div class="cs__more-in">
+<dl class="facts">
+<div><dt>Factor A · feedback</dt><dd>Frequent (monthly) versus infrequent (quarterly) performance reports.</dd></div>
+<div><dt>Factor B · decision opportunity</dt><dd>Frequent (monthly) versus infrequent (quarterly) ability to revise allocation. 2 &times; 2 between-subject assignment; exact timing and comprehension checks to be finalized in pilot.</dd></div>
+<div><dt>Primary estimand</dt><dd>Intention-to-treat marginal effect of frequent versus infrequent feedback on terminal allocation, averaged across randomized decision-frequency arms. Estimate the 2 &times; 2 factorial model; report the feedback-by-decision interaction and confidence intervals as a prespecified secondary contrast.</dd></div>
+<div><dt>Model weights</dt><dd>No hand-assigned “psychology weights.” Estimate effects from randomized contrasts. Any composite scale requires a defensible measurement model and reliability/validity evidence; prospect-theory parameters are not interchangeable with regression coefficients.</dd></div>
+<div><dt>Power &amp; sample</dt><dd>Do not invent a sample size. Run a feasibility pilot, define the smallest effect of practical interest, and power the primary marginal feedback contrast before recruitment. Assess interaction power separately rather than implying it is guaranteed by the main-effect calculation.</dd></div>
+<div><dt>Analysis safeguards</dt><dd>Pre-specify the primary outcome, exclusions, missing-data handling, manipulation checks, and exploratory outcomes. Report effect sizes and confidence intervals; account for repeated choices and participant heterogeneity. Label moderator analyses exploratory unless powered and preregistered.</dd></div>
+<div><dt>Hypotheses</dt><dd>H1: More frequent feedback lowers terminal risky allocation (directional, based on myopic-loss-aversion theory). H2: Feedback frequency changes reported state risk/unease (secondary). H3: Feedback and decision frequency may interact (secondary; power separately). Any mediation claim is exploratory because a measured emotional response is not itself randomized.</dd></div>
+<div><dt>Psychological measurement</dt><dd>Separate baseline risk-taking propensity from state response. Candidate baseline: the published DOSPERT Financial Investment domain, which distinguishes risk-taking likelihood from perceived risk and expected benefits. Candidate state measures: a direct perceived-risk item and valence/arousal ratings informed by SAM, after the allocation at shared quarter-end checkpoints. The demo&rsquo;s “uneasy” slider is provisional, not a validated scale; conduct cognitive interviews and pilot the final wording before preregistration.</dd></div>
+<div><dt>Ethics &amp; limits</dt><dd>No real money, brokerage data, or financial advice. The public demo stores no responses. Any recruitment or identifiable data collection requires review of applicable Brandeis IRB requirements before launch. A retrospective scenario experiment cannot establish how investors actually behaved during 2020.</dd></div>
+</dl>
+<h2 class="sub-head">Prototype</h2>
+<p class="cs__desc">The browser-only demo uses the archived historical market series and tests the randomized decision flow; it collects no data and is not evidence about participants. The study still needs comprehension testing, finalized measures, power analysis, preregistration, and ethics review before recruitment.</p>
+<p class="cs__take"><a class="link" href="/labs/check-in-effect/">Open the interactive prototype &nearr;</a> &middot; <a class="link" href="/labs/check-in-effect/market-returns-2020.json">Inspect the frozen 2020 return data &nearr;</a> &middot; <a class="link" href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html" target="_blank" rel="noopener">Kenneth French Data Library &nearr;</a> &middot; <a class="link" href="https://academic.oup.com/qje/article-abstract/112/2/631/1870944" target="_blank" rel="noopener">Gneezy &amp; Potters (1997) &nearr;</a> &middot; <a class="link" href="https://www.sciencedirect.com/science/article/pii/S0165176505000558" target="_blank" rel="noopener">Bellemare et al. (2005) &nearr;</a> &middot; <a class="link" href="https://onlinelibrary.wiley.com/doi/10.1002/bdm.414" target="_blank" rel="noopener">DOSPERT scale (2002) &nearr;</a> &middot; <a class="link" href="https://doi.org/10.1016/0005-7916(94)90063-9" target="_blank" rel="noopener">Self-Assessment Manikin (1994) &nearr;</a> &middot; <a class="link" href="https://www.nber.org/papers/w27272" target="_blank" rel="noopener">Vanguard investor survey during 2020 crash &nearr;</a></p>
+<div class="chips"><span class="chip">Behavioral finance</span><span class="chip">Experimental design</span><span class="chip">Randomized 2 &times; 2</span><span class="chip">Psychometrics</span><span class="chip">Causal inference</span></div>
+</div></div></div>
+</article>
+<nav class="case-pagination" aria-label="Other projects"><a href="jobhunter.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="state-street.html">Featured project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div>
+</body></html>

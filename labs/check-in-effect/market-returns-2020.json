@@ -1,0 +1,27 @@
+{
+  "source": "Kenneth R. French Data Library, Fama/French 3 Factors, monthly",
+  "source_url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+  "archive_vintage": "202608 CRSP database; file created 2026-09-24",
+  "retrieved": "2026-10-18",
+  "source_archive_sha256": "593f4fbef03181bc0b22ff6292f217689dd1fb79355049ca905d95b262040a66",
+  "units": "percent per month",
+  "fields": {
+    "mkt_rf": "Market return minus one-month Treasury bill rate",
+    "rf": "One-month Treasury bill rate"
+  },
+  "period": "2020-01 through 2020-12",
+  "returns": [
+    { "month": "Jan 2020", "mkt_rf": -0.11, "rf": 0.13 },
+    { "month": "Feb 2020", "mkt_rf": -8.15, "rf": 0.12 },
+    { "month": "Mar 2020", "mkt_rf": -13.37, "rf": 0.12 },
+    { "month": "Apr 2020", "mkt_rf": 13.60, "rf": 0.00 },
+    { "month": "May 2020", "mkt_rf": 5.57, "rf": 0.01 },
+    { "month": "Jun 2020", "mkt_rf": 2.45, "rf": 0.01 },
+    { "month": "Jul 2020", "mkt_rf": 5.83, "rf": 0.01 },
+    { "month": "Aug 2020", "mkt_rf": 7.62, "rf": 0.01 },
+    { "month": "Sep 2020", "mkt_rf": -3.64, "rf": 0.01 },
+    { "month": "Oct 2020", "mkt_rf": -2.08, "rf": 0.01 },
+    { "month": "Nov 2020", "mkt_rf": 12.45, "rf": 0.01 },
+    { "month": "Dec 2020", "mkt_rf": 4.63, "rf": 0.01 }
+  ]
+}
