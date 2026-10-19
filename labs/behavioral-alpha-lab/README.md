@@ -1,18 +1,19 @@
-# Behavioral Alpha Lab — project record
+# Behavioral Finance Lab — project record
 
 ## Agreed direction
 
-Build one portfolio project under the umbrella **Behavioral Alpha Lab**. Do not split related experiments into separate portfolio projects. Keep studies modular so each has its own question, operational definitions, intervention, outcomes, analysis plan, and limits.
+Build one portfolio project under the umbrella **Behavioral Finance Lab**. Avoid “Alpha” in the name: this project studies investor behavior and does not claim to generate investment alpha. Do not split related experiments into separate portfolio projects. Keep studies modular so each has its own question, operational definitions, intervention, outcomes, analysis plan, and limits.
 
 ### First study
 
-**Study 01 — The Check-In Effect** remains the first working module. It tests whether performance-feedback frequency affects investment choices, separately from how often a participant may change an allocation.
+**Study 01 — The Check-In Effect** remains the first working module. It is a proposed conceptual replication and extension of Bellemare et al. (2005), testing whether performance-feedback frequency affects investment choices, separately from how often a participant may change an allocation. The extension uses a fixed historical market path, continuous risky allocation, an equity-investor target population, and repeated state-response measures; novelty is not claimed for separating feedback and flexibility.
 
 - Historical stimulus: the frozen January–December 2020 U.S. market-factor path in `../check-in-effect/market-returns-2020.json`.
 - Design: proposed between-subject 2 × 2 random assignment (monthly/quarterly performance feedback × monthly/quarterly allocation opportunity).
 - Primary outcome: risky-asset allocation at the common endpoint.
 - Secondary outcomes: quarter-end allocations and state response ratings at identical checkpoints after the allocation decision.
-- Status: protocol and browser prototype only. No participants recruited; no human-subject data collected; no results or causal findings.
+- Status: proposed protocol and browser prototype only. No participants recruited; no human-subject data collected; no results or causal findings.
+- Model: all arms use a constant target allocation with monthly rebalancing; decision frequency controls when the participant may revise that target. The demo shows interval return as primary feedback and cumulative index secondarily.
 
 ## Research process — follow in order
 
@@ -52,7 +53,7 @@ Build one portfolio project under the umbrella **Behavioral Alpha Lab**. Do not 
 
 ## Next work
 
-1. Rebrand the portfolio entry and case page under **Behavioral Alpha Lab**, retaining **Study 01 — The Check-In Effect** as its first module.
+1. Keep the portfolio entry and case page under **Behavioral Finance Lab**, retaining **Study 01 — The Check-In Effect** as its first module.
 2. Finalize the study's participant population and measure choices; DOSPERT investment-domain items are a baseline candidate, while the prototype's “uneasy” slider is provisional. Evaluate a direct perceived-risk item and SAM-style valence/arousal measure without claiming validation before piloting.
 3. Verify the frozen data file against its stated archive hash and independently validate all monthly portfolio calculations.
 4. Refine the actual-study flow (balanced randomization, neutral stimulus labels, shared measurement checkpoints), then draft the preregistration and power-analysis inputs.
