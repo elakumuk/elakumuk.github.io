@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EKHHMFP4SE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EKHHMFP4SE');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backtest Breaker — Ela Kumuk</title>
+<meta name="description" content="Backtest Breaker. A project by Ela Kumuk, Business &amp; Data Analyst.">
+<meta name="author" content="Ela Kumuk">
+<link rel="canonical" href="https://elakumuk.github.io/cases/backtest-breaker.html">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Backtest Breaker — Ela Kumuk">
+<meta property="og:description" content="Business &amp; Data Analyst. Models and analyses for finance, consulting and data teams — tested before anyone acts on them. Available January 2027.">
+<meta property="og:url" content="https://elakumuk.github.io/cases/backtest-breaker.html">
+<meta property="og:image" content="https://elakumuk.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Backtest Breaker — Ela Kumuk">
+<meta name="twitter:description" content="Business &amp; Data Analyst. M.S. Business Analytics, Brandeis. Available January 2027.">
+<meta name="twitter:image" content="https://elakumuk.github.io/assets/og.png">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap">
+<link rel="stylesheet" href="/styles.css?v=248fb2e380863d8f">
+<link rel="stylesheet" href="/design.css?v=8a5e0e1926fa14d7">
+</head>
+<body class="case-page"><div class="shell">  <aside class="rail" aria-label="Site header">
+    <a class="brand" href="/" aria-label="Ela Kumuk, back to top">
+      <img src="/assets/portrait.jpg" width="40" height="40" alt="">
+      <span>Ela Kumuk<span class="brand__sub">Business &amp; Data Analyst</span></span>
+    </a>
+    <nav class="railnav" id="railnav" aria-label="Page sections">
+      <a href="/#work">Work</a><a href="/#experience">Experience</a><a href="/#about">About</a><a href="/#contact">Contact</a>
+    </nav>
+    <a class="header-cv" href="/assets/Ela_Kumuk_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute; <span aria-hidden="true">&nearr;</span></a>
+  </aside>
+
+<main class="main"><div class="case-breadcrumb"><a href="/#work">&larr; Selected work</a><span>Case 03 / 11</span></div><article class="cs" id="w-backtest-breaker" data-tracks="finance ai ds"
+               data-short="Backtest Breaker">
+        <div class="cs__rail">
+          <p class="cs__num" aria-hidden="true">03</p>
+          <p class="cs__tag">AI agents &middot; Quant</p>
+          <p class="cs__org">Meta Global AI Developer Hackathon<br>Indie Developer track</p>
+          <p class="cs__when">Oct 26 &ndash; Nov 4, 2026</p>
+          <p class="cs__kind">Muse Spark via Baseten<br>Python &middot; Streamlit</p>
+        </div>
+        <div class="cs__main">
+          <h1 class="cs__q">What happens when one AI tries to break another AI&rsquo;s backtest?</h1>
+          <h3 class="cs__title">Two Muse Spark agents with opposite jobs. The final verdict comes from code, not the model.</h3>
+          <p class="cs__take">Built from scratch in a 10-day hackathon: a research agent hunts for a good backtest,
+            an auditor agent attacks it, and a sealed holdout is opened exactly once.</p>
+
+          <div class="finding">
+            <p class="finding__n">0.32<small>&rarr; 0.30</small></p>
+            <p class="finding__t">The auditor&rsquo;s logged holdout prediction, then the actual Sharpe when the
+              hash-sealed holdout was opened. The model still called the strategy SURVIVES; the code rubric said FRAGILE.</p>
+          </div>
+          <dl class="star">
+            <div><dt>Situation</dt><dd>AI research assistants never get tired of trying variants, so they make
+              overfit backtests faster. A team needs to know whether a result is real before money follows it.</dd></div>
+            <div><dt>What I did</dt><dd>Designed the system and the evaluation, and directed the build with AI coding
+              tools (logged in the repo). A research agent iterates on in-sample data only; an auditor agent runs
+              walk-forward, Deflated Sharpe, PBO and cost-stress tests by tool call, writes down a prediction, then
+              opens the holdout once. A notebook mode finds look-ahead leaks and proves each one with a test.</dd></div>
+            <div><dt>Outcome</dt><dd>In the live run the model mostly refused to overfit. The one exception was a
+              trial that set trading costs to zero, and it became the in-sample winner (Sharpe 0.68). Holdout: 0.30.
+              Deflated Sharpe 0.04, verdict FRAGILE.</dd></div>
+          </dl>
+          <div class="cs__act"><a class="link" href="https://github.com/elakumuk/backtest-breaker" target="_blank" rel="noopener">Code and README on GitHub</a></div>
+          <div class="cs__more" id="more-w-backtest-breaker"><div class="cs__more-in">
+          <dl class="facts">
+            <div><dt>Guardrails</dt>
+              <dd>Strategies are JSON specs, never code &middot; signal at t uses data up to t&minus;1 &middot;
+                  holdout (2024 onward) hash-sealed, opened once &middot; every number from deterministic code</dd></div>
+            <div><dt>Notebook mode</dt>
+              <dd>A finding counts as PROVEN only if a generated test fails on the original code, passes with the
+                  fix, and passes on a clean control notebook</dd></div>
+          </dl>
+
+          <figure class="fig">
+            <div class="fig__bar"><span class="eyebrow">What the data says</span></div>
+            <div class="fig__body">
+              <div class="didrow">
+                <div class="did"><span class="n">25<i>trials</i></span><span class="l">Live Muse Spark research trials, 0 failed</span></div>
+                <div class="did"><span class="n">0.68<i>vs 0.56</i></span><span class="l">In-sample winner (costs set to 0) vs median trial</span></div>
+                <div class="did em"><span class="n">0.32<i>vs 0.30</i></span><span class="l">Predicted vs actual sealed-holdout Sharpe</span></div>
+                <div class="did"><span class="n">1.00<i>/ 0.60</i></span><span class="l">Precision / recall of PROVEN leaks on a held-out notebook set</span></div>
+                <div class="did em"><span class="n">0<i>/ 0</i></span><span class="l">Our own regex baseline once it had to prove its findings</span></div>
+              </div>
+              <p class="didnote">Held-out set: 5 leaky notebooks, 5 clean twins, 2 decoys, written outside the repo so
+                the build could not tune to them. Numbers from the saved live run (demo/MANIFEST.json).</p>
+            </div>
+          </figure>
+
+          <p class="brought">The most useful result was a failure of our own: an early baseline scored 0.62 precision
+            and 1.00 recall only because it matched our example variable names. The held-out set caught it. And the
+            auditor never said out loud that the winner was picked at zero cost; that is the next rubric rule.</p>
+          <div class="chips">
+            <span class="chip">LLM agents</span><span class="chip">Tool calling</span>
+            <span class="chip">Evaluation design</span><span class="chip">Deflated Sharpe</span>
+            <span class="chip">Python</span>
+          </div>
+          </div></div>
+        </div>
+      </article><nav class="case-pagination" aria-label="Other projects"><a href="strategy-audit-lab.html">&larr; Previous project</a><a href="/#work">All selected work</a><a href="crash-intelligence.html">Next project &rarr;</a></nav><footer class="case-footer"><p>Have a business question worth exploring?</p><a href="mailto:elakumuk@brandeis.edu">Get in touch &nearr;</a></footer></main></div><script src="/app.js?v=63c3d151e528e079" defer></script></body></html>
